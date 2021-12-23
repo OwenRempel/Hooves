@@ -3,5 +3,3 @@ docker run -i -t -p "80:80" --name "HovesAPI" -v ${PWD}/API/app:/app  -v ${PWD}/
  -e MYSQL_USER_PASS='GTV4DYv6KA5Hp9A2uShe8f4PYcQeRCmPxKyUxGL4' \
  -e MYSQL_ADMIN_PASS='3ntry150' \
   mattrayner/lamp:latest
-
-ip addr
