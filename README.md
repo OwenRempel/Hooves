@@ -1,5 +1,5 @@
 # Hooves
-## A Modern take on Cattle mangment
+### A Modern take on Cattle mangment
 
 This app alows users to keep track of their farms in a way that is easy to use yet allows for powerful statistics.
 
