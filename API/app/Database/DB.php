@@ -18,7 +18,7 @@ class DB_Admin{
         global $ADMIN_SECRET_KEYS;
         $pdo = new PDO("mysql:host=127.0.0.1", $ADMIN_SECRET_KEYS['username'], $ADMIN_SECRET_KEYS['password']);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $query = 'CREATE DATABASE '.$DB_Name.';';
+        $query = 'CREATE DATABASE IF NOT EXISTS '.$DB_Name.';';
         $pdo->exec($query);
     }
     public static function exFile($sql){

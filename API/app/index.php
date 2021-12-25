@@ -6,3 +6,7 @@ if(!is_file('Build/Built')){
     DB_Admin::exFile(file_get_contents('Database/sql/admin.sql'));
     touch('Build/Built');
 }
+
+echo 'Hello Owen';
+
+DB_Admin::mkDB('owentest');
