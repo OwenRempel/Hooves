@@ -7,6 +7,4 @@ if(!is_file('Build/Built')){
     touch('Build/Built');
 }
 
-echo 'Hello Owen';
-
-DB_Admin::mkDB('owentest');
+print_r($_GET['url']);
