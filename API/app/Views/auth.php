@@ -1,1 +1,4 @@
-This is auth
+<?php 
+
+
+echo json_encode($_SERVER);

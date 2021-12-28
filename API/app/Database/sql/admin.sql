@@ -1,5 +1,5 @@
 CREATE TABLE `HovesAdmin`.`Companies` (
-    `Name` TEXT NOT NULL ,
+    `CompanyName` TEXT NOT NULL ,
     `DB_Name` TEXT NOT NULL ,
     `Adate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
     `ID` TEXT NOT NULL ,
@@ -8,10 +8,9 @@ CREATE TABLE `HovesAdmin`.`Companies` (
 ) ENGINE = InnoDB;
 
 CREATE TABLE `HovesAdmin`.`Users` (
-    `Name` TEXT NOT NULL ,
     `CompID` TEXT NOT NULL ,
-    `Username` TEXT NOT NULL ,
-    `Pass` TEXT NOT NULL ,
+    `UserEmail` TEXT NOT NULL ,
+    `UserPassword` TEXT NOT NULL ,
     `adate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
     `ID` TEXT NOT NULL , 
     `RID` INT NOT NULL AUTO_INCREMENT ,
