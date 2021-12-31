@@ -1,6 +1,6 @@
 CREATE TABLE `HovesAdmin`.`Companies` (
     `CompanyName` TEXT NOT NULL ,
-    `DB_Name` TEXT NOT NULL ,
+    `DBName` TEXT NOT NULL ,
     `Adate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
     `ID` TEXT NOT NULL ,
     `RID` INT NOT NULL AUTO_INCREMENT ,
@@ -8,7 +8,7 @@ CREATE TABLE `HovesAdmin`.`Companies` (
 ) ENGINE = InnoDB;
 
 CREATE TABLE `HovesAdmin`.`Users` (
-    `CompID` TEXT NOT NULL ,
+    `CompaniesID` TEXT NOT NULL ,
     `UserEmail` TEXT NOT NULL ,
     `UserPassword` TEXT NOT NULL ,
     `adate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
@@ -20,8 +20,8 @@ CREATE TABLE `HovesAdmin`.`Users` (
 CREATE TABLE `HovesAdmin`.`LoginAuth` (
     `Token` TEXT NOT NULL ,
     `Expire` TIMESTAMP NOT NULL ,
-    `UserID` TEXT NOT NULL ,
-    `CompID` TEXT NOT NULL ,
+    `UsersID` TEXT NOT NULL ,
+    `CompaniesID` TEXT NOT NULL ,
     `IP` TEXT NOT NULL ,
     `Adate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
     `ID` INT NOT NULL AUTO_INCREMENT ,

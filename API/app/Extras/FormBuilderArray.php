@@ -51,11 +51,13 @@
 $FormBuilderArray = [
     'Routes'=>[
         'companies'=>[
+            'tokenAuth'=>'CompCreateAuth',
+            'dbCreate'=>'CompanyName',
             'formTitle'=>'Add Company',
             'formName'=>'CompanyAddItem',
-            'passwordCheck'=>'UserPassword',
             'tableName'=>'Companies',
-            'secondTableName'=>'Users',
+            'secondTable'=>'Users',
+            'Sucess'=>'Company and User sucessfully created!',
             'items'=>[
                 [
                     'name'=>'CompanyName',
@@ -67,7 +69,8 @@ $FormBuilderArray = [
                 [
                     'name'=>'UserEmail',
                     'typeName'=>'FormInput',
-                    'type'=>'Email',
+                    'unique'=>True,
+                    'type'=>'text',
                     'inputLabel'=>'User Email',
                     'secondTable'=>True
                     
@@ -82,6 +85,7 @@ $FormBuilderArray = [
                 [   //TODO: Work on getting the passwords match to work before the form is submited
                     'name'=>'UserPassword-confirm',
                     'typeName'=>'FormInput',
+                    'passwordConfirm'=>'UserPassword',
                     'type'=>'password',
                     'inputLabel'=>'Confirm Password'
                 ]

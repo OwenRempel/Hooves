@@ -82,19 +82,11 @@ function InitRouter(){
                 echo stouts('There was an error processing your post request', 'error');
                 exit();
             }
-            $RecivedForm = [];
-            foreach($PostData as $itemKey => $item){
-                foreach($localArray['items'] as $formItem){
-                    if($itemKey == $formItem['name']){
-                        $RecivedForm[$formItem['name']] = $item;
-                        continue;
-                    }
-                }
-            }
-            if(!empty($RecivedForm)){
-                echo json_encode($RecivedForm);
+            //This is where the receved form is entered into the database
+            if(!empty($PostData)){
+                insertFormData($PostData, $localArray);
             }else{
-                echo stouts('None of the form items you sent matched the database', 'error');
+                echo stouts('No data recieved', 'error');
             }
             
             
@@ -116,14 +108,18 @@ function getFormStruct($formArray, $redirectName){
         'options',
         'inputLabel',
         'placeholder',
-        'checkboxTitle'
+        'checkboxTitle',
+        'password_check'
     ];
     $arrayToSend = [];
     $arrayToSend['form']['formName'] = $formArray['formName'];
     $arrayToSend['form']['formTitle'] = $formArray['formTitle'];
-    $arrayToSend['form']['callback'] = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].'/'.$redirectName;
+    $arrayToSend['form']['callBack'] = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].'/'.$redirectName;
     foreach($formArray['items'] as $items){
         $itemArray = [];
+        if(isset($items['passwordConfirm'])){
+            $arrayToSend['form']['passwordCheck'] = [$items['passwordConfirm'], $items['name']];
+        }
         foreach($items as $itemName => $item){
             if(in_array($itemName, $FormPassthroughItems)){
                 $itemArray[$itemName] = $item;
@@ -132,6 +128,86 @@ function getFormStruct($formArray, $redirectName){
         $arrayToSend['form']['fields'][] = $itemArray;
     }
     echo json_encode($arrayToSend);
+}
+function insertFormData($RecivedFormData, $localArray){
+    $DB = new DB_Admin;
+    $insertStringArray = [];
+    $pdoDataArray = [];
+    if(isset($localArray['secondTable'])){
+        $secInsertStringArray = [];
+        $secPdoDataArray = [];
+    }
+    foreach($RecivedFormData as $itemKey => $item){
+        foreach($localArray['items'] as $formItem){
+            if($itemKey == $formItem['name']){
+                if(isset($formItem['passwordConfirm'])){
+                    continue;
+                }
+                if($formItem['type'] == 'password'){
+                    $item = password_hash($item, PASSWORD_BCRYPT);
+                }
+                if(isset($formItem['unique']) and $formItem['unique'] == true){
+                    $table = (isset($localArray['secondTable']) ? $localArray['secondTable'] : $localArray['tableName'] );
+                    
+                }
+                if(isset($formItem['secondTable']) and $formItem['secondTable'] == true){
+                    $secPdoDataArray[$itemKey] = $item; 
+                    $secInsertStringArray[] = $itemKey;
+                }else{
+                    $pdoDataArray[$itemKey] = $item; 
+                    $insertStringArray[] = $itemKey;
+                }
+                continue;
+            }
+        }
+    }
+    //TODO:here is where we will check the uuid to make sure it is unique
+    do{
+        $UUID = bin2hex(random_bytes(24));
+    }while(false);
+    
+    if(isset($localArray['tokenAuth'])){
+        if(!isset($RecivedFormData['Token'])){
+            echo stouts('Please include auth token', 'error');
+            exit();
+        }
+        
+        $data = $DB->query('SELECT Token, Expire from '.$localArray['tokenAuth'].' WHERE Token = :token', array('token'=>$RecivedFormData['Token']));
+        if(empty($data)){
+            echo stouts('Auth Token has expried or is invalid', 'error');
+            exit();
+        }
+    }
+    if(isset($localArray['dbCreate'])){
+        $UUID = bin2hex(random_bytes(8));
+        $name = str_replace(' ', '', ucwords($pdoDataArray[$localArray['dbCreate']]));
+        $DBName = $name.'$'.$UUID;
+        $pdoDataArray['ID'] = $UUID;
+        $pdoDataArray['DBName'] = $DBName;
+        $insertStringArray[] = 'ID';
+        $insertStringArray[] = 'DBName';
+        $DB->mkDB($DBName);
+    }
+
+    if(isset($localArray['secondTable'])){
+        $secUUID = bin2hex(random_bytes(24));
+        $secInsertStringArray[] = 'ID';
+        $secPdoDataArray['ID'] = $secUUID;
+        $secPdoDataArray[$localArray['tableName'].'ID'] = $UUID;
+        $secInsertStringArray[] = $localArray['tableName'].'ID';
+        $secValues = implode(', ',$secInsertStringArray);
+        $secDataValues =':'.implode(', :',$secInsertStringArray);
+        $DB->query("INSERT INTO ".$localArray['secondTable']." ($secValues) VALUES ($secDataValues)", $secPdoDataArray);    
+    }
+    
+   
+    $values = implode(', ',$insertStringArray);
+    $dataValues =':'.implode(', :',$insertStringArray);
+
+    $DB->query("INSERT INTO ".$localArray['tableName']." ($values) VALUES ($dataValues)", $pdoDataArray);
+   
+    echo stouts($localArray['Sucess'], 'sucess');
+    
 }
 
 
