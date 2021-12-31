@@ -14,7 +14,9 @@ function MyApp({ Component, pageProps }) {
     <Header/>  
     <div className='MainContent'>
       <Nav />
-      <Component {...pageProps} />
+      <div className='container'>
+        <Component {...pageProps} />
+      </div>
     </div>
 
     <Footer/>

@@ -16,7 +16,7 @@ export default function Form({ form, onSubmit,}) {
             return <Field key={index} {...field} />;
         })}
 
-        <button className={style.btn} type="submit" name={formName}>Submit</button>
+        <button className='btn' type="submit" name={formName}>Submit</button>
         </form>
   );
 }

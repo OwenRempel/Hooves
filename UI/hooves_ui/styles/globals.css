@@ -20,12 +20,32 @@ select option{
   margin: 30px;
 }
 
+.btn{
+  background-color: #2196f3;
+  padding: 10px 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 4px;
+  margin: 15px;
+  color: white;
+  grid-column: 1;
+  cursor: pointer;
+  width: max-content;
+}
+
 .MainContent{
   width: 100%;
+  min-height: calc(100vh - 90px - 80px);
   margin: auto;
   display: grid;
   grid-template-columns: 100px 1fr;
 }
+.container{
+  padding: 20px;
+  width: 100%;
+}
+
+
 
 ::-webkit-scrollbar {
   width:2px;

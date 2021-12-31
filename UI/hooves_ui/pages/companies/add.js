@@ -1,11 +1,24 @@
 import Form from "../../Components/Form"
+import Back from "../../Components/Back";
 import Router from 'next/router'
 
 function  add({ formItems }) {
-    const { callBack } = formItems;
+    const { form } = formItems
+    const { callBack, passwordCheck } = form;
     const returnFormData = async e => {
         e.preventDefault();
         const FormItem = e.target;
+        if(passwordCheck){
+          const pass1 = FormItem.querySelector('#'+passwordCheck[0]);
+          const pass2 = FormItem.querySelector('#'+passwordCheck[1]);
+          if(pass1.value != pass2.value){
+            pass1.value = '';
+            pass2.value = '';
+            alert("Passwords Dont match");
+            return
+          }
+        }
+        
         //let FormOut = new FormData();
         let FormOut = {};
         for (let i = 0; i < FormItem.length; i++) {
@@ -13,8 +26,7 @@ function  add({ formItems }) {
             //FormOut.append(item.name, item.value);         
             FormOut[item.name] = item.value;
         }
-        console.log(FormOut)
-        const res = await fetch(callBack, {
+        const res = await fetch(callBack+'/add', {
             method: 'POST',
             headers:{
               'Content-Type': '"application/x-form-urlencoded"'
@@ -23,11 +35,18 @@ function  add({ formItems }) {
           });
         
         const Response = await res.json();
-        console.log(Response);
-        e.target.reset();
-        Router.push('/');
+        if(Response.error){
+          console.log(Response.error);
+        }else{
+          Router.push('/');
+        }
     }
-    return <Form onSubmit={returnFormData}  {...formItems} />
+    return (
+      <div className="container">
+        <Back link='/companies' />
+        <Form onSubmit={returnFormData}  {...formItems} />
+      </div>
+    )
 }
 
 

@@ -1,7 +1,8 @@
 import style from '../../styles/form.module.css'
-export default function FormInput({ inputLabel, type: enumType, ...rest }) {
+export default function FormInput({ inputLabel, password_check, type: enumType, ...rest }) {
   const { name } = rest;
   const type = enumType.toLowerCase();
+  
 
   return (
     <div className={style.inputItem}>
