@@ -35,6 +35,38 @@
     background: #fff0;
     padding: 5px 10px;
 }
+.inputItem input[type='checkbox']{
+    width: 20px;
+    height: 20px;
+}
+
+.inputoption{
+    margin: 10px;
+}
+
+.checkwrap{
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+}
+.checkboxtitle{
+    font-size: 18px;
+}
+.inputItem textarea{
+    font-size: 20px;
+    border: none;
+    border-bottom: 1px solid black;
+    background: #fff0;
+    padding: 5px 10px;
+    resize: vertical;
+}
+.inputItem select{
+    font-size: 20px;
+    border: none;
+    border-bottom: 1px solid black;
+    background: #fff0;
+    padding: 5px 10px;
+}
 .inputItem input:focus-visible{
     border:none;
     outline: none;
