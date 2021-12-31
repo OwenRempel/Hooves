@@ -1,8 +1,8 @@
 import * as Fields from "./FormFields";
 import style from '../styles/form.module.css'
 
-export default function Form({ form, formName, formTitle, onSubmit,}) {
-    const { fields } = form;
+export default function Form({ form, onSubmit,}) {
+    const { fields, formName, formTitle } = form;
     if (!fields) return null;
 
     return (
