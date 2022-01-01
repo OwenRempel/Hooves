@@ -148,7 +148,11 @@ function insertFormData($RecivedFormData, $localArray){
                 }
                 if(isset($formItem['unique']) and $formItem['unique'] == true){
                     $table = (isset($localArray['secondTable']) ? $localArray['secondTable'] : $localArray['tableName'] );
-                    
+                    $check = $DB->query("SELECT $itemKey From $table WHERE $itemKey=:$itemKey", array($itemKey=>$item));
+                    if(!empty($check)){
+                        echo stouts("This $itemKey Already Exists", 'error');
+                        exit();
+                    }                    
                 }
                 if(isset($formItem['secondTable']) and $formItem['secondTable'] == true){
                     $secPdoDataArray[$itemKey] = $item; 
