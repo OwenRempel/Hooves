@@ -130,7 +130,22 @@ function getFormStruct($formArray, $redirectName){
     echo json_encode($arrayToSend);
 }
 function insertFormData($RecivedFormData, $localArray){
-    $DB = new DB_Admin;
+    if(isset($localArray['dbCreate'])){
+        $DB = new DB_Admin;
+    }
+    if(isset($localArray['tokenAuth'])){
+        if(!isset($RecivedFormData['Token'])){
+            echo stouts('Please include auth token', 'error');
+            exit();
+        }
+        $data = $DB->query('SELECT Token, Expire from '.$localArray['tokenAuth'].' WHERE Token = :token', array('token'=>$RecivedFormData['Token']));
+        
+        if(empty($data)){
+            echo stouts('Auth Token has expried or is invalid', 'error');
+            exit();
+        }
+    }
+    
     $insertStringArray = [];
     $pdoDataArray = [];
     if(isset($localArray['secondTable'])){
@@ -168,22 +183,14 @@ function insertFormData($RecivedFormData, $localArray){
     //TODO:here is where we will check the uuid to make sure it is unique
     do{
         $UUID = bin2hex(random_bytes(24));
-    }while(false);
+    }while(!empty($DB->query("SELECT ID from ".$localArray['tableName']." WHERE ID = '$UUID'")));
     
-    if(isset($localArray['tokenAuth'])){
-        if(!isset($RecivedFormData['Token'])){
-            echo stouts('Please include auth token', 'error');
-            exit();
-        }
-        
-        $data = $DB->query('SELECT Token, Expire from '.$localArray['tokenAuth'].' WHERE Token = :token', array('token'=>$RecivedFormData['Token']));
-        if(empty($data)){
-            echo stouts('Auth Token has expried or is invalid', 'error');
-            exit();
-        }
-    }
+    
     if(isset($localArray['dbCreate'])){
-        $UUID = bin2hex(random_bytes(8));
+        do{
+            $UUID = bin2hex(random_bytes(8));
+        }while(!empty($DB->query("SELECT ID from ".$localArray['tableName']." WHERE ID='$UUID'")));
+        
         $name = str_replace(' ', '', ucwords($pdoDataArray[$localArray['dbCreate']]));
         $DBName = $name.'$'.$UUID;
         $pdoDataArray['ID'] = $UUID;
@@ -194,7 +201,10 @@ function insertFormData($RecivedFormData, $localArray){
     }
 
     if(isset($localArray['secondTable'])){
-        $secUUID = bin2hex(random_bytes(24));
+        do{
+            $secUUID = bin2hex(random_bytes(8));
+        }while(!empty($DB->query("SELECT ID from ".$localArray['secondTable']." WHERE ID='$secUUID'")));
+        
         $secInsertStringArray[] = 'ID';
         $secPdoDataArray['ID'] = $secUUID;
         $secPdoDataArray[$localArray['tableName'].'ID'] = $UUID;
@@ -209,7 +219,11 @@ function insertFormData($RecivedFormData, $localArray){
     $dataValues =':'.implode(', :',$insertStringArray);
 
     $DB->query("INSERT INTO ".$localArray['tableName']." ($values) VALUES ($dataValues)", $pdoDataArray);
-   
+    
+    if(isset($localArray['tokenAuth'])){
+        $data = $DB->query('DELETE from '.$localArray['tokenAuth'].' WHERE Token = :token', array('token'=>$RecivedFormData['Token']));
+    }
+
     echo stouts($localArray['Sucess'], 'sucess');
     
 }

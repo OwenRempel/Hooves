@@ -91,6 +91,9 @@ $FormBuilderArray = [
                 ]
             ]
         ],
+        'gen'=>[
+            'view'=>true
+        ],
         'server'=>[
             'view'=>True
         ],
