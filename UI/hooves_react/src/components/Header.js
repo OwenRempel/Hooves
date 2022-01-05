@@ -9,7 +9,7 @@ function Header() {
 
             <div className='profileWrap'>
                 <div className='profile'>
-                    <img src="/images/profile/Profile.jpg" className='profileImg'/>
+                    <img src="/images/profile/Profile.jpg" alt='Profile' className='profileImg'/>
                 </div>
             </div>
         </div>
