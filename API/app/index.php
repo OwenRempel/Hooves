@@ -34,7 +34,7 @@ if($_SERVER["REQUEST_METHOD"] == "OPTIONS"){
 //Check to see if Setup complete
 if(!is_file('Build/Built')){
     DB_Admin::mkDB('HovesAdmin');
-    DB_Admin::exFile(file_get_contents('Database/sql/admin.sql'));
+    DB_Admin::exFile(file_get_contents('Database/sql/Admin.sql'));
     touch('Build/Built');
 }
 //Functions
@@ -60,9 +60,14 @@ function InitRouter(){
     $method = $_SERVER['REQUEST_METHOD'];
     //Build file path from url
     if($Routes[0] == 'login'){
+        //handle login
         include('Extras/login.php');
     }elseif($Routes[0] == 'token'){
+        //handle token checks
         include('Extras/token.php');
+    }elseif($Routes[0] == 'logout'){
+        //handle logout
+        include('Extras/logout.php');
     }elseif(isset($FormBuilderArray['Routes'][$Routes[0]])){
         if(isset($FormBuilderArray['Routes'][$Routes[0]]['view'])){
             $viewFile = "./Views/".$Routes[0].'.php';
@@ -207,6 +212,10 @@ function insertFormData($RecivedFormData, $localArray){
         $insertStringArray[] = 'ID';
         $insertStringArray[] = 'DBName';
         $DB->mkDB($DBName);
+        $dbBuildData = 'Database/sql/'.$localArray['tableName'].'.sql'
+        if(is_file($dbBuildData)){
+            $DB->exFile(file_get_contents($dbBuildData));
+        }
     }
 
     if(isset($localArray['secondTable'])){
