@@ -1,11 +1,10 @@
 import { Outlet } from "react-router-dom"
-
-function Cows() {
+function Settings() {
     return (
         <>
-            <Outlet/>
+            <Outlet/> 
         </>
     )
 }
 
-export default Cows
+export default Settings
