@@ -4,7 +4,7 @@ import Login from "./components/Login";
 import Header from './components/Header';
 import Nav from './components/Nav';
 import Footer from './components/Footer';
-import './App.css';
+import './css/App.css';
 
 
 export default function App() {
@@ -71,7 +71,6 @@ export default function App() {
       }
     }
   }
-  
   
   return (
     <div>

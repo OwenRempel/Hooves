@@ -1,5 +1,5 @@
 import * as Fields from "./FormFields";
-import '../Form.css'
+import '../css/Form.css'
 export default function Form({ form, onSubmit,}) {
     const { fields, formName, formTitle } = form;
     if (!fields) return null;
