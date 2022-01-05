@@ -1,5 +1,4 @@
 <?php 
-session_start();
 //Database Class
 require_once("Database/DB.php");
 //Array that has all the data for the forms
@@ -8,9 +7,7 @@ require('Extras/FormBuilderArray.php');
 //setting the correct timezone
 date_default_timezone_set('America/Dawson_Creek');
 
-if(isset($_SESSION['USER_TOKEN'])){
-    echo $_SESSION['USER_TOKEN'];
-}
+
 
 //Cors Headers
 //|\|/\|/|\|/|\|/|\|/|\|/|\|/|\|/|\|/|\|/|\|/|\
@@ -63,8 +60,9 @@ function InitRouter(){
     $method = $_SERVER['REQUEST_METHOD'];
     //Build file path from url
     if($Routes[0] == 'login'){
-        //TODO:handle the login
         include('Extras/login.php');
+    }elseif($Routes[0] == 'token'){
+        include('Extras/token.php');
     }elseif(isset($FormBuilderArray['Routes'][$Routes[0]])){
         if(isset($FormBuilderArray['Routes'][$Routes[0]]['view'])){
             $viewFile = "./Views/".$Routes[0].'.php';

@@ -1,5 +1,5 @@
 
-function Login({ onSubmit }) {
+function Login({ onSubmit, error }) {
 
     return (
         <div className='loginWrap'>
@@ -11,6 +11,8 @@ function Login({ onSubmit }) {
                     <label htmlFor="pass">Password</label>
                     <input type="password" name='password' className='formItem' />
                     <button className='loginSubmit'>Submit</button>
+
+                    {error && <> <br></br><span className="LoginError">{error}</span></>}
                 </form>
             </div>
         </div>

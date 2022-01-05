@@ -5,18 +5,19 @@ import {
   Route
 } from "react-router-dom";
 import App from "./App";
-import Expenses from "./routes/expenses";
-import Invoices from "./routes/invoices";
+import Home from "./components/routes/Home";
+import Companies from './components/routes/Companies';
+import NotFound from "./components/routes/NotFound";
 
 const rootElement = document.getElementById("root");
-const auth = false;
 render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<App />}>
-        <Route path="expenses" element={<Expenses />} />
-        <Route path="invoices" element={<Invoices />} />
+        <Route path="companies" element={<Companies />} />
+        <Route path='*' element={<NotFound />} />
       </Route>
+     
     </Routes>
   </BrowserRouter>,
   rootElement

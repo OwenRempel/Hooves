@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Hooves",
+  "name": "A better way to manage cattle",
   "icons": [
     {
       "src": "favicon.ico",
