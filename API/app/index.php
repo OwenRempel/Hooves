@@ -200,7 +200,7 @@ function insertFormData($RecivedFormData, $localArray){
             $UUID = bin2hex(random_bytes(8));
         }while(!empty($DB->query("SELECT ID from ".$localArray['tableName']." WHERE ID='$UUID'")));
         
-        $name = str_replace(' ', '', ucwords($pdoDataArray[$localArray['dbCreate']]));
+        $name = str_replace("'", '', str_replace(' ', '', ucwords($pdoDataArray[$localArray['dbCreate']])));
         $DBName = 'Hoves$2$'.$name.'$'.$UUID;
         $pdoDataArray['ID'] = $UUID;
         $pdoDataArray['DBName'] = $DBName;
