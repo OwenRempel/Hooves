@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import Login from "./components/Login";
 import Header from './components/Header';
 import Nav from './components/Nav';
@@ -87,6 +87,7 @@ export default function App() {
             </div>
           </div>
           <Footer/>
+          <Link to='/cows/add'><button className='AddCowBtn'><span className='material-icons'>add</span></button></Link>
         </div>
       }
     </div>

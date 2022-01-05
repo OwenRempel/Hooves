@@ -15,16 +15,16 @@ function Nav() {
                     <span>List</span>
                 </div>
             </Link>
-            <Link to='/settings'>
+            <Link to='/groups'>
                 <div>
-                    <span className="material-icons menuIcon">settings</span>
-                    <span>Settings</span>
+                    <span className="material-icons menuIcon">library_add</span>
+                    <span>Groups</span>
                 </div>
             </Link>
-            <Link to='/logout' >
+            <Link to='/feed' >
                 <div>
-                    <span className="material-icons menuIcon">logout</span>
-                    <span>Logout</span>
+                    <span className="material-icons menuIcon">grass</span>
+                    <span>Feed</span>
                 </div>
             </Link>
         </nav>

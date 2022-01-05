@@ -1,42 +1,21 @@
-.App {
-  text-align: center;
-}
+/*///////////Miss UI Css///////////*/
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.AddCowBtn {
+  position: fixed;
+  bottom: 35px;
+  right: 20px;
+  height: 60px;
+  width: 60px;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  background: #f44336;
+  border: none;
+  border-radius: 50px;
   color: white;
+  box-shadow: 1px 1px 5px #00000061;
+  cursor: pointer;
 }
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 
 
 
@@ -109,19 +88,46 @@ font-size: 12px;
   height: 90px;
   box-shadow: 1px 0px 5px darkslategrey;
   background-color: #2196F3;
+  position: relative;
 }
 .title{
   color: white;
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.userSettings {
+  position: absolute;
+  right: 25px;
+  top: 75px;
+  display: flex;
+  background: white;
+  box-shadow: 1px 1px 5px #0000003b;
+  border-radius: 4px;
+  padding: 10px;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.userSettings a {
+  padding: 5px 15px;
+  width: calc(100% - 10px);
+  font-size: 18px;
+  margin: 5px;
+}
+.userSettings a:hover {
+  background-color: #0000000f;
+  text-decoration: underline;
+  border-radius: 2px;
+  box-shadow: 1px 1px 5px #0000002b;
+}
 .profile{
   width: 50px;
   height: 50px;
   border-radius: 50px;
   overflow: hidden;
   box-shadow: 1px 1px 5px #00000096;
+  cursor: pointer;
 }
+
 .profileImg{
   width: 100%;
 }
