@@ -162,14 +162,16 @@ function insertFormData($RecivedFormData, $localArray){
             echo stouts('Please include Login token', 'error');
             exit();
         }
-        $data = $DBAdmin->query('SELECT * FROM `LoginAuth` inner join Companies on LoginAuth.CompaniesID = Companies.ID WHERE Token = :token', array('token'=>$RecivedFormData['Token']));
+        $loginData = $DBAdmin->query('SELECT * FROM `LoginAuth` inner join Companies on LoginAuth.CompaniesID = Companies.ID WHERE Token = :token', array('token'=>$RecivedFormData['Token']));
+    }
+    if(!isset($loginData[0]['DBName'])){
+        echo stouts('Your Token is not linked to a company', 'error');
+        exit();
     }
     if(isset($localArray['dbCreate'])){
         $DB = $DBAdmin;
     }else{
-       
-        $DB = new DB()
-        
+        $DB = new DB($loginData[0]['DBName']);
     }
     
     $insertStringArray = [];
