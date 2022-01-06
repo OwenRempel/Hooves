@@ -91,6 +91,160 @@ $FormBuilderArray = [
                 ]
             ]
         ],
+        'cattle'=>[
+            'loginAuth'=>true,
+            'formTitle'=>'Add Cow',
+            'formName'=>'CattleAddItem',
+            'tableName'=>'Cattle',
+            'Sucess'=>'Company and User sucessfully created!',
+            'items'=>[
+                [
+                    'name'=>'Tag',
+                    'typeName'=>'FormInput',
+                    'type'=>'text',
+                    'inputLabel'=>'Tag',
+                    
+                ],
+                [
+                    'name'=>'BuyDate',
+                    'typeName'=>'FormInput',
+                    'type'=>'date',
+                    'inputLabel'=>'Date Bought',
+                    
+                ],
+                [
+                    'name'=>'HerdsMan',
+                    'typeName'=>'FormInput',
+                    'type'=>'text',
+                    'inputLabel'=>'Herdsman',
+                    
+                ],
+                [
+                    'name'=>'Investor',
+                    'typeName'=>'FormInput',
+                    'type'=>'text',
+                    'inputLabel'=>'Investor',
+                    
+                ],
+                [
+                    'name'=>'Price',
+                    'typeName'=>'FormInput',
+                    'type'=>'number',
+                    'inputLabel'=>'Price',
+                    
+                ],
+                [
+                    'name'=>'AgeState',
+                    'typeName'=>'FormSelect',
+                    'selectLabel'=>'Age-State',
+                    'options'=>[
+                        [
+                            "value"=>'heffer',
+                            "option"=>'Heffer'
+                        ],
+                        [
+                            "value"=>'steer',
+                            "option"=>'Steer'
+                        ]
+                    ]
+                ],
+
+                //TODO:Get this working once the pens system is in place
+
+              /*  [
+                    'name'=>'PenDate',
+                    'typeName'=>'FormInput',
+                    'type'=>'date',
+                    'inputLabel'=>'Into Pen Date',
+                    
+                ],
+                [
+                    'name'=>'Pen',
+                    'typeName'=>'FormSelect',
+                    'selectLabel'=>'Pen',
+                    'options'=>[
+                        [
+                            "value"=>'Owen',
+                            "option"=>'owen'
+                        ],
+                        
+                    ]
+                    
+                ],*/
+                [
+                    'name'=>'RecNo',
+                    'typeName'=>'FormInput',
+                    'type'=>'text',
+                    'inputLabel'=>'Rec No',
+                    
+                ],
+                [
+                    'name'=>'RegNo',
+                    'typeName'=>'FormInput',
+                    'type'=>'text',
+                    'inputLabel'=>'Reg No',
+                    
+                ],
+                [
+                    'name'=>'CellNo',
+                    'typeName'=>'FormInput',
+                    'type'=>'text',
+                    'inputLabel'=>'Cell No',
+                    
+                ],
+                [
+                    'name'=>'MegNo',
+                    'typeName'=>'FormInput',
+                    'type'=>'text',
+                    'inputLabel'=>'Meg No',
+                    
+                ],
+                [
+                    'name'=>'BankNo',
+                    'typeName'=>'FormInput',
+                    'type'=>'text',
+                    'inputLabel'=>'BankNo',
+                    
+                ],
+                [
+                    'name'=>'Remarks',
+                    'typeName'=>'FormTextarea',
+                    'placeolder'=>'Type your remarks here',
+                    'textareaLabel'=>'Remarks'
+                    
+                ],
+                [
+                    'name'=>'Description',
+                    'typeName'=>'FormTextarea',
+                    'placeolder'=>'Type your description here',
+                    'textareaLabel'=>'Description'
+                    
+                ],
+                [
+                    'name'=>'Source',
+                    'typeName'=>'FormInput',
+                    'type'=>'text',
+                    'inputLabel'=>'Meg No',
+                    
+                ],
+
+                //TODO:add CalfState, CalfDate
+                [
+                    'name'=>'MotherTag',
+                    'typeName'=>'FormInput',
+                    'type'=>'text',
+                    'inputLabel'=>'BankNo',
+                    
+                ],
+                [
+                    'name'=>'MotherTag',
+                    'typeName'=>'FormInput',
+                    'type'=>'text',
+                    'inputLabel'=>'BankNo',
+                    
+                ]
+            ]
+        ],
         'gen'=>[
             'view'=>true
         ],
