@@ -38,15 +38,20 @@ class DB_Admin{
 }
 
 class DB{
+
+    public $database;
+
     function __construct($init_parameter) {
-        $this->database = $init_parameter;
+        global $database;
+        $database = $init_parameter;
     }
     private static function connection(){
         global $ADMIN_SECRET_KEYS;
+        global $database;
         $username=$ADMIN_SECRET_KEYS['username'];
         $password=$ADMIN_SECRET_KEYS['password'];
         $host="127.0.0.1";
-        $db=$this->database;
+        $db=$database;
         $pdo = new PDO("mysql:dbname=$db;host=$host", $username, $password);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $pdo;
