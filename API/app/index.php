@@ -191,7 +191,7 @@ function insertFormData($RecivedFormData, $localArray){
             echo stouts('Please include auth token', 'error');
             exit();
         }
-        $data = $DBAdmin->query('SELECT Token, Expire, from '.$localArray['tokenAuth'].' WHERE Token = :token', array('token'=>$RecivedFormData['Token']));
+        $data = $DBAdmin->query('SELECT Token, Expire from '.$localArray['tokenAuth'].' WHERE Token = :token', array('token'=>$RecivedFormData['Token']));
         
         if(empty($data)){
             echo stouts('Auth Token has expried or is invalid', 'error');
@@ -203,11 +203,12 @@ function insertFormData($RecivedFormData, $localArray){
             exit();
         }
         $loginData = $DBAdmin->query('SELECT * FROM `LoginAuth` inner join Companies on LoginAuth.CompaniesID = Companies.ID WHERE Token = :token', array('token'=>$RecivedFormData['Token']));
+        if(!isset($loginData[0]['DBName'])){
+            echo stouts('Your Token is not linked to a company', 'error');
+            exit();
+        }
     }
-    if(!isset($loginData[0]['DBName'])){
-        echo stouts('Your Token is not linked to a company', 'error');
-        exit();
-    }
+    
     if(isset($localArray['dbCreate'])){
         $DB = $DBAdmin;
     }else{
@@ -254,7 +255,6 @@ function insertFormData($RecivedFormData, $localArray){
     }while(!empty($DB->query("SELECT ID from ".$localArray['tableName']." WHERE ID = '$UUID'")));
     $insertStringArray[] = 'ID';
     $pdoDataArray['ID'] = $UUID;
-    
     if(isset($localArray['dbCreate'])){
         do{
             $UUID = bin2hex(random_bytes(8));
@@ -264,13 +264,12 @@ function insertFormData($RecivedFormData, $localArray){
         $DBName = 'Hoves$2$'.$name.'$'.$UUID;
         $pdoDataArray['ID'] = $UUID;
         $pdoDataArray['DBName'] = $DBName;
-        $insertStringArray[] = 'ID';
         $insertStringArray[] = 'DBName';
         $DB->mkDB($DBName);
-        $DB_Local = new DB();
+        $DB_Local = new DB($DBName);
         $dbBuildData = 'Database/sql/'.$localArray['tableName'].'.sql';
         if(is_file($dbBuildData)){
-            $DB_Local->exFile($DBName, file_get_contents($dbBuildData));
+            $DB_Local->exFile(file_get_contents($dbBuildData));
         }
     }
 
@@ -291,7 +290,6 @@ function insertFormData($RecivedFormData, $localArray){
    
     $values = implode(', ',$insertStringArray);
     $dataValues =':'.implode(', :',$insertStringArray);
-
     $DB->query("INSERT INTO ".$localArray['tableName']." ($values) VALUES ($dataValues)", $pdoDataArray);
     
     if(isset($localArray['tokenAuth'])){

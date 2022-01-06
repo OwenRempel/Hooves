@@ -19,7 +19,10 @@ if(isset($_POST['username']) and isset($_POST['password'])){
 }
 
 
-$userCheckData = $DB->query('SELECT * from Users WHERE UserEmail = :username', array('username'=> $PostInput['username']));
+$userCheckData = $DB->query(
+    'SELECT UserEmail, UserPassword, Users.ID, Users.CompaniesID, Companies.CompanyName from Users inner join Companies on Users.CompaniesID = Companies.ID
+    WHERE UserEmail = :username',
+  array('username'=> $PostInput['username']));
 
 if(!isset($userCheckData[0]['UserEmail'])){
     echo stouts('That username does not exist', 'error');
@@ -67,7 +70,9 @@ try {
 $_SESSION['USER_TOKEN'] = $UUID;
 echo json_encode([
     'sucess'=>'User Logged In',
-    'Token'=>$UUID
+    'Token'=>$UUID,
+    'User'=>$userCheckData['UserEmail'],
+    'Company'=>$userCheckData['CompanyName']
 ]);
 
 
