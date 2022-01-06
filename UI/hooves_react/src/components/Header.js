@@ -14,7 +14,9 @@ function Header() {
     }
     return (
         <div className='header'>
-            <h1 className='title'>Hooves</h1>
+            <h1 className='title'>
+                {localStorage.getItem('Company') ? localStorage.getItem('Company') : "Hooves"}
+            </h1>
             <Search/>
 
             <div className='profileWrap'>

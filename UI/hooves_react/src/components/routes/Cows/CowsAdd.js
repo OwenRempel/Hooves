@@ -16,8 +16,13 @@ function CowsAdd() {
     
     const returnFormData = async e => {
         e.preventDefault();
-        const res = formHandle(formData, e.target);
-        console.log(res)
+        const  res = await formHandle(formData, e.target);
+        if(res.sucess){
+          console.log('Cow Added Sucessfully')
+          e.target.reset()
+        }else{
+          console.log(res)
+        }
     }
     return (
       <div className="container">

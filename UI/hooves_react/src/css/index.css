@@ -47,13 +47,16 @@ select option{
 }
 .container{
   padding: 20px;
-  width: 100%;
+  width: 90%;
+  max-width: 1800px;
+  margin: 0px auto;
 }
 
 
 
 ::-webkit-scrollbar {
   width:2px;
+  height: 2px;
 }
 
 /* Track */

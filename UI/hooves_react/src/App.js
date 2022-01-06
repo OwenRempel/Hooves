@@ -51,10 +51,13 @@ export default function App() {
       body:JSON.stringify(formItems)
     })
     const checkAuthData = await checkAuth.json();
+    console.log(checkAuthData)
     let time = (Math.round(new Date() / 1000) + (60*24*3))
     if(checkAuthData.Token && (checkAuthData.sucess || checkAuthData.info)){
       localStorage.setItem('Token', checkAuthData.Token);
       localStorage.setItem('TokenExpire', time);
+      localStorage.setItem('User', checkAuthData.User);
+      localStorage.setItem('Company', checkAuthData.Company)
       setAuth(true);
     }else if(checkAuthData.error){
       setFormError({"error":checkAuthData.error});
@@ -73,7 +76,7 @@ export default function App() {
   }
   
   return (
-    <div>
+    <>
       {auth === false &&
         <Login onSubmit={loginCatch} error={formError.Error}/>
       }
@@ -90,7 +93,7 @@ export default function App() {
           <Link to='/cows/add'><button className='AddCowBtn'><span className='material-icons'>add</span></button></Link>
         </div>
       }
-    </div>
+    </>
    
   );
 }

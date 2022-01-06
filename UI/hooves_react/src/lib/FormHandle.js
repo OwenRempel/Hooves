@@ -19,7 +19,6 @@ export async function formHandle(formData, FormItem, searchParams){
     }
     const token = localStorage.getItem('Token');
     FormOut['Token'] = token;
-    console.log(FormOut)
     
     const res = await fetch(callBack+'/add', {
         method: 'POST',
@@ -31,4 +30,5 @@ export async function formHandle(formData, FormItem, searchParams){
     
     const Response = await res.json();
     return Response
+    
 }
