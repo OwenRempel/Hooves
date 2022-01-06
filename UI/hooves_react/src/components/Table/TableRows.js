@@ -1,12 +1,4 @@
 function TableRows({ Rows }) {
-    if(localStorage.getItem('DisplayItems')){
-        let DispItem = JSON.parse(localStorage.getItem('DisplayItems'));
-        for(let key in Rows){
-            if(!DispItem[key]){
-                delete(Rows[key])
-            }
-        }
-    }
     return (
         <>
             {
