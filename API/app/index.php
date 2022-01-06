@@ -144,20 +144,32 @@ function getFormStruct($formArray, $redirectName){
     echo json_encode($arrayToSend);
 }
 function insertFormData($RecivedFormData, $localArray){
-    if(isset($localArray['dbCreate'])){
-        $DB = new DB_Admin;
-    }
-    if(isset($localArray['tokenAuth'])){
+    $DBAdmin = new DB_Admin;
+   
+    if(isset($localArray['tokenAuth']) and isset($localArray['dbCreate'])){
         if(!isset($RecivedFormData['Token'])){
             echo stouts('Please include auth token', 'error');
             exit();
         }
-        $data = $DB->query('SELECT Token, Expire from '.$localArray['tokenAuth'].' WHERE Token = :token', array('token'=>$RecivedFormData['Token']));
+        $data = $DBAdmin->query('SELECT Token, Expire, from '.$localArray['tokenAuth'].' WHERE Token = :token', array('token'=>$RecivedFormData['Token']));
         
         if(empty($data)){
             echo stouts('Auth Token has expried or is invalid', 'error');
             exit();
         }
+    }elseif(isset($localArray['loginAuth'])){
+        if(!isset($RecivedFormData['Token'])){
+            echo stouts('Please include Login token', 'error');
+            exit();
+        }
+        $data = $DBAdmin->query('SELECT * FROM `LoginAuth` inner join Companies on LoginAuth.CompaniesID = Companies.ID WHERE Token = :token', array('token'=>$RecivedFormData['Token']));
+    }
+    if(isset($localArray['dbCreate'])){
+        $DB = $DBAdmin;
+    }else{
+       
+        $DB = new DB()
+        
     }
     
     $insertStringArray = [];
@@ -212,9 +224,10 @@ function insertFormData($RecivedFormData, $localArray){
         $insertStringArray[] = 'ID';
         $insertStringArray[] = 'DBName';
         $DB->mkDB($DBName);
-        $dbBuildData = 'Database/sql/'.$localArray['tableName'].'.sql'
+        $DB_Local = new DB();
+        $dbBuildData = 'Database/sql/'.$localArray['tableName'].'.sql';
         if(is_file($dbBuildData)){
-            $DB->exFile(file_get_contents($dbBuildData));
+            $DB_Local->exFile($DBName, file_get_contents($dbBuildData));
         }
     }
 
