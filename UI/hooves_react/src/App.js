@@ -51,13 +51,15 @@ export default function App() {
       body:JSON.stringify(formItems)
     })
     const checkAuthData = await checkAuth.json();
-    console.log(checkAuthData)
     let time = (Math.round(new Date() / 1000) + (60*24*3))
     if(checkAuthData.Token && (checkAuthData.sucess || checkAuthData.info)){
       localStorage.setItem('Token', checkAuthData.Token);
       localStorage.setItem('TokenExpire', time);
       localStorage.setItem('User', checkAuthData.User);
-      localStorage.setItem('Company', checkAuthData.Company)
+      localStorage.setItem('Company', checkAuthData.Company);
+      if(checkAuthData.Display){
+        localStorage.setItem('DisplayItems', JSON.stringify(checkAuthData.Display));
+      }
       setAuth(true);
     }else if(checkAuthData.error){
       setFormError({"error":checkAuthData.error});
