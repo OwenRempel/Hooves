@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 function CowsAdd() {
     const [formData, setFormData] = useState({});
     useEffect(() => {
-      fetch('http://localhost/cattle/info')
+      fetch('http://localhost/cattle/info?token='+localStorage.getItem('Token'))
             .then(response => response.json())
             .then(result => {
               setFormData(result)
@@ -25,8 +25,8 @@ function CowsAdd() {
         }
     }
     return (
-      <div className="container">
-        <Link to='/'><button className='btn'>Home</button></Link>
+      <div className="formWrap">
+        <Link to='/'><button className='btn'>Back</button></Link>
         {formData.form && <Form onSubmit={returnFormData}  {...formData} />}
       </div>
     )
