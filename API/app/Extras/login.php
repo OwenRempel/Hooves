@@ -20,7 +20,7 @@ if(isset($_POST['username']) and isset($_POST['password'])){
 
 
 $userCheckData = $DB->query(
-    'SELECT UserEmail, UserPassword, Users.ID, Users.CompaniesID, Companies.CompanyName from Users inner join Companies on Users.CompaniesID = Companies.ID
+    'SELECT UserEmail, UserPassword, ListDisplayPref, Users.ID, Users.CompaniesID, Companies.CompanyName from Users inner join Companies on Users.CompaniesID = Companies.ID
     WHERE UserEmail = :username',
   array('username'=> $PostInput['username']));
 
@@ -68,11 +68,16 @@ try {
     echo stouts('Error:'.$th, 'error');
 }
 $_SESSION['USER_TOKEN'] = $UUID;
-echo json_encode([
+$senddata = [
     'sucess'=>'User Logged In',
     'Token'=>$UUID,
     'User'=>$userCheckData['UserEmail'],
     'Company'=>$userCheckData['CompanyName']
-]);
+];
+if($userCheckData['ListDisplayPref'] != null){
+   $senddata['Display'] = json_decode($userCheckData['ListDisplayPref'], true);
+}
+
+echo json_encode($senddata);
 
 
