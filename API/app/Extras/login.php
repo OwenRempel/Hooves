@@ -20,7 +20,7 @@ if(isset($_POST['username']) and isset($_POST['password'])){
 
 
 $userCheckData = $DB->query(
-    'SELECT UserEmail, UserPassword, ListDisplayPref, Users.ID, Users.CompaniesID, Companies.CompanyName from Users inner join Companies on Users.CompaniesID = Companies.ID
+    'SELECT UserEmail, UserPassword, Users.ID, Users.CompaniesID, Companies.CompanyName from Users inner join Companies on Users.CompaniesID = Companies.ID
     WHERE UserEmail = :username',
   array('username'=> $PostInput['username']));
 
@@ -74,9 +74,6 @@ $senddata = [
     'User'=>$userCheckData['UserEmail'],
     'Company'=>$userCheckData['CompanyName']
 ];
-if($userCheckData['ListDisplayPref'] != null){
-   $senddata['Display'] = json_decode($userCheckData['ListDisplayPref'], true);
-}
 
 echo json_encode($senddata);
 
