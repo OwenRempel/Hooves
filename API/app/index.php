@@ -47,11 +47,13 @@ function stouts($message, $type='info'){
         return json_encode(['info'=>$message]);
     }
 }
-function getDbFromToken($token){
+function getInfoFromToken($token){
     $DBAdmin = new DB_Admin;
-    $loginData = $DBAdmin->query('SELECT * FROM `LoginAuth` inner join Companies on LoginAuth.CompaniesID = Companies.ID WHERE Token = :token', array('token'=>$token));
+    $loginData = $DBAdmin->query('SELECT DBName, ListDisplayPref FROM ((
+        `LoginAuth` inner join Companies on LoginAuth.CompaniesID = Companies.ID
+        ) inner join Users on LoginAuth.UsersID = Users.ID) WHERE Token = :token', array('token'=>$token));
     if(isset($loginData[0]['DBName'])){
-        return array('Sucess'=>$loginData[0]['DBName']);
+        return $loginData[0];
     }else{
         return array('Error'=>'That token is not conected to company');
     }
@@ -120,6 +122,11 @@ function InitRouter(){
     }
 }
 function getFormStruct($formArray, $redirectName){
+    if(isset($_GET['token'])){
+        $tokenData = json_decode(getInfoFromToken($_GET['token'])['ListDisplayPref'], true);
+    }else{
+        $tokenData = null;
+    }
     $FormPassthroughItems = [
         'name',
         'type',
@@ -139,6 +146,9 @@ function getFormStruct($formArray, $redirectName){
     $arrayToSend['form']['formTitle'] = $formArray['formTitle'];
     $arrayToSend['form']['callBack'] = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].'/'.$redirectName;
     foreach($formArray['items'] as $items){
+        if($tokenData and !$tokenData[$items['name']]){
+            continue;
+        }
         $itemArray = [];
         if($items['type'] == 'date'){
             $itemArray['defaultValue'] = date('Y-m-d');
@@ -162,20 +172,24 @@ function selectFormData($localArray){
         exit();
     }
     
-    $DBNameCheck = getDbFromToken($_GET['token']);
+    $DBNameCheck = getInfoFromToken($_GET['token']);
 
     if(isset($DBNameCheck['Error'])){
         echo stouts($DBNameCheck['Error'], 'error');
         exit();
     }
+
+    $onlyDisplay = json_decode($DBNameCheck['ListDisplayPref'], true);
     $selectItems = [];
     foreach($localArray['items'] as $item){
-        $sendData['Info'][$item['name']] = $item['inputLabel'];
-        $selectItems[] = $item['name'];
+        if($onlyDisplay[$item['name']]){
+            $sendData['Info'][$item['name']] = $item['inputLabel'];
+            $selectItems[] = $item['name'];
+        }
     }
     $selectItems = implode(', ', $selectItems);
 
-    $DB = new DB($DBNameCheck['Sucess']);
+    $DB = new DB($DBNameCheck['DBName']);
 
     $data = $DB->query("SELECT $selectItems from ".$localArray['tableName']." order By Adate Desc ");
     $sendData['Data'] = $data;
