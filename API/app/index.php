@@ -47,6 +47,15 @@ function stouts($message, $type='info'){
         return json_encode(['info'=>$message]);
     }
 }
+function getDbFromToken($token){
+    $DBAdmin = new DB_Admin;
+    $loginData = $DBAdmin->query('SELECT * FROM `LoginAuth` inner join Companies on LoginAuth.CompaniesID = Companies.ID WHERE Token = :token', array('token'=>$token));
+    if(isset($loginData[0]['DBName'])){
+        return array('Sucess'=>$loginData[0]['DBName']);
+    }else{
+        return array('Error'=>'That token is not conected to company');
+    }
+}
 function InitRouter(){
     //Globals
     global $FormBuilderArray;
@@ -79,8 +88,8 @@ function InitRouter(){
         if($method == 'GET'){
             if(isset($Routes[1]) and (strtolower($Routes[1]) == 'add' or strtolower($Routes[1] == 'info'))){
                 getFormStruct($FormBuilderArray['Routes'][$Routes[0]], $Routes[0]);
-            }elseif(!isset($Routes[1])){
-                echo stouts('TODO:This will list all of the '.$Routes[0], 'info');
+            }elseif(!isset($Routes[1]) or empty($Routes[1])){
+                selectFormData($FormBuilderArray['Routes'][$Routes[0]]);
             }else{
                 echo stouts('The action you have entered is not alowed on a GET Request', 'error');
             }
@@ -131,6 +140,9 @@ function getFormStruct($formArray, $redirectName){
     $arrayToSend['form']['callBack'] = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].'/'.$redirectName;
     foreach($formArray['items'] as $items){
         $itemArray = [];
+        if($items['type'] == 'date'){
+            $itemArray['defaultValue'] = date('Y-m-d');
+        }
         if(isset($items['passwordConfirm'])){
             $arrayToSend['form']['passwordCheck'] = [$items['passwordConfirm'], $items['name']];
         }
@@ -142,6 +154,34 @@ function getFormStruct($formArray, $redirectName){
         $arrayToSend['form']['fields'][] = $itemArray;
     }
     echo json_encode($arrayToSend);
+}
+function selectFormData($localArray){
+    $sendData = [];
+    if(!isset($_GET['token'])){
+        echo stouts('Please include token parm', 'error');
+        exit();
+    }
+    
+    $DBNameCheck = getDbFromToken($_GET['token']);
+
+    if(isset($DBNameCheck['Error'])){
+        echo stouts($DBNameCheck['Error'], 'error');
+        exit();
+    }
+    $selectItems = [];
+    foreach($localArray['items'] as $item){
+        $sendData['Info'][$item['name']] = $item['inputLabel'];
+        $selectItems[] = $item['name'];
+    }
+    $selectItems = implode(', ', $selectItems);
+
+    $DB = new DB($DBNameCheck['Sucess']);
+
+    $data = $DB->query("SELECT $selectItems from ".$localArray['tableName']." order By Adate Desc ");
+    $sendData['Data'] = $data;
+    echo json_encode($sendData);
+    
+    
 }
 function insertFormData($RecivedFormData, $localArray){
     $DBAdmin = new DB_Admin;
@@ -212,7 +252,8 @@ function insertFormData($RecivedFormData, $localArray){
     do{
         $UUID = bin2hex(random_bytes(24));
     }while(!empty($DB->query("SELECT ID from ".$localArray['tableName']." WHERE ID = '$UUID'")));
-    
+    $insertStringArray[] = 'ID';
+    $pdoDataArray['ID'] = $UUID;
     
     if(isset($localArray['dbCreate'])){
         do{

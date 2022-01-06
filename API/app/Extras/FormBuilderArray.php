@@ -96,7 +96,7 @@ $FormBuilderArray = [
             'formTitle'=>'Add Cow',
             'formName'=>'CattleAddItem',
             'tableName'=>'Cattle',
-            'Sucess'=>'Company and User sucessfully created!',
+            'Sucess'=>'Cow sucessfully created!',
             'items'=>[
                 [
                     'name'=>'Tag',
@@ -136,7 +136,7 @@ $FormBuilderArray = [
                 [
                     'name'=>'AgeState',
                     'typeName'=>'FormSelect',
-                    'selectLabel'=>'Age-State',
+                    'inputLabel'=>'Age-State',
                     'options'=>[
                         [
                             "value"=>'heffer',
@@ -161,7 +161,7 @@ $FormBuilderArray = [
                 [
                     'name'=>'Pen',
                     'typeName'=>'FormSelect',
-                    'selectLabel'=>'Pen',
+                    'inputLabel'=>'Pen',
                     'options'=>[
                         [
                             "value"=>'Owen',
@@ -210,14 +210,14 @@ $FormBuilderArray = [
                     'name'=>'Remarks',
                     'typeName'=>'FormTextarea',
                     'placeolder'=>'Type your remarks here',
-                    'textareaLabel'=>'Remarks'
+                    'inputLabel'=>'Remarks'
                     
                 ],
                 [
                     'name'=>'Description',
                     'typeName'=>'FormTextarea',
                     'placeolder'=>'Type your description here',
-                    'textareaLabel'=>'Description'
+                    'inputLabel'=>'Description'
                     
                 ],
                 [
@@ -233,14 +233,7 @@ $FormBuilderArray = [
                     'name'=>'MotherTag',
                     'typeName'=>'FormInput',
                     'type'=>'text',
-                    'inputLabel'=>'BankNo',
-                    
-                ],
-                [
-                    'name'=>'MotherTag',
-                    'typeName'=>'FormInput',
-                    'type'=>'text',
-                    'inputLabel'=>'BankNo',
+                    'inputLabel'=>'Mother Tag',
                     
                 ]
             ]
