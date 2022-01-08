@@ -49,9 +49,9 @@ function stouts($message, $type='info'){
 }
 function getInfoFromToken($token){
     $DBAdmin = new DB_Admin;
-    $loginData = $DBAdmin->query('SELECT DBName, ListDisplayPref FROM ((
+    $loginData = $DBAdmin->query('SELECT DBName, ListDisplayPref FROM
         `LoginAuth` inner join Companies on LoginAuth.CompaniesID = Companies.ID
-        ) inner join Users on LoginAuth.UsersID = Users.ID) WHERE Token = :token', array('token'=>$token));
+         WHERE Token = :token', array('token'=>$token));
     if(isset($loginData[0]['DBName'])){
         return $loginData[0];
     }else{
@@ -228,10 +228,16 @@ function selectFormData($localArray){
     $onlyDisplay = json_decode($DBNameCheck['ListDisplayPref'], true);
     $selectItems = [];
     foreach($localArray['items'] as $item){
-        if($onlyDisplay[$item['name']]){
+        if($onlyDisplay != null){
+            if($onlyDisplay[$item['name']]){
+                $sendData['Info'][$item['name']] = $item['inputLabel'];
+                $selectItems[] = $item['name'];
+            }
+        }else{
             $sendData['Info'][$item['name']] = $item['inputLabel'];
-            $selectItems[] = $item['name'];
+                $selectItems[] = $item['name'];
         }
+        
     }
     $selectItems[] = 'ID';
     $selectItems = implode(', ', $selectItems);
