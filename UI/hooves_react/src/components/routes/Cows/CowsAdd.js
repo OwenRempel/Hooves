@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState } from 'react';
 import Form from "../../Form";
 import { formHandle } from '../../../lib/FormHandle';
 import { Link } from 'react-router-dom';
+import { useNotify } from '../../Notify';
 function CowsAdd() {
+    const { addToast } = useNotify
     const [formData, setFormData] = useState({});
     useEffect(() => {
       fetch('http://localhost/cattle/info?token='+localStorage.getItem('Token'))
@@ -18,7 +20,7 @@ function CowsAdd() {
         e.preventDefault();
         const  res = await formHandle(formData, e.target);
         if(res.sucess){
-          console.log('Cow Added Sucessfully')
+          addToast('cow added sucessfully')
           e.target.reset()
         }else{
           console.log(res)

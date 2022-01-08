@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, Link } from "react-router-dom";
 import Login from "./components/Login";
 import Header from './components/Header';
 import Nav from './components/Nav';
 import Footer from './components/Footer';
 import './css/App.css';
+import  NotifyProvider  from './components/Notify';
+
+
 
 
 export default function App() {
@@ -12,6 +15,7 @@ export default function App() {
   const [auth, setAuth] = useState(false);
   //state for showing user a error message for login input
   const [formError, setFormError] = useState({'Error':false});
+  const [listNotify, setNotify] = useState(null)
   //querys the api to see if the token is valid
   const checkToken = async (Token) => {
     const checkToken = await fetch('http://localhost/token', {
@@ -31,6 +35,14 @@ export default function App() {
     }
     console.log('checked Token');
   }
+
+ useEffect(()=>{
+   if(listNotify){
+    console.log(listNotify)
+   }
+ },[listNotify])
+
+ 
   //logic for when the login form is submitted
   const loginCatch = async (e) =>{
     e.preventDefault();
@@ -42,7 +54,7 @@ export default function App() {
         formItems[item.name] = item.value;
       }
     }
-
+   
     const checkAuth = await fetch('http://localhost/login', {
       method:"POST",
       headers:{
@@ -85,7 +97,11 @@ export default function App() {
           <div className='MainContent'>
             <Nav/>
             <div  className='container'>
-              <Outlet />
+              <NotifyProvider value={setNotify}>
+                
+                <Outlet />
+              </NotifyProvider>
+              
             </div>
           </div>
           <Footer/>
