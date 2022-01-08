@@ -33,7 +33,7 @@ render(
         <Route path="cows" element={<Cows />} >
           <Route index element={<CowsList />} />
           <Route path="add" element={<CowsAdd/> } />
-          <Route path=":id" element={<Cow/> } />
+          <Route path=":ID" element={<Cow/> } />
         </Route>
         <Route path='/settings' element={<Settings/>}>
         <Route index element={<AllSettings />} />

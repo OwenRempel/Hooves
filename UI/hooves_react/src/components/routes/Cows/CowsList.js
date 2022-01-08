@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+
 import Back from '../../Back'
 import Table from '../../Table/Table';
 
@@ -16,7 +17,7 @@ function CowsList() {
             <Back link='/'/>
             <h1>All Cattle</h1>
             {AllCows.Data &&
-               <Table table={AllCows}/>
+               <Table table={AllCows} UrlKey={'/cows/'}/>
             }
             
         </div>
