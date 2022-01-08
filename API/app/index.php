@@ -61,6 +61,13 @@ function getInfoFromToken($token){
 function InitRouter(){
     //Globals
     global $FormBuilderArray;
+    //alowed request types
+    $requestTypes = [
+        'add',
+        'update',
+        'info',
+        'delete'
+    ];
     //Get url without parms
     $full_url = explode('?', $_SERVER['REQUEST_URI']);
     //Split into Array
@@ -90,6 +97,9 @@ function InitRouter(){
         if($method == 'GET'){
             if(isset($Routes[1]) and (strtolower($Routes[1]) == 'add' or strtolower($Routes[1] == 'info'))){
                 getFormStruct($FormBuilderArray['Routes'][$Routes[0]], $Routes[0]);
+            }elseif(isset($Routes[1]) and !in_array(strtolower($Routes[1]), $requestTypes)){
+                //Handle the individual requests
+                selectFormItem($FormBuilderArray['Routes'][$Routes[0]], $Routes[1]);
             }elseif(!isset($Routes[1]) or empty($Routes[1])){
                 selectFormData($FormBuilderArray['Routes'][$Routes[0]]);
             }else{
@@ -165,6 +175,42 @@ function getFormStruct($formArray, $redirectName){
     }
     echo json_encode($arrayToSend);
 }
+function selectFormItem($localArray, $ID){
+    $sendData = [];
+    if(!isset($_GET['token'])){
+        echo stouts('Please include token parm', 'error');
+        exit();
+    }
+    
+    $DBNameCheck = getInfoFromToken($_GET['token']);
+
+    if(isset($DBNameCheck['Error'])){
+        echo stouts($DBNameCheck['Error'], 'error');
+        exit();
+    }
+
+    $onlyDisplay = json_decode($DBNameCheck['ListDisplayPref'], true);
+    $selectItems = [];
+    foreach($localArray['items'] as $item){
+        if($onlyDisplay[$item['name']]){
+            $sendData['Info'][$item['name']] = $item['inputLabel'];
+            $selectItems[] = $item['name'];
+        }
+    }
+    $selectItems[] = 'ID';
+    $selectItems = implode(', ', $selectItems);
+
+    $DB = new DB($DBNameCheck['DBName']);
+
+    $data = $DB->query("SELECT $selectItems from ".$localArray['tableName']." WHERE ID=:ID order By Adate Desc", array('ID'=>$ID));
+    if(isset($data[0]['ID'])){
+        $sendData['Data'] = $data;
+        echo json_encode($sendData);
+    }else{
+        echo stouts('The ID is invalid', 'error');
+    }
+    
+}
 function selectFormData($localArray){
     $sendData = [];
     if(!isset($_GET['token'])){
@@ -187,6 +233,7 @@ function selectFormData($localArray){
             $selectItems[] = $item['name'];
         }
     }
+    $selectItems[] = 'ID';
     $selectItems = implode(', ', $selectItems);
 
     $DB = new DB($DBNameCheck['DBName']);
