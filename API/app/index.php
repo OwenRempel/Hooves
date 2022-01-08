@@ -214,7 +214,7 @@ function selectFormItem($localArray, $ID){
 function selectFormData($localArray){
     $sendData = [];
     if(!isset($_GET['token'])){
-        echo stouts('Please include token parm', 'error');
+        echo stouts('Please include token pram', 'error');
         exit();
     }
     
