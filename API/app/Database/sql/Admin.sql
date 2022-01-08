@@ -1,6 +1,7 @@
 CREATE TABLE `HovesAdmin`.`Companies` (
     `CompanyName` TEXT NOT NULL ,
     `DBName` TEXT NOT NULL ,
+    `ListDisplayPref` JSON DEFAULT NULL,
     `Adate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
     `ID` TEXT NOT NULL ,
     `RID` INT NOT NULL AUTO_INCREMENT ,
@@ -12,7 +13,6 @@ CREATE TABLE `HovesAdmin`.`Users` (
     `UserEmail` TEXT NOT NULL ,
     `UserPassword` TEXT NOT NULL ,
     `ProfileImgUrl` TEXT DEFAULT NULL,
-    `ListDisplayPref` JSON DEFAULT NULL,
     `Adate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
     `ID` TEXT NOT NULL , 
     `RID` INT NOT NULL AUTO_INCREMENT ,
