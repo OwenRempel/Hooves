@@ -1,3 +1,30 @@
+:root {
+    --input-border:1px solid #67707c;
+    --input-border-active:2px solid #67707c;
+    --shadow:#00000040;
+    --text-color:white;
+    --background:#39414b;
+
+  }
+
+  ::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+  
+  @media screen and (prefers-color-scheme: light) {
+    :root {
+        --input-border-active:2px solid black;
+        --input-border:1px solid black;
+        --shadow:#00000040;
+        --text-color:black;
+        --background:white;
+    }
+    ::-webkit-calendar-picker-indicator {
+        filter: unset;
+    }
+  }
+  
+
 .inputForm{
     width: 100%;
     max-width: 800px;
@@ -29,8 +56,9 @@
 .inputItem input{
     font-size: 20px;
     border: none;
-    border-bottom: 1px solid black;
-    background: #fff0;
+    border-bottom: var(--input-border);
+    color: var(--text-color);
+    background:var(--background);
     padding: 5px 10px;
 }
 .inputItem input[type='checkbox']{
@@ -53,22 +81,24 @@
 .inputItem textarea{
     font-size: 20px;
     border: none;
-    border-bottom: 1px solid black;
-    background: #fff0;
+    border-bottom: var(--input-border);
+    color: var(--text-color);
+    background:var(--background);
     padding: 5px 10px;
     resize: vertical;
 }
 .inputItem select{
     font-size: 20px;
     border: none;
-    border-bottom: 1px solid black;
-    background: #fff0;
+    border-bottom: var(--input-border);
+    color: var(--text-color);
+    background:var(--background);
     padding: 5px 10px;
 }
 .inputItem input:focus-visible{
     border:none;
     outline: none;
-    border-bottom: 2px solid black;
+    border-bottom: var(--input-border-active);
 }
 
 .inputItem label{
