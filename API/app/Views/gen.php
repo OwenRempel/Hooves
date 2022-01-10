@@ -7,4 +7,4 @@ $DB->query('INSERT into CompCreateAuth (Token, Expire) Values (:token, :expire)'
     'token'=> $uid,
     'expire'=>date('Y-m-d H:i:s', (time()+(60 * 24 * 10)))
 ));
-echo "http://localhost:3000/companies/add?token=$uid";
+echo "http://".$_SERVER['SERVER_NAME'].":3000/companies/add?token=$uid";
