@@ -4,7 +4,7 @@ import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 function CompAdd() {
     const [formData, setFormData] = useState({});
     useEffect(() => {
-      fetch('http://localhost/companies/add')
+      fetch(process.env.REACT_APP_API_URL+'/companies/add')
             .then(response => response.json())
             .then(result => {
               setFormData(result)

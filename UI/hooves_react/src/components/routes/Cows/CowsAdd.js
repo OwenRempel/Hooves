@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 function CowsAdd() {
     const [formData, setFormData] = useState({});
     useEffect(() => {
-      fetch('http://localhost/cattle/info?token='+localStorage.getItem('Token'))
+      fetch(process.env.REACT_APP_API_URL+'/cattle/info?token='+localStorage.getItem('Token'))
             .then(response => response.json())
             .then(result => {
               setFormData(result)

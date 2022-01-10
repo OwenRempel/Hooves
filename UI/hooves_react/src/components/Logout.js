@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 
 function Logout() {
     const navigate = useNavigate();
-   fetch('http://localhost/logout',{
+   fetch(process.env.REACT_APP_API_URL+'/logout',{
        method:'POST',
        headers:{
         'Content-Type': '"application/x-form-urlencoded"'

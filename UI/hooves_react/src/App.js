@@ -14,7 +14,7 @@ export default function App() {
   const [formError, setFormError] = useState({'Error':false});
   //querys the api to see if the token is valid
   const checkToken = async (Token) => {
-    const checkToken = await fetch('http://localhost/token', {
+    const checkToken = await fetch(process.env.REACT_APP_API_URL+'/token', {
       method:"POST",
       headers:{
         'Content-Type': '"application/x-form-urlencoded"'
@@ -43,7 +43,7 @@ export default function App() {
       }
     }
 
-    const checkAuth = await fetch('http://localhost/login', {
+    const checkAuth = await fetch(process.env.REACT_APP_API_URL+'/login', {
       method:"POST",
       headers:{
         'Content-Type': '"application/x-form-urlencoded"'

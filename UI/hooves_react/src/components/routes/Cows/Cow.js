@@ -10,7 +10,7 @@ function Cow() {
     const { ID } = useParams();
     const [Cow, setCow] = useState({});
     useEffect(() => {
-      fetch('http://localhost/cattle/'+ID+'?token='+localStorage.getItem('Token'))
+      fetch(process.env.REACT_APP_API_URL+'/cattle/'+ID+'?token='+localStorage.getItem('Token'))
             .then(response => response.json())
             .then(result => {
               setCow(result)
