@@ -191,15 +191,23 @@ function selectFormItem($localArray, $ID){
 
     $onlyDisplay = json_decode($DBNameCheck['ListDisplayPref'], true);
     $selectItems = [];
-    foreach($localArray['items'] as $item){
-        if($onlyDisplay[$item['name']]){
+    if($onlyDisplay != null){
+        
+        foreach($localArray['items'] as $item){
+            if(isset($onlyDisplay[$item['name']])){
+                $sendData['Info'][$item['name']] = $item['inputLabel'];
+                $selectItems[] = $item['name'];
+            }
+        }
+    }else{
+        foreach($localArray['items'] as $item){
             $sendData['Info'][$item['name']] = $item['inputLabel'];
             $selectItems[] = $item['name'];
         }
     }
     $selectItems[] = 'ID';
     $selectItems = implode(', ', $selectItems);
-
+    
     $DB = new DB($DBNameCheck['DBName']);
 
     $data = $DB->query("SELECT $selectItems from ".$localArray['tableName']." WHERE ID=:ID order By Adate Desc", array('ID'=>$ID));
