@@ -1,5 +1,6 @@
-import { useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { useState, useEffect} from 'react';
+
 import DisplayItems from '../../DisplayItems';
 import Back from '../../Back'
 
@@ -22,7 +23,15 @@ function Cow() {
         <div>
             <Back link='/cows' />
             {Cow.Data &&
+            <>
+                <Link to={`/cows/update/${ID}`}>
+                    <button className='btn'>Edit</button>
+                </Link>
+                <Link to={`/cows/delete/${ID}`}>
+                    <button className='btn delete-btn'>Delete</button>
+                </Link>
                 <DisplayItems data={Cow}/>
+            </>
             }        
         </div>
     )
