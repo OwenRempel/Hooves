@@ -2,8 +2,8 @@
     --input-border:1px solid #67707c;
     --input-border-active:2px solid #67707c;
     --shadow:#00000040;
-    --text-color:white;
-    --background:#39414b;
+    --form-background:#21262d;
+   
 
   }
 
@@ -16,8 +16,8 @@
         --input-border-active:2px solid black;
         --input-border:1px solid black;
         --shadow:#00000040;
-        --text-color:black;
-        --background:white;
+        --form-background:#ffffff;
+     
     }
     ::-webkit-calendar-picker-indicator {
         filter: unset;
@@ -31,9 +31,10 @@
     margin: 50px auto;
     box-shadow: 1px 1px 5px #00000040;
     border-radius: 4px;
+    background-color: var(--form-background);
 }
 .inputForm input{
-    color: #37474f;
+    color: var(--text-color);
 }
 
 .inputTitle{
@@ -58,7 +59,7 @@
     border: none;
     border-bottom: var(--input-border);
     color: var(--text-color);
-    background:var(--background);
+    background:var(--form-background);
     padding: 5px 10px;
 }
 .inputItem input[type='checkbox']{
@@ -83,7 +84,7 @@
     border: none;
     border-bottom: var(--input-border);
     color: var(--text-color);
-    background:var(--background);
+    background:var(--form-background);
     padding: 5px 10px;
     resize: vertical;
 }
@@ -92,7 +93,7 @@
     border: none;
     border-bottom: var(--input-border);
     color: var(--text-color);
-    background:var(--background);
+    background:var(--form-background);
     padding: 5px 10px;
 }
 .inputItem input:focus-visible{
