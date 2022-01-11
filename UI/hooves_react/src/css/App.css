@@ -59,6 +59,9 @@ body {
   background-color: var(--button-color);
 }
 
+.delete-btn{
+  background-color: var(--add-button-color);
+}
 
 /*///////////Login Form Css///////////*/
 
