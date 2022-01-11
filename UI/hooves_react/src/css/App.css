@@ -4,6 +4,7 @@
   --button-color: #172c39;
   --footer-color: #2c3847bf;
   --input-border:1px solid #67707c;
+  --input-border-hover:2px solid #67707c;
   --user-settings-color:#2f3a48;
   --text-color:white;
   --background:#39414b;
@@ -13,6 +14,8 @@
   :root {
     --header-color: #1d3557;
     --add-button-color: #e63946;
+    --input-border:1px solid black;
+    --input-border-hover:2px solid black;
     --button-color: #457b9d;
     --footer-color: #1d3557bf;
     --user-settings-color:white;
@@ -71,7 +74,7 @@ body {
   margin-top: 100px;
   width: 400px;
   height: 500px;
-  background-color:white;
+  background-color:var(--background);
   box-shadow: 1px 1px 5px #00000096;
   text-align: center;
 }
@@ -85,19 +88,21 @@ body {
   width: 80%;
   margin: 10px auto;
   font-size: 18px;
+  color: var(--text-color);
   padding: 10px 5px;
+  background-color: var(--background);
   border:none;
-  border-bottom:1px solid black;
+  border-bottom:var(--input-border);
 }
 
 .formItem:active{
   outline: none;
-  border-bottom:2px solid black;
+  border-bottom:var(--input-border-hover);
 }
 
 .formItem:focus-visible{
   outline: none;
-  border-bottom:2px solid black;
+  border-bottom:var(--input-border-hover);
 }
 
 .loginBlock form label{
