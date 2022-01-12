@@ -96,7 +96,10 @@ function InitRouter(){
         }
         if($method == 'GET'){
             if(isset($Routes[1]) and (strtolower($Routes[1]) == 'add' or strtolower($Routes[1] == 'info'))){
-                getFormStruct($FormBuilderArray['Routes'][$Routes[0]], $Routes[0]);
+                getFormStruct($FormBuilderArray['Routes'][$Routes[0]], $Routes[0], $Routes[1]);
+            }elseif(isset($Routes[1]) and strtolower($Routes[1]) == 'update' ){
+                //Return the data and structure for updating item
+                selectUpdateFormItem($FormBuilderArray['Routes'][$Routes[0]], $Routes[0], $Routes[2]);
             }elseif(isset($Routes[1]) and !in_array(strtolower($Routes[1]), $requestTypes)){
                 //Handle the individual requests
                 selectFormItem($FormBuilderArray['Routes'][$Routes[0]], $Routes[1]);
@@ -118,8 +121,10 @@ function InitRouter(){
                 exit();
             }
             //This is where the receved form is entered into the database
-            if(!empty($PostData)){
+            if(!empty($PostData) and strtolower($Routes[1]) == 'add'){
                 insertFormData($PostData, $localArray);
+            }elseif(!empty($PostData) and strtolower($Routes[1]) == 'update'){
+                updateFormData($PostData, $localArray, $Routes[2]);
             }else{
                 echo stouts('No data recieved', 'error');
             }
@@ -131,7 +136,135 @@ function InitRouter(){
         echo stouts('That Route Does Not Exist', 'error');
     }
 }
-function getFormStruct($formArray, $redirectName){
+function updateFormData($formData, $localArray, $ID){
+    $DBAdmin = new DB_Admin;
+    
+    if(!isset($formData['Token'])){
+        echo stouts('Please include Login token', 'error');
+        exit();
+    }
+    $data = $DBAdmin->query('SELECT * FROM `LoginAuth` inner join Companies on LoginAuth.CompaniesID = Companies.ID WHERE Token = :token', array('token'=>$formData['Token']));
+
+    if(empty($data)){
+        echo stouts('Auth Token has expried or is invalid', 'error');
+        exit();
+    }
+    $DB = new DB($data[0]['DBName']);
+    $outArray = [];
+    $dataArray = [];
+    foreach($localArray['items'] as $items){
+        if(isset($formData[$items['name']]) and $formData[$items['name']] != ""){
+            $outArray[] = $items['name'];
+            $dataArray[$items['name']] =  $formData[$items['name']];
+        }
+    }
+    $final = [];
+    foreach($outArray as $out){
+        $final[] = $out.'=:'.$out;
+    }
+    $final = implode(', ', $final);
+    $dataArray['ID'] = $ID;
+
+    $dataUpdate = $DB->query('UPDATE '.$localArray['tableName'].' SET '.$final.' WHERE ID=:ID', $dataArray);
+
+    echo stouts('Cow Updated Sucessfully', 'sucess');
+
+
+}
+function selectUpdateFormItem($formArray, $redirectName, $ID){
+    $sendData = [];
+    if(!isset($_GET['token'])){
+        echo stouts('Please include token parm', 'error');
+        exit();
+    }
+    
+    $DBNameCheck = getInfoFromToken($_GET['token']);
+
+    if(isset($DBNameCheck['Error'])){
+        echo stouts($DBNameCheck['Error'], 'error');
+        exit();
+    }
+
+    $onlyDisplay = json_decode($DBNameCheck['ListDisplayPref'], true);
+    $selectItems = [];
+    if($onlyDisplay != null){
+        
+        foreach($formArray['items'] as $item){
+            if(isset($onlyDisplay[$item['name']])){
+                $sendData['Info'][$item['name']] = $item['inputLabel'];
+                $selectItems[] = $item['name'];
+            }
+        }
+    }else{
+        foreach($formArray['items'] as $item){
+            $sendData['Info'][$item['name']] = $item['inputLabel'];
+            $selectItems[] = $item['name'];
+        }
+    }
+    $selectItems[] = 'ID';
+    $selectItems = implode(', ', $selectItems);
+    $DB = new DB($DBNameCheck['DBName']);
+
+    $data = $DB->query("SELECT $selectItems from ".$formArray['tableName']." WHERE ID=:ID order By Adate Desc", array('ID'=>$ID));
+    if(!isset($data[0]['ID'])){
+        echo stouts('The ID is invalid', 'error');
+        exit();
+    }
+
+    $updateData = $data[0];
+
+    if(isset($_GET['token'])){
+        $tokenData = json_decode(getInfoFromToken($_GET['token'])['ListDisplayPref'], true);
+    }else{
+        $tokenData = null;
+    }
+    $FormPassthroughItems = [
+        'name',
+        'type',
+        'typeName',
+        'checkboxLabel',
+        'required',
+        'selectLabel',
+        'textareaLabel', 
+        'options',
+        'inputLabel',
+        'placeholder',
+        'checkboxTitle',
+        'password_check'
+    ];
+    $arrayToSend = [];
+    
+    $arrayToSend['form']['formName'] = $formArray['formName'];
+    $arrayToSend['form']['formTitle'] = 'Update '.$formArray['formDesc'];
+    $arrayToSend['form']['callBack'] = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].'/'.$redirectName.'/update/'.$ID;
+    foreach($formArray['items'] as $items){
+        if($tokenData and !$tokenData[$items['name']]){
+            continue;
+        }
+        $itemArray = [];
+        if($items['type'] == 'date'){
+            $itemArray['defaultValue'] = date('Y-m-d');
+        }
+        if(isset($items['passwordConfirm'])){
+            $arrayToSend['form']['passwordCheck'] = [$items['passwordConfirm'], $items['name']];
+        }
+        foreach($items as $itemName => $item){
+            if(in_array($itemName, $FormPassthroughItems)){
+                $itemArray[$itemName] = $item;
+            }
+        }
+        if(!empty($updateData[$items['name']])){
+            $itemArray['defaultValue'] = $updateData[$items['name']];
+        }
+         
+        $arrayToSend['form']['fields'][] = $itemArray;
+    }
+    echo json_encode($arrayToSend); 
+}
+function getFormStruct($formArray, $redirectName, $action){
+    if($action == 'add'){
+        $redirectName = $redirectName.'/'.$action;
+    }
     if(isset($_GET['token'])){
         $tokenData = json_decode(getInfoFromToken($_GET['token'])['ListDisplayPref'], true);
     }else{
@@ -153,7 +286,7 @@ function getFormStruct($formArray, $redirectName){
     ];
     $arrayToSend = [];
     $arrayToSend['form']['formName'] = $formArray['formName'];
-    $arrayToSend['form']['formTitle'] = $formArray['formTitle'];
+    $arrayToSend['form']['formTitle'] = 'Add '.$formArray['formDesc'];
     $arrayToSend['form']['callBack'] = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].'/'.$redirectName;
     foreach($formArray['items'] as $items){
         if($tokenData and !$tokenData[$items['name']]){
@@ -266,7 +399,7 @@ function insertFormData($RecivedFormData, $localArray){
             echo stouts('Please include auth token', 'error');
             exit();
         }
-        $data = $DBAdmin->query('SELECT Token, Expire from '.$localArray['tokenAuth'].' WHERE Token = :token', array('token'=>$RecivedFormData['Token']));
+        $data = $DBAdmin->query('SELECT Token, Expire from LoginAuth WHERE Token = :token', array('token'=>$RecivedFormData['Token']));
         
         if(empty($data)){
             echo stouts('Auth Token has expried or is invalid', 'error');

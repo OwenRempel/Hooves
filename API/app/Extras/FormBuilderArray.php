@@ -93,7 +93,7 @@ $FormBuilderArray = [
         ],
         'cattle'=>[
             'loginAuth'=>true,
-            'formTitle'=>'Add Cow',
+            'formDesc'=>'Cow',
             'formName'=>'CattleAddItem',
             'tableName'=>'Cattle',
             'Sucess'=>'Cow sucessfully created!',
