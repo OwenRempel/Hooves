@@ -1,18 +1,32 @@
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom"
+import { formHandle } from "../../../lib/FormHandle";
+import Form from "../../Form";
 import Back from "../../Back";
 
-function CowUpdate() {
+function  CowUpdate() {
     const { ID } = useParams();
+    const [formData, setFormData] = useState({});
     const nav = useNavigate();
-    console.log(ID)
-    if(!ID){
-        nav('/cows', {replace:true})
+    useEffect(() => {
+      fetch(process.env.REACT_APP_API_URL+'/cattle/update/'+ID+'?token='+localStorage.getItem('Token'))
+            .then(response => response.json())
+            .then(result => {
+              setFormData(result)
+            });
+    }, [ID])
+    const returnFormData = async (e) => {
+        e.preventDefault();
+        const  res = await formHandle(formData, e.target);
+        if(res.sucess){
+            nav('/cows/'+ID);
+        }
     }
+    
     return (
         <div>
             <Back link={`/cows/${ID}`} />
-            <h2>Update</h2>
-            {ID}
+            {formData.form && <Form onSubmit={returnFormData}  {...formData} />}
         </div>
     )
 }
