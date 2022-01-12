@@ -1,4 +1,5 @@
 <?php 
+
 //Database Class
 require_once("Database/DB.php");
 //Array that has all the data for the forms
@@ -6,8 +7,6 @@ require('Extras/FormBuilderArray.php');
 
 //setting the correct timezone
 date_default_timezone_set('America/Dawson_Creek');
-
-
 
 //Cors Headers
 //|\|/\|/|\|/|\|/|\|/|\|/|\|/|\|/|\|/|\|/|\|/|\
@@ -39,6 +38,8 @@ if(!is_file('Build/Built')){
 }
 //Functions
 //|\|/\|/|\|/|\|/|\|/|\|/|\|/|\|/|\|/|\|/|\|/|\
+
+//push output as json
 function stouts($message, $type='info'){
     $types = explode(',', str_replace(' ', '', 'info, sucess, error'));
     if(in_array($type, $types)){
@@ -47,6 +48,7 @@ function stouts($message, $type='info'){
         return json_encode(['info'=>$message]);
     }
 }
+//Gets the comapany DB and Display Pref
 function getInfoFromToken($token){
     $DBAdmin = new DB_Admin;
     $loginData = $DBAdmin->query('SELECT DBName, ListDisplayPref FROM
@@ -58,6 +60,7 @@ function getInfoFromToken($token){
         return array('Error'=>'That token is not conected to company');
     }
 }
+//Main router for all incoming requests
 function InitRouter(){
     //Globals
     global $FormBuilderArray;
@@ -136,6 +139,7 @@ function InitRouter(){
         echo stouts('That Route Does Not Exist', 'error');
     }
 }
+//handler updating the db
 function updateFormData($formData, $localArray, $ID){
     $DBAdmin = new DB_Admin;
     
@@ -171,6 +175,7 @@ function updateFormData($formData, $localArray, $ID){
 
 
 }
+//form builder for the update system
 function selectUpdateFormItem($formArray, $redirectName, $ID){
     $sendData = [];
     if(!isset($_GET['token'])){
@@ -261,6 +266,7 @@ function selectUpdateFormItem($formArray, $redirectName, $ID){
     }
     echo json_encode($arrayToSend); 
 }
+//get structure for building the add forms
 function getFormStruct($formArray, $redirectName, $action){
     if($action == 'add'){
         $redirectName = $redirectName.'/'.$action;
@@ -308,6 +314,7 @@ function getFormStruct($formArray, $redirectName, $action){
     }
     echo json_encode($arrayToSend);
 }
+//get individual info
 function selectFormItem($localArray, $ID){
     $sendData = [];
     if(!isset($_GET['token'])){
@@ -352,6 +359,7 @@ function selectFormItem($localArray, $ID){
     }
     
 }
+//get bulk data
 function selectFormData($localArray){
     $sendData = [];
     if(!isset($_GET['token'])){
@@ -391,6 +399,7 @@ function selectFormData($localArray){
     
     
 }
+//insert form data
 function insertFormData($RecivedFormData, $localArray){
     $DBAdmin = new DB_Admin;
    
@@ -508,5 +517,5 @@ function insertFormData($RecivedFormData, $localArray){
     
 }
 
-
+//init the router
 InitRouter();
