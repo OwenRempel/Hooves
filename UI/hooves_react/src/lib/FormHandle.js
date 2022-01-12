@@ -1,4 +1,4 @@
-export async function formHandle(formData, FormItem, searchParams){
+export async function formHandle(formData, FormItem){
     const { form } = formData
     const { callBack, passwordCheck } = form;
     if(passwordCheck){
@@ -19,8 +19,8 @@ export async function formHandle(formData, FormItem, searchParams){
     }
     const token = localStorage.getItem('Token');
     FormOut['Token'] = token;
-    
-    const res = await fetch(callBack+'/add', {
+
+    const res = await fetch(callBack, {
         method: 'POST',
         headers:{
         'Content-Type': '"application/x-form-urlencoded"'
