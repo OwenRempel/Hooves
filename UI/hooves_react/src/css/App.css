@@ -124,7 +124,7 @@ font-size: 12px;
   font-size: 24px;
   border-radius: 4px;
   margin-top: 30px;
-  color: var(--text-color);
+  color: var(--text-color-light);
   background: #404950ad;
 }
 
