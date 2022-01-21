@@ -18,20 +18,27 @@ function Cow() {
               
             })
     }, [ID]);
-
     return (
         <div>
             <Back link='/cows' />
             {Cow.Data &&
-            <>
-                <Link to={`/cows/update/${ID}`}>
-                    <button className='btn'>Edit</button>
-                </Link>
-                <Link to={`/cows/delete/${ID}`}>
-                    <button className='btn delete-btn'>Delete</button>
-                </Link>
+            <div className='viewWrap'>
+                <div className="cowMenu">
+                    <Link to={`/cows/update/${ID}`}>
+                        <button className='btn'>Edit</button>
+                    </Link>
+                    <Link to={`/cows/weight/add/${ID}`}>
+                        <button className='btn'>Add Weight</button>
+                    </Link>
+                    <Link to={`/cows/medical/add/${ID}`}>
+                        <button className='btn'>Add Medicine</button>
+                    </Link>
+                    <Link to={`/cows/delete/${ID}`}>
+                        <button className='btn no-btn'>Delete</button>
+                    </Link>
+                </div>
                 <DisplayItems data={Cow}/>
-            </>
+            </div>
             }        
         </div>
     )
