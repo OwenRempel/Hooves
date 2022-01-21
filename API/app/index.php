@@ -41,7 +41,7 @@ if(!is_file('Build/Built')){
 
 //push output as json
 function stouts($message, $type='info'){
-    $types = explode(',', str_replace(' ', '', 'info, sucess, error'));
+    $types = explode(',', str_replace(' ', '', 'info, success, error'));
     if(in_array($type, $types)){
         return json_encode([$type=>$message]);
     }else{
@@ -90,6 +90,28 @@ function InitRouter(){
         //handle logout
         include('Extras/logout.php');
     }elseif(isset($FormBuilderArray['Routes'][$Routes[0]])){
+        //checks if the route is in the route array
+        $localArray = $FormBuilderArray['Routes'][$Routes[0]];
+        //load all the form data
+        if($method == 'POST' or $method == 'PUT'){
+            $PHPinput = file_get_contents('php://input');
+            $PostInput = json_decode($PHPinput, 1);
+            parse_str($PHPinput, $_PUT);
+          
+            //This is the check to see if the api should use $_POST or php://input
+            if(isset($_POST[$localArray['formName']])){
+                $PostData = $_POST;
+            }elseif(isset($_PUT[$localArray['formName']])){
+                $PostData = $_PUT;
+            }elseif(isset($PostInput[$localArray['formName']])){
+                $PostData = $PostInput;
+            }else{
+                echo stouts('No data Received', 'error');
+                exit();
+            }
+        }
+           
+        //checks to see if the route is a view file
         if(isset($FormBuilderArray['Routes'][$Routes[0]]['view'])){
             $viewFile = "./Views/".$Routes[0].'.php';
             if(is_file($viewFile)){
@@ -98,42 +120,40 @@ function InitRouter(){
             }
         }
         if($method == 'GET'){
-            if(isset($Routes[1]) and (strtolower($Routes[1]) == 'add' or strtolower($Routes[1] == 'info'))){
-                getFormStruct($FormBuilderArray['Routes'][$Routes[0]], $Routes[0], $Routes[1]);
-            }elseif(isset($Routes[1]) and strtolower($Routes[1]) == 'update' ){
+            if(isset($Routes[1]) and strtolower($Routes[1]) == 'info' and isset($Routes[2]) ){
                 //Return the data and structure for updating item
-                selectUpdateFormItem($FormBuilderArray['Routes'][$Routes[0]], $Routes[0], $Routes[2]);
+                selectUpdateFormItem($localArray, $Routes[0], $Routes[2]);
+            }elseif(isset($Routes[1]) and  strtolower($Routes[1]) == 'info'){
+                //get the form structure for 
+                getFormStruct($localArray, $Routes[0], $Routes[1]);
             }elseif(isset($Routes[1]) and !in_array(strtolower($Routes[1]), $requestTypes)){
                 //Handle the individual requests
-                selectFormItem($FormBuilderArray['Routes'][$Routes[0]], $Routes[1]);
+                selectFormItem($localArray, $Routes[1]);
             }elseif(!isset($Routes[1]) or empty($Routes[1])){
-                selectFormData($FormBuilderArray['Routes'][$Routes[0]]);
+                selectFormData($localArray);
             }else{
                 echo stouts('The action you have entered is not alowed on a GET Request', 'error');
             }
         }elseif($method == "POST"){
-            $localArray = $FormBuilderArray['Routes'][$Routes[0]];
-            $PostInput = json_decode(file_get_contents('php://input'), 1);
-            //This is the check to see if the api should use $_POST or php://input
-            if(isset($_POST[$localArray['formName']])){
-                $PostData = $_POST;
-            }elseif(isset($PostInput[$localArray['formName']])){
-                $PostData = $PostInput;
-            }else{
-                echo stouts('There was an error processing your post request', 'error');
-                exit();
-            }
+           
             //This is where the receved form is entered into the database
-            if(!empty($PostData) and strtolower($Routes[1]) == 'add'){
-                insertFormData($PostData, $localArray);
-            }elseif(!empty($PostData) and strtolower($Routes[1]) == 'update'){
-                updateFormData($PostData, $localArray, $Routes[2]);
+            if(!empty($PostData)){
+                insertFormData($PostData, $localArray, $Routes);
             }else{
                 echo stouts('No data recieved', 'error');
             }
-            
-            
-
+        }elseif($method == 'PUT'){
+            if(!empty($PostData) and !empty($Routes[1])){
+                updateFormData($PostData, $localArray, $Routes[1]);
+            }else{
+                echo stouts('No data recieved', 'error');
+            }
+        }elseif($method == 'DELETE'){
+            if(!empty($Routes[1])){
+                deleteItem($localArray, $Routes[1]);
+            }else{
+                echo stouts('Please include an ID', 'error');
+            }
         }
     }else{
         echo stouts('That Route Does Not Exist', 'error');
@@ -168,10 +188,9 @@ function updateFormData($formData, $localArray, $ID){
     }
     $final = implode(', ', $final);
     $dataArray['ID'] = $ID;
-
     $dataUpdate = $DB->query('UPDATE '.$localArray['tableName'].' SET '.$final.' WHERE ID=:ID', $dataArray);
 
-    echo stouts('Cow Updated Sucessfully', 'sucess');
+    echo stouts('Cow Updated successfully', 'success');
 
 
 }
@@ -241,7 +260,7 @@ function selectUpdateFormItem($formArray, $redirectName, $ID){
     
     $arrayToSend['form']['formName'] = $formArray['formName'];
     $arrayToSend['form']['formTitle'] = 'Update '.$formArray['formDesc'];
-    $arrayToSend['form']['callBack'] = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].'/'.$redirectName.'/update/'.$ID;
+    $arrayToSend['form']['callBack'] = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].'/'.$redirectName.'/'.$ID;
     foreach($formArray['items'] as $items){
         if($tokenData and !$tokenData[$items['name']]){
             continue;
@@ -400,7 +419,7 @@ function selectFormData($localArray){
     
 }
 //insert form data
-function insertFormData($RecivedFormData, $localArray){
+function insertFormData($RecivedFormData, $localArray, $Routes){
     $DBAdmin = new DB_Admin;
    
     if(isset($localArray['tokenAuth']) and isset($localArray['dbCreate'])){
@@ -466,7 +485,22 @@ function insertFormData($RecivedFormData, $localArray){
             }
         }
     }
-    //TODO:here is where we will check the uuid to make sure it is unique
+
+    //here is where we will handle the sub array link
+    if(isset($localArray['MasterLink']) and isset($localArray['MasterTable'])){
+        if(isset($Routes[1])){
+            $subData = $DB->query("SELECT ID From ".$localArray['MasterTable']." WHERE ID=:ID", array('ID'=>$Routes[1]));
+            if(isset($subData[0]['ID'])){
+                $pdoDataArray[$localArray['MasterLink']] = $Routes[1]; 
+                $insertStringArray[] = $localArray['MasterLink'];
+            }else{
+                echo stouts('Please Include A valid UUID', 'error');
+            }
+        }else{
+            echo stouts('Please Include a UUID in the url', 'error');
+        }
+    }
+    //creation of the UUID for the table item
     do{
         $UUID = bin2hex(random_bytes(24));
     }while(!empty($DB->query("SELECT ID from ".$localArray['tableName']." WHERE ID = '$UUID'")));
@@ -513,8 +547,33 @@ function insertFormData($RecivedFormData, $localArray){
         $data = $DB->query('DELETE from '.$localArray['tokenAuth'].' WHERE Token = :token', array('token'=>$RecivedFormData['Token']));
     }
 
-    echo stouts($localArray['Sucess'], 'sucess');
+    echo stouts($localArray['success'], 'success');
     
+}
+
+//delete item
+function deleteItem($formArray, $ID){
+    if(!isset($_GET['token'])){
+        echo stouts('Please include token parm', 'error');
+        exit();
+    }
+    $DBNameCheck = getInfoFromToken($_GET['token']);
+
+    if(isset($DBNameCheck['Error'])){
+        echo stouts($DBNameCheck['Error'], 'error');
+        exit();
+    }
+
+    $DB = new DB($DBNameCheck['DBName']);
+
+    $data = $DB->query("SELECT ID from ".$formArray['tableName']." WHERE ID=:ID", array('ID'=>$ID));
+    if(!isset($data[0]['ID'])){
+        echo stouts('The ID is invalid', 'error');
+        exit();
+    }
+
+    $del = $DB->query('DELETE FROM '.$formArray['tableName'].' WHERE ID=:ID', array('ID'=>$ID));
+    echo stouts('Item successfully deleted', 'success');
 }
 
 //init the router

@@ -57,7 +57,7 @@ $FormBuilderArray = [
             'formName'=>'CompanyAddItem',
             'tableName'=>'Companies',
             'secondTable'=>'Users',
-            'Sucess'=>'Company and User sucessfully created!',
+            'success'=>'Company and User successfully created!',
             'items'=>[
                 [
                     'name'=>'CompanyName',
@@ -96,7 +96,9 @@ $FormBuilderArray = [
             'formDesc'=>'Cow',
             'formName'=>'CattleAddItem',
             'tableName'=>'Cattle',
-            'Sucess'=>'Cow sucessfully created!',
+            'success'=>'Cow successfully created!',
+            'SubArrays'=>['weight', 'medical'],
+            'SubLink'=>'CowID',
             'items'=>[
                 [
                     'name'=>'Tag',
@@ -238,6 +240,56 @@ $FormBuilderArray = [
                 ]
             ]
         ],
+        'weight'=>[
+            'loginAuth'=>true,
+            'formDesc'=>'Weight',
+            'formName'=>'WeightAddItem',
+            'tableName'=>'Weight',
+            'success'=>'Weight successfully added!',
+            'MasterTable'=>'Cattle',
+            'MasterLink'=>'CowID',
+            'items'=>[
+                [
+                    'name'=>'CowWeight',
+                    'typeName'=>'FormInput',
+                    'type'=>'number',
+                    'inputLabel'=>'Weight',
+                    
+                ],
+                [
+                    'name'=>'WeightDate',
+                    'typeName'=>'FormInput',
+                    'type'=>'date',
+                    'inputLabel'=>'Date Weighed',
+                    
+                ]
+            ]
+        ],
+        'medical'=>[
+            'loginAuth'=>true,
+            'formDesc'=>'Medicine',
+            'formName'=>'MedicalAddItem',
+            'tableName'=>'Medical',
+            'success'=>'Medicine successfully added!',
+            'MasterTable'=>'Cattle',
+            'MasterLink'=>'CowID',
+            'items'=>[
+                [
+                    'name'=>'CowVaccine',
+                    'typeName'=>'FormInput',
+                    'type'=>'text',
+                    'inputLabel'=>'Medicine',
+                    
+                ],
+                [
+                    'name'=>'MedDate',
+                    'typeName'=>'FormInput',
+                    'type'=>'date',
+                    'inputLabel'=>'Date Given',
+                    
+                ]
+            ]
+        ],
         'gen'=>[
             'view'=>true
         ],
@@ -306,6 +358,5 @@ $FormBuilderArray = [
                 ]
             ]
         ]
-
     ]
 ];
