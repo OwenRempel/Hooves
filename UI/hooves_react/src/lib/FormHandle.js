@@ -1,6 +1,7 @@
-export async function formHandle(formData, FormItem){
+export async function formHandle(formData, FormItem, methodType='POST', ID){
     const { form } = formData
     const { callBack, passwordCheck } = form;
+    let url
     if(passwordCheck){
     const pass1 = FormItem.querySelector('#'+passwordCheck[0]);
     const pass2 = FormItem.querySelector('#'+passwordCheck[1]);
@@ -19,9 +20,13 @@ export async function formHandle(formData, FormItem){
     }
     const token = localStorage.getItem('Token');
     FormOut['Token'] = token;
-
-    const res = await fetch(callBack, {
-        method: 'POST',
+    if(ID){
+         url =  callBack+'/'+ID
+    }else{
+         url = callBack
+    }
+    const res = await fetch(url, {
+        method: methodType,
         headers:{
         'Content-Type': '"application/x-form-urlencoded"'
         },
