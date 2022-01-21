@@ -9,7 +9,7 @@ function  CowUpdate() {
     const [formData, setFormData] = useState({});
     const nav = useNavigate();
     useEffect(() => {
-      fetch(process.env.REACT_APP_API_URL+'/cattle/update/'+ID+'?token='+localStorage.getItem('Token'))
+      fetch(process.env.REACT_APP_API_URL+'/cattle/info/'+ID+'?token='+localStorage.getItem('Token'))
             .then(response => response.json())
             .then(result => {
               setFormData(result)
@@ -17,8 +17,8 @@ function  CowUpdate() {
     }, [ID])
     const returnFormData = async (e) => {
         e.preventDefault();
-        const  res = await formHandle(formData, e.target);
-        if(res.sucess){
+        const  res = await formHandle(formData, e.target, 'PUT');
+        if(res.success){
             nav('/cows/'+ID);
         }
     }

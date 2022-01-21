@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 function CowsAdd() {
     const [formData, setFormData] = useState({});
     useEffect(() => {
-      fetch(process.env.REACT_APP_API_URL+'/cattle/add?token='+localStorage.getItem('Token'))
+      fetch(process.env.REACT_APP_API_URL+'/cattle/info?token='+localStorage.getItem('Token'))
             .then(response => response.json())
             .then(result => {
               setFormData(result)
@@ -17,8 +17,8 @@ function CowsAdd() {
     const returnFormData = async e => {
         e.preventDefault();
         const  res = await formHandle(formData, e.target);
-        if(res.sucess){
-          console.log('Cow Added Sucessfully')
+        if(res.success){
+          console.log('Cow Added successfully')
           e.target.reset()
         }else{
           console.log(res)

@@ -22,7 +22,7 @@ export default function App() {
       body:JSON.stringify({'Token':Token})
     });
     const tokenData = await checkToken.json();
-    if(tokenData.sucess && tokenData.Token){
+    if(tokenData.success && tokenData.Token){
       let time = (Math.round(new Date() / 1000) + (60*24*3))
       localStorage.setItem('TokenExpire', time);
       setAuth(true);
@@ -52,7 +52,7 @@ export default function App() {
     })
     const checkAuthData = await checkAuth.json();
     let time = (Math.round(new Date() / 1000) + (60*24*3))
-    if(checkAuthData.Token && (checkAuthData.sucess || checkAuthData.info)){
+    if(checkAuthData.Token && (checkAuthData.success || checkAuthData.info)){
       localStorage.setItem('Token', checkAuthData.Token);
       localStorage.setItem('TokenExpire', time);
       localStorage.setItem('User', checkAuthData.User);
