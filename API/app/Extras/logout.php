@@ -22,7 +22,7 @@ if(isset($_POST['Token'])){
 $data = $DB->query('SELECT Token, ID From LoginAuth WHERE Token = :token', array('token'=>$InputData['Token']));
 if(isset($data[0]['Token'])){
     $DB->query('DELETE FROM LoginAuth where ID='.$data[0]['ID'].'');
-    echo stouts('User has been Loged out', 'sucess');
+    echo stouts('User has been Loged out', 'success');
 }else{
     echo stouts('That token is invalid', 'error');
 }

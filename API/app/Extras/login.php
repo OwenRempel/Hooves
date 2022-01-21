@@ -69,7 +69,7 @@ try {
 }
 $_SESSION['USER_TOKEN'] = $UUID;
 $senddata = [
-    'sucess'=>'User Logged In',
+    'success'=>'User Logged In',
     'Token'=>$UUID,
     'User'=>$userCheckData['UserEmail'],
     'Company'=>$userCheckData['CompanyName']

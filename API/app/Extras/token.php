@@ -27,7 +27,7 @@ if(isset($checkData[0]['Token'])){
     $time = $checkData[0]['Expire'] = strtotime($checkData[0]['Expire']);
     if($time > time()){
         echo json_encode([
-            'sucess'=>'Valid Token',
+            'success'=>'Valid Token',
             'Token'=>$checkData[0]['Token']
         ]);
         exit();
