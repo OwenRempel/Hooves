@@ -17,8 +17,12 @@ import CowDelete from "./components/routes/Cows/CowDelete"
 
 //imports for weights
 import AddWeight from "./components/routes/Weights/AddWeight";
+import EditWeight from "./components/routes/Weights/EditWeight";
+import DeleteWeight from "./components/routes/Weights/DeleteWeight";
 //import medical
 import AddMedicine from "./components/routes/Medicines/AddMedicine";
+import EditMedicine from "./components/routes/Medicines/EditMedicine";
+import DeleteMedicine from "./components/routes/Medicines/DeleteMedicine";
 //import settings
 import Settings from "./components/routes/Settings/Settings";
 import Profile from "./components/routes/Settings/Profile";
@@ -52,10 +56,14 @@ render(
           <Route path="weight">
             <Route index element={<CowsList />} />
             <Route path="add/:ID" element={<AddWeight/>}/>
+            <Route path="edit/:Cow/:ID" element={<EditWeight/>}/>
+            <Route path="delete/:Cow/:ID" element={<DeleteWeight/>}/>
           </Route>
           <Route path="medical">
             <Route index element={<CowsList />} />
             <Route path="add/:ID" element={<AddMedicine/>}/>
+            <Route path="edit/:Cow/:ID" element={<EditMedicine/>}/>
+            <Route path="delete/:Cow/:ID" element={<DeleteMedicine/>}/>
           </Route>
         </Route>
         <Route path='/settings' element={<Settings/>}>
