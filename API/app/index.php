@@ -335,6 +335,7 @@ function getFormStruct($formArray, $redirectName, $action){
 }
 //get individual info
 function selectFormItem($localArray, $ID){
+    global $FormBuilderArray;
     $sendData = [];
     if(!isset($_GET['token'])){
         echo stouts('Please include token parm', 'error');
@@ -369,10 +370,45 @@ function selectFormItem($localArray, $ID){
     
     $DB = new DB($DBNameCheck['DBName']);
 
+    //check for sub forms
+    $subArray = [];
+    if(isset($localArray['subArrays']) and isset($localArray['subLink'])){
+       
+
+        foreach($localArray['subArrays'] as $sub){
+            if(isset($FormBuilderArray['Routes'][$sub]['orderIndex'])){
+                $order = $FormBuilderArray['Routes'][$sub]['orderIndex'];
+            }else{
+                $order = "Adate";
+            }
+            $check = true;
+            $da = $DB->query('SELECT * From '.$FormBuilderArray['Routes'][$sub]['tableName'].' WHERE '.$localArray['subLink'].'=:ID order by '.$order.' DESC',array('ID'=>$ID));
+            foreach($da as $row){
+                $each = [];
+                foreach($FormBuilderArray['Routes'][$sub]['items'] as $item){
+                    if(isset($row[$item['name']])){
+                        $each[$item['name']] = $row[$item['name']];
+                        if($check){
+                            $subArray[$sub]['Info'][$item['name']] = $item['inputLabel'];
+                        }
+                        
+                    }
+                }
+                $each['ID'] = $row['ID'];
+                
+                $subArray[$sub]["Data"][] = $each;
+                $check = false;
+            }
+        }
+        $sendData['Sub'] = $subArray;
+    }
+   
+
+
     $data = $DB->query("SELECT $selectItems from ".$localArray['tableName']." WHERE ID=:ID order By Adate Desc", array('ID'=>$ID));
     if(isset($data[0]['ID'])){
         $sendData['Data'] = $data;
-        echo json_encode($sendData);
+       echo json_encode($sendData);
     }else{
         echo stouts('The ID is invalid', 'error');
     }
@@ -487,12 +523,12 @@ function insertFormData($RecivedFormData, $localArray, $Routes){
     }
 
     //here is where we will handle the sub array link
-    if(isset($localArray['MasterLink']) and isset($localArray['MasterTable'])){
+    if(isset($localArray['masterLink']) and isset($localArray['masterTable'])){
         if(isset($Routes[1])){
-            $subData = $DB->query("SELECT ID From ".$localArray['MasterTable']." WHERE ID=:ID", array('ID'=>$Routes[1]));
+            $subData = $DB->query("SELECT ID From ".$localArray['masterTable']." WHERE ID=:ID", array('ID'=>$Routes[1]));
             if(isset($subData[0]['ID'])){
-                $pdoDataArray[$localArray['MasterLink']] = $Routes[1]; 
-                $insertStringArray[] = $localArray['MasterLink'];
+                $pdoDataArray[$localArray['masterLink']] = $Routes[1]; 
+                $insertStringArray[] = $localArray['masterLink'];
             }else{
                 echo stouts('Please Include A valid UUID', 'error');
             }
@@ -538,7 +574,6 @@ function insertFormData($RecivedFormData, $localArray, $Routes){
         $DB->query("INSERT INTO ".$localArray['secondTable']." ($secValues) VALUES ($secDataValues)", $secPdoDataArray);    
     }
     
-   
     $values = implode(', ',$insertStringArray);
     $dataValues =':'.implode(', :',$insertStringArray);
     $DB->query("INSERT INTO ".$localArray['tableName']." ($values) VALUES ($dataValues)", $pdoDataArray);
