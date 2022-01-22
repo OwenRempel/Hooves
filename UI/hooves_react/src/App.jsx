@@ -81,8 +81,8 @@ export default function App() {
       }
       {auth === true &&
         <div className='wraper'>
-          <Header/>
           <div className='MainContent'>
+          <Header/>
             <Nav/>
             <div  className='container'>
               <Outlet />
