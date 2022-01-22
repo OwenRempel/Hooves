@@ -20,10 +20,11 @@ function Cow() {
     }, [ID]);
     return (
         <div>
-            <Back link='/cows' />
+           
             {Cow.Data &&
             <div className='viewWrap'>
                 <div className="cowMenu">
+                    <Back link='/cows' />
                     <Link to={`/cows/update/${ID}`}>
                         <button className='btn'>Edit</button>
                     </Link>
