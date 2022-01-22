@@ -36,18 +36,40 @@ select option{
   width: max-content;
 }
 
-.MainContent{
+.MainContent {
   width: 100%;
-  min-height: calc(100vh - 90px - 45px);
+  min-height: calc(100vh - 45px);
   margin: auto;
   display: grid;
   grid-template-columns: 100px 1fr;
+  grid-template-rows: 90px 1fr;
 }
+
+@media only screen and (max-width: 800px) {
+  .MainContent {
+    width: 100%;
+    min-height: calc(100vh  - 45px);
+    margin: auto;
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    grid-template-rows: 90px 1fr;
+  }
+}
+
 .container{
   padding: 20px;
   width: 90%;
   max-width: 1800px;
   margin: 0px auto;
+}
+
+@media only screen and (max-width: 800px) {
+  .container {
+    padding: 20px;
+    width: 95%;
+    margin: 0px auto;
+    grid-column: 1 / span 2;
+  }
 }
 
 
