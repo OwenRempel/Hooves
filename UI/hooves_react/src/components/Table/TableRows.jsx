@@ -2,18 +2,27 @@ import { Link } from "react-router-dom"
 
 function TableRows({ Rows, UrlKey }) {
     let ID = ''
+   
     Object.keys(Rows).map((key, i) => {
         if(key === "ID"){
-           ID = UrlKey+Rows[key]
-           delete Rows[key]
+            ID = Rows[key]
+            delete Rows[key]
         }
+     
+       
         return(
-            <div></div>
+            <></>
         )
     })
     return (
         <>
-            <td><Link to={ID}>View</Link></td>
+            <td>
+                {
+                    Object.keys(UrlKey).map((key, i) => (
+                        <Link key={i} to={UrlKey[key].link+ID}>{UrlKey[key].title}</Link>
+                    ))
+                }
+            </td>
             {
                 Object.keys(Rows).map((key, i) => {
                     return(

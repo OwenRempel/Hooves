@@ -6,7 +6,7 @@ function TableBody({ Body, UrlKey }) {
                 Body.map((j, i) => (
                     <tr key={i}>
                         {
-                            <TableRows Rows={j} UrlKey={UrlKey}/>
+                            <TableRows Rows={j} UrlKey={UrlKey} />
                         }
                     </tr>
                 ))

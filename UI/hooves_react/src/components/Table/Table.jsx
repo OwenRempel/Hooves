@@ -7,7 +7,7 @@ function Table({ table, UrlKey }) {
         <div className="tableCatch">
             <table className="BuildTable highlight">
                 <TableHead Head={table.Info}/>
-                <TableBody Body={table.Data} UrlKey={UrlKey}/>
+                <TableBody Body={table.Data} UrlKey={UrlKey} />
             </table>
         </div>
         
