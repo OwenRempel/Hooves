@@ -17,7 +17,7 @@ function CowsList() {
             <Back link='/'/>
             <h1>All Cattle</h1>
             {AllCows.Data &&
-               <Table table={AllCows} UrlKey={'/cows/'}/>
+               <Table table={AllCows} UrlKey={[{title:'View',link:'/cows/'}]}/>
             }
             
         </div>
