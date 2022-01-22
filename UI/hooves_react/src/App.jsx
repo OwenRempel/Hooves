@@ -61,6 +61,8 @@ export default function App() {
     }else if(checkAuthData.error){
       setFormError({"error":checkAuthData.error});
     }
+    //this is a test
+    
   }
   //checks to see if the token is set in local storage
   if(localStorage.getItem('Token') && localStorage.getItem('TokenExpire')){
