@@ -43,7 +43,12 @@ $checkUserIsLoggedIn = $DB->query('SELECT * FROM LoginAuth WHERE UsersID = :user
 //makes sure that the token hasent expired
 if(isset($checkUserIsLoggedIn[0]) and strtotime($checkUserIsLoggedIn[0]['Expire']) > time()){
     //return the data to the user if they are already logged in
-    echo json_encode(['info'=>'Your already logged in', 'Token'=>$checkUserIsLoggedIn[0]['Token']]);
+    echo json_encode([
+        'info'=>'Your already logged in',
+        'Token'=>$checkUserIsLoggedIn[0]['Token'],
+        'User'=>$userCheckData['UserEmail'],
+        'Company'=>$userCheckData['CompanyName']
+        ]);
     exit();
 }elseif((isset($checkUserIsLoggedIn[0]) and strtotime($checkUserIsLoggedIn[0]['Expire']) <= time())){
     $DB->query('DELETE FROM LoginAuth WHERE ID=:id', array('id'=>$checkUserIsLoggedIn[0]['ID']));
