@@ -97,8 +97,8 @@ $FormBuilderArray = [
             'formName'=>'CattleAddItem',
             'tableName'=>'Cattle',
             'success'=>'Cow successfully created!',
-            'SubArrays'=>['weight', 'medical'],
-            'SubLink'=>'CowID',
+            'subArrays'=>['weight', 'medical'],
+            'subLink'=>'CowID',
             'items'=>[
                 [
                     'name'=>'Tag',
@@ -246,8 +246,9 @@ $FormBuilderArray = [
             'formName'=>'WeightAddItem',
             'tableName'=>'Weight',
             'success'=>'Weight successfully added!',
-            'MasterTable'=>'Cattle',
-            'MasterLink'=>'CowID',
+            'masterTable'=>'Cattle',
+            'masterLink'=>'CowID',
+            'orderIndex'=>'WeightDate',
             'items'=>[
                 [
                     'name'=>'CowWeight',
@@ -271,8 +272,9 @@ $FormBuilderArray = [
             'formName'=>'MedicalAddItem',
             'tableName'=>'Medical',
             'success'=>'Medicine successfully added!',
-            'MasterTable'=>'Cattle',
-            'MasterLink'=>'CowID',
+            'masterTable'=>'Cattle',
+            'masterLink'=>'CowID',
+            'orderIndex'=>'MedDate',
             'items'=>[
                 [
                     'name'=>'CowVaccine',
