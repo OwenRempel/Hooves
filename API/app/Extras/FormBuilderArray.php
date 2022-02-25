@@ -359,6 +359,19 @@ $FormBuilderArray = [
                     
                 ]
             ]
+        ],
+        'pens'=>[
+            'formTitle'=>'Add Pen',
+            'formName'=>'PenAddItem',
+            'items'=>[
+                [
+                    'name'=>'Name',
+                    'typeName'=>'FormInput',
+                    'type'=>'text',
+                    'inputLabel'=>'Pen Name',
+                    
+                ]
+            ]
         ]
     ]
 ];
