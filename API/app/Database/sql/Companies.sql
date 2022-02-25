@@ -69,3 +69,10 @@ CREATE TABLE `Weight` (
     `RID` int unsigned NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (`RID`)
 ) ENGINE=InnoDB;
+
+CREATE TABLE `Pens` (
+    `Name` text not null,
+    `Adate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `ID` int unsigned NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (`ID`)
+) ENGINE=InnoDB;
