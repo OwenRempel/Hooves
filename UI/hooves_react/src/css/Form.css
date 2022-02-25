@@ -33,6 +33,7 @@
     box-shadow: 1px 1px 5px #00000040;
     border-radius: 4px;
     background-color: var(--form-background);
+    padding-top: 20px;
 }
 .inputForm input{
     color: var(--text-color);
