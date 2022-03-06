@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 
 import Form from '../../Form'
 
+import { formHandle } from '../../../lib/FormHandle';
+
 function PenAdd() {
     const [FormData, setFormData] = useState({})
     useEffect(() => {
@@ -16,9 +18,15 @@ function PenAdd() {
 
     console.log(FormData)
 
-    const submitHandle = (e) =>{
+    const  submitHandle = async (e) =>{
         e.preventDefault();
-        console.log('form handle')
+        const  res = await formHandle(FormData, e.target);
+        if(res.success){
+          console.log('Pen Added successfully')
+          e.target.reset()
+        }else{
+          console.log(res)
+        }
     }
 
     return(
