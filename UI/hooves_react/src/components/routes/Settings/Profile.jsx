@@ -3,7 +3,7 @@ function Profile() {
     let time = new Date(tokenExpire * 1000);
     
     return (
-        <div>
+        <>
             <h2>
                 {localStorage.getItem('User')}
             </h2>
@@ -13,7 +13,7 @@ function Profile() {
             <h3>
                 User Auth Token: {localStorage.getItem('Token')}
             </h3>
-        </div>
+        </>
     )
 }
 
