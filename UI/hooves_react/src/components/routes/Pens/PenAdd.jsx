@@ -2,6 +2,8 @@ import React from 'react'
 
 import { useState, useEffect } from 'react';
 
+import Form from '../../Form'
+
 function PenAdd() {
     const [FormData, setFormData] = useState({})
     useEffect(() => {
@@ -21,6 +23,7 @@ function PenAdd() {
 
     return(
         <>
+            <h3>Add pen</h3>
             {FormData.form &&  <Form {...FormData} onSubmit={submitHandle}/> }
         </>
     )
