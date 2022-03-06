@@ -311,10 +311,11 @@ function getFormStruct($formArray, $redirectName, $action){
     ];
     $arrayToSend = [];
     $arrayToSend['form']['formName'] = $formArray['formName'];
-    $arrayToSend['form']['formTitle'] = 'Add '.$formArray['formDesc'];
+    $arrayToSend['form']['formTitle'] = (isset($formArray['formDesc']) ? "Add ". $formArray['formDesc'] : $formArray['formTitle']);
     $arrayToSend['form']['callBack'] = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].'/'.$redirectName;
     foreach($formArray['items'] as $items){
-        if($tokenData and !$tokenData[$items['name']]){
+       // echo json_encode($tokenData);
+        if($tokenData and isset($tokenData[$items['name']]) and $tokenData[$items['name']] == false){
             continue;
         }
         $itemArray = [];
@@ -481,6 +482,7 @@ function insertFormData($RecivedFormData, $localArray, $Routes){
         }
     }
     
+
     if(isset($localArray['dbCreate'])){
         $DB = $DBAdmin;
     }else{
@@ -537,11 +539,13 @@ function insertFormData($RecivedFormData, $localArray, $Routes){
         }
     }
     //creation of the UUID for the table item
-    do{
-        $UUID = bin2hex(random_bytes(24));
-    }while(!empty($DB->query("SELECT ID from ".$localArray['tableName']." WHERE ID = '$UUID'")));
-    $insertStringArray[] = 'ID';
-    $pdoDataArray['ID'] = $UUID;
+    if(!isset($localArray['UUID']) or $localArray['UUID'] == true){
+        do{
+            $UUID = bin2hex(random_bytes(24));
+        }while(!empty($DB->query("SELECT ID from ".$localArray['tableName']." WHERE ID = '$UUID'")));
+        $insertStringArray[] = 'ID';
+        $pdoDataArray['ID'] = $UUID;
+    }
     if(isset($localArray['dbCreate'])){
         do{
             $UUID = bin2hex(random_bytes(8));
