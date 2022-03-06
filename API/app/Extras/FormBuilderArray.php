@@ -363,6 +363,7 @@ $FormBuilderArray = [
         'pens'=>[
             'formTitle'=>'Add Pen',
             'formName'=>'PenAddItem',
+            'tableName'=>'Pens',
             'items'=>[
                 [
                     'name'=>'Name',
