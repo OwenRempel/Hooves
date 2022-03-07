@@ -315,13 +315,17 @@ $FormBuilderArray = [
         'pens'=>[
             'formTitle'=>'Add Pen',
             'formName'=>'PenAddItem',
+            'loginAuth'=>true,
+            'tableName'=>'Pens',
+            'success'=>'Pen successfully added!',
+            'UUID'=>false,
             'items'=>[
                 [
                     'name'=>'Name',
+                    'unique'=>true,
                     'typeName'=>'FormInput',
                     'type'=>'text',
                     'inputLabel'=>'Pen Name',
-                    
                 ]
             ]
         ]

@@ -71,9 +71,7 @@ render(
         <Route path='/settings' element={<Settings/>}>
         <Route index element={<AllSettings />} />
           <Route path='profile' element={<Profile/>}/>
-          <Route path="pens" element={<Pens/>}>
-            <Route index element={<AllSettings />} />
-          </Route>
+          <Route path="pens" element={<Pens/>}/>
         </Route>
         <Route path='*' element={<NotFound />} />
       </Route>
