@@ -1,53 +1,5 @@
 <?php
 
-/*
-
-//These are some templates for how the forms will work
-
-[
-    'name'=>'UserEmail',
-    'typeName'=>'FormSelect',
-    'selectLabel'=>'User',
-    'options'=>[
-        [
-            "value"=>'Owen',
-            "option"=>'owen'
-        ],
-        [
-            "value"=>'Terrilee',
-            "option"=>'terrilee'
-        ],
-        [
-            "value"=>'Dustin',
-            "option"=>'dustin'
-        ]  
-    ]
-    
-],
-
-[
-    'name'=>'Age',
-    'typeName'=>'FormCheckbox',
-    'checkboxTitle'=>'18+',
-    'checkboxLabel'=>'Age',
-    "required"=>true
-],
-
-
-[
-    'name'=>'Message',
-    'typeName'=>'FormTextarea',
-    'placeolder'=>'Type your message here',
-    'textareaLabel'=>'Message'
-    
-]
-
-
-
-*/
-
-
-
 $FormBuilderArray = [
     'Routes'=>[
         'companies'=>[
@@ -82,7 +34,7 @@ $FormBuilderArray = [
                     'inputLabel'=>'Password',
                     'secondTable'=>True                    
                 ],
-                [   //TODO: Work on getting the passwords match to work before the form is submited
+                [
                     'name'=>'UserPassword-confirm',
                     'typeName'=>'FormInput',
                     'passwordConfirm'=>'UserPassword',

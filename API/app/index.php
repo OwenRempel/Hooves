@@ -48,7 +48,7 @@ function stouts($message, $type='info'){
         return json_encode(['info'=>$message]);
     }
 }
-//Gets the comapany DB and Display Pref
+//Gets the company DB and Display Pref
 function getInfoFromToken($token){
     $DBAdmin = new DB_Admin;
     $loginData = $DBAdmin->query('SELECT DBName, ListDisplayPref FROM
@@ -57,14 +57,14 @@ function getInfoFromToken($token){
     if(isset($loginData[0]['DBName'])){
         return $loginData[0];
     }else{
-        return array('Error'=>'That token is not conected to company');
+        return array('Error'=>'That token is not connected to company');
     }
 }
 //Main router for all incoming requests
 function InitRouter(){
     //Globals
     global $FormBuilderArray;
-    //alowed request types
+    //allowed request types
     $requestTypes = [
         'add',
         'update',
@@ -75,7 +75,7 @@ function InitRouter(){
     $full_url = explode('?', $_SERVER['REQUEST_URI']);
     //Split into Array
     $Routes =  explode('/', $full_url[0]);
-    //Remove first item of array to account for inital /
+    //Remove first item of array to account for initial /
     array_shift($Routes);
     //Set method
     $method = $_SERVER['REQUEST_METHOD'];
@@ -170,7 +170,7 @@ function updateFormData($formData, $localArray, $ID){
     $data = $DBAdmin->query('SELECT * FROM `LoginAuth` inner join Companies on LoginAuth.CompaniesID = Companies.ID WHERE Token = :token', array('token'=>$formData['Token']));
 
     if(empty($data)){
-        echo stouts('Auth Token has expried or is invalid', 'error');
+        echo stouts('Auth Token has expired or is invalid', 'error');
         exit();
     }
     $DB = new DB($data[0]['DBName']);
@@ -455,26 +455,26 @@ function selectFormData($localArray){
     
 }
 //insert form data
-function insertFormData($RecivedFormData, $localArray, $Routes){
+function insertFormData($ReceivedFormData, $localArray, $Routes){
     $DBAdmin = new DB_Admin;
    
     if(isset($localArray['tokenAuth']) and isset($localArray['dbCreate'])){
-        if(!isset($RecivedFormData['Token'])){
+        if(!isset($ReceivedFormData['Token'])){
             echo stouts('Please include auth token', 'error');
             exit();
         }
-        $data = $DBAdmin->query('SELECT Token, Expire from LoginAuth WHERE Token = :token', array('token'=>$RecivedFormData['Token']));
+        $data = $DBAdmin->query('SELECT Token, Expire from LoginAuth WHERE Token = :token', array('token'=>$ReceivedFormData['Token']));
         
         if(empty($data)){
-            echo stouts('Auth Token has expried or is invalid', 'error');
+            echo stouts('Auth Token has expired or is invalid', 'error');
             exit();
         }
     }elseif(isset($localArray['loginAuth'])){
-        if(!isset($RecivedFormData['Token'])){
+        if(!isset($ReceivedFormData['Token'])){
             echo stouts('Please include Login token', 'error');
             exit();
         }
-        $loginData = $DBAdmin->query('SELECT * FROM `LoginAuth` inner join Companies on LoginAuth.CompaniesID = Companies.ID WHERE Token = :token', array('token'=>$RecivedFormData['Token']));
+        $loginData = $DBAdmin->query('SELECT * FROM `LoginAuth` inner join Companies on LoginAuth.CompaniesID = Companies.ID WHERE Token = :token', array('token'=>$ReceivedFormData['Token']));
         if(!isset($loginData[0]['DBName'])){
             echo stouts('Your Token is not linked to a company', 'error');
             exit();
@@ -493,7 +493,7 @@ function insertFormData($RecivedFormData, $localArray, $Routes){
         $secInsertStringArray = [];
         $secPdoDataArray = [];
     }
-    foreach($RecivedFormData as $itemKey => $item){
+    foreach($ReceivedFormData as $itemKey => $item){
         foreach($localArray['items'] as $formItem){
             if($itemKey == $formItem['name']){
                 if(isset($formItem['passwordConfirm'])){
@@ -608,7 +608,7 @@ function deleteItem($formArray, $ID){
     }
 
     $del = $DB->query('DELETE FROM '.$formArray['tableName'].' WHERE ID=:ID', array('ID'=>$ID));
-    echo stouts('Item successfully deleted', 'success');
+    echo stouts('Item Successfully deleted', 'success');
 }
 
 //init the router
