@@ -132,21 +132,21 @@ function InitRouter(){
             }elseif(!isset($Routes[1]) or empty($Routes[1])){
                 selectFormData($localArray);
             }else{
-                echo stouts('The action you have entered is not alowed on a GET Request', 'error');
+                echo stouts('The action you have entered is not allowed on a GET Request', 'error');
             }
         }elseif($method == "POST"){
            
-            //This is where the receved form is entered into the database
+            //This is where the received form is entered into the database
             if(!empty($PostData)){
                 insertFormData($PostData, $localArray, $Routes);
             }else{
-                echo stouts('No data recieved', 'error');
+                echo stouts('No data received', 'error');
             }
         }elseif($method == 'PUT'){
             if(!empty($PostData) and !empty($Routes[1])){
                 updateFormData($PostData, $localArray, $Routes[1]);
             }else{
-                echo stouts('No data recieved', 'error');
+                echo stouts('No data received', 'error');
             }
         }elseif($method == 'DELETE'){
             if(!empty($Routes[1])){
@@ -629,7 +629,7 @@ function insertFormData($ReceivedFormData, $localArray, $Routes){
     $DB->query("INSERT INTO ".$localArray['tableName']." ($values) VALUES ($dataValues)", $pdoDataArray);
     
     if(isset($localArray['tokenAuth'])){
-        $data = $DB->query('DELETE from '.$localArray['tokenAuth'].' WHERE Token = :token', array('token'=>$RecivedFormData['Token']));
+        $data = $DB->query('DELETE from '.$localArray['tokenAuth'].' WHERE Token = :token', array('token'=>$ReceivedFormData['Token']));
     }
 
     echo stouts($localArray['success'], 'success');

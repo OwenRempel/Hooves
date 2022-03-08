@@ -12,7 +12,7 @@ export default function App() {
   const [auth, setAuth] = useState(false);
   //state for showing user a error message for login input
   const [formError, setFormError] = useState({'Error':false});
-  //querys the api to see if the token is valid
+  //query's the api to see if the token is valid
   const checkToken = async (Token) => {
     const checkToken = await fetch(process.env.REACT_APP_API_URL+'/token', {
       method:"POST",
@@ -61,8 +61,6 @@ export default function App() {
     }else if(checkAuthData.error){
       setFormError({"error":checkAuthData.error});
     }
-    //this is a test
-    
   }
   //checks to see if the token is set in local storage
   if(localStorage.getItem('Token') && localStorage.getItem('TokenExpire')){

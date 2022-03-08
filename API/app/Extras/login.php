@@ -15,7 +15,7 @@ if(isset($_POST['username']) and isset($_POST['password'])){
 }elseif(isset($InputData['username']) and isset($InputData['password'])){
     $PostInput = $InputData;
 }else{
-    echo stouts('Missing paramaters please include a username and password', 'error');
+    echo stouts('Missing parameters please include a username and password', 'error');
 }
 
 
@@ -33,14 +33,14 @@ $userCheckData = $userCheckData[0];
 //password check
 
 if(!password_verify($PostInput['password'], $userCheckData['UserPassword'])){
-    echo stouts('Passwords dont match', 'error');
+    echo stouts('Passwords don\'t match', 'error');
     exit();
 }
 
 //check to see if a login token already exists for the user
 
 $checkUserIsLoggedIn = $DB->query('SELECT * FROM LoginAuth WHERE UsersID = :user', array('user'=>$userCheckData['ID']));
-//makes sure that the token hasent expired
+//makes sure that the token hasn't expired
 if(isset($checkUserIsLoggedIn[0]) and strtotime($checkUserIsLoggedIn[0]['Expire']) > time()){
     //return the data to the user if they are already logged in
     echo json_encode([
@@ -53,7 +53,7 @@ if(isset($checkUserIsLoggedIn[0]) and strtotime($checkUserIsLoggedIn[0]['Expire'
 }elseif((isset($checkUserIsLoggedIn[0]) and strtotime($checkUserIsLoggedIn[0]['Expire']) <= time())){
     $DB->query('DELETE FROM LoginAuth WHERE ID=:id', array('id'=>$checkUserIsLoggedIn[0]['ID']));
 }
-//If the user is not already logged in then add any entry to the table
+//If the user is not already logged in then add an entry to the table
 do{
     $UUID = bin2hex(random_bytes(20));
 }while(!empty($DB->query("SELECT Token from LoginAuth WHERE Token='$UUID'")));
@@ -73,13 +73,13 @@ try {
     echo stouts('Error:'.$th, 'error');
 }
 $_SESSION['USER_TOKEN'] = $UUID;
-$senddata = [
+$sendData = [
     'success'=>'User Logged In',
     'Token'=>$UUID,
     'User'=>$userCheckData['UserEmail'],
     'Company'=>$userCheckData['CompanyName']
 ];
 
-echo json_encode($senddata);
+echo json_encode($sendData);
 
 

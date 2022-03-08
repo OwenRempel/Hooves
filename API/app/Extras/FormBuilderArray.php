@@ -103,7 +103,6 @@ $FormBuilderArray = [
                     ]
                 ],
 
-                //TODO:Get this working once the pens system is in place
 
                [
                     'name'=>'PenDate',
@@ -159,14 +158,14 @@ $FormBuilderArray = [
                 [
                     'name'=>'Remarks',
                     'typeName'=>'FormTextarea',
-                    'placeolder'=>'Type your remarks here',
+                    'placeholder'=>'Type your remarks here',
                     'inputLabel'=>'Remarks'
                     
                 ],
                 [
                     'name'=>'Description',
                     'typeName'=>'FormTextarea',
-                    'placeolder'=>'Type your description here',
+                    'placeholder'=>'Type your description here',
                     'inputLabel'=>'Description'
                     
                 ],
@@ -302,7 +301,7 @@ $FormBuilderArray = [
                 [
                     'name'=>'Message',
                     'typeName'=>'FormTextarea',
-                    'placeolder'=>'Type your message here',
+                    'placeholder'=>'Type your message here',
                     'textareaLabel'=>'Message'
                     
                 ]

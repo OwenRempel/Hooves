@@ -4,6 +4,9 @@ import { useState, useEffect} from 'react';
 import DisplayItems from '../../DisplayItems';
 import Back from '../../Back'
 
+//TODO: Add Images
+
+//TODO: Add buttons for groups and moving pens when those features get done
 
 
 function Cow() {

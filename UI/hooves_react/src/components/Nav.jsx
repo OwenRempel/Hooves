@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom"
 
+//TODO: Add Buttons for feedlot uses after that system is in place
+
+
+
 function Nav() {
     const [ToggleClass, setToggleClass] = useState('menuSmall');
     const [Icon, setIcon] = useState('menu');

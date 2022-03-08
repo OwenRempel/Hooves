@@ -2,7 +2,7 @@ import { render } from "react-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 // global css
 import './css/index.css';
-//main app wraper
+//main app wrapper
 import App from "./App";
 //default page probably stats later
 import Home from "./components/routes/Home";
@@ -36,6 +36,9 @@ import PenOutlet from "./components/routes/Pens/PenOutlet";
 //logout component
 import Logout from "./components/Logout";
 
+
+
+//TODO: Add routing for the groups and moving individual cows from pen to pen
 
 
 const rootElement = document.getElementById("root");
