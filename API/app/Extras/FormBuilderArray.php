@@ -105,26 +105,22 @@ $FormBuilderArray = [
 
                 //TODO:Get this working once the pens system is in place
 
-              /*  [
+               [
                     'name'=>'PenDate',
                     'typeName'=>'FormInput',
                     'type'=>'date',
                     'inputLabel'=>'Into Pen Date',
+                    'noEdit'=>true
                     
                 ],
                 [
                     'name'=>'Pen',
                     'typeName'=>'FormSelect',
                     'inputLabel'=>'Pen',
-                    'options'=>[
-                        [
-                            "value"=>'Owen',
-                            "option"=>'owen'
-                        ],
-                        
-                    ]
+                    'OptionsLoad'=>['Pens', 'Name'],
+                    'noEdit'=>true
                     
-                ],*/
+                ],
                 [
                     'name'=>'RecNo',
                     'typeName'=>'FormInput',

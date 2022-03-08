@@ -265,6 +265,9 @@ function selectUpdateFormItem($formArray, $redirectName, $ID){
         if($tokenData and !$tokenData[$items['name']]){
             continue;
         }
+        if(isset($items['noEdit'])){
+            continue;
+        }
         $itemArray = [];
         if($items['type'] == 'date'){
             $itemArray['defaultValue'] = date('Y-m-d');
@@ -290,11 +293,17 @@ function getFormStruct($formArray, $redirectName, $action){
     if($action == 'add'){
         $redirectName = $redirectName.'/'.$action;
     }
-    if(isset($_GET['token'])){
-        $tokenData = json_decode(getInfoFromToken($_GET['token'])['ListDisplayPref'], true);
-    }else{
-        $tokenData = null;
+
+    if(!isset($_GET['token'])){
+        echo stouts('Please include token parm', 'error');
+        exit();
     }
+    $userData = getInfoFromToken($_GET['token']);
+
+    $tokenData = json_decode($userData['ListDisplayPref'], true);
+  
+    $DB = new DB($userData['DBName']);
+
     $FormPassthroughItems = [
         'name',
         'type',
@@ -324,6 +333,18 @@ function getFormStruct($formArray, $redirectName, $action){
         }
         if(isset($items['passwordConfirm'])){
             $arrayToSend['form']['passwordCheck'] = [$items['passwordConfirm'], $items['name']];
+        }
+
+        if($items['typeName'] == 'FormSelect' and isset($items['OptionsLoad'])){
+            $sendOption = [];
+            $optionData = $DB->query('SELECT '.$items['OptionsLoad'][1].', ID FROM '.$items['OptionsLoad'][0].'');
+            foreach($optionData as $option){
+                $sendOption[] = [
+                    'value'=>$option['ID'],
+                    'option'=>$option[$items['OptionsLoad'][1]]
+                ];
+            }
+            $itemArray['options'] = $sendOption;
         }
         foreach($items as $itemName => $item){
             if(in_array($itemName, $FormPassthroughItems)){
@@ -408,8 +429,21 @@ function selectFormItem($localArray, $ID){
 
     $data = $DB->query("SELECT $selectItems from ".$localArray['tableName']." WHERE ID=:ID order By Adate Desc", array('ID'=>$ID));
     if(isset($data[0]['ID'])){
+        
+        foreach($localArray['items'] as $items){
+            if(isset($items['OptionsLoad'])){
+                $replaceQuery = [];
+                $replaceData = $DB->query('SELECT '.$items['OptionsLoad'][1].', ID FROM '.$items['OptionsLoad'][0].'');
+                foreach($replaceData as $rep){
+                    $replaceQuery[$rep['ID']] = $rep[$items['OptionsLoad'][1]];
+                }
+                foreach($data as $dataKey=>$dataItem){
+                    $data[$dataKey][$items['name']] = $replaceQuery[$dataItem[$items['name']]];
+                }
+            }
+        }
         $sendData['Data'] = $data;
-       echo json_encode($sendData);
+        echo json_encode($sendData);
     }else{
         echo stouts('The ID is invalid', 'error');
     }
@@ -450,6 +484,18 @@ function selectFormData($localArray){
     $DB = new DB($DBNameCheck['DBName']);
 
     $data = $DB->query("SELECT $selectItems from ".$localArray['tableName']." order By Adate Desc ");
+    foreach($localArray['items'] as $items){
+        if(isset($items['OptionsLoad'])){
+            $replaceQuery = [];
+            $replaceData = $DB->query('SELECT '.$items['OptionsLoad'][1].', ID FROM '.$items['OptionsLoad'][0].'');
+            foreach($replaceData as $rep){
+                $replaceQuery[$rep['ID']] = $rep[$items['OptionsLoad'][1]];
+            }
+            foreach($data as $dataKey=>$dataItem){
+                $data[$dataKey][$items['name']] = $replaceQuery[$dataItem[$items['name']]];
+            }
+        }
+    }
     $sendData['Data'] = $data;
     echo json_encode($sendData);
     
