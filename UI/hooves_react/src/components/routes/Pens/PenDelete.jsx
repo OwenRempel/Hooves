@@ -2,13 +2,20 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Back from "../../Back";
 function PenDelete() {
+
+    //TODO: Make it so that the last pen cannot be deleted
+
+    //TODO: Add system to move any cows from pen being deleted
+
+    
+
     const { ID } = useParams();
     const nav = useNavigate();
     
     const [Delete, setDelete] = useState(false);
-    
+
     if(Delete === true){
-        fetch(process.env.REACT_APP_API_URL+'/pen/'+ID+'?token='+localStorage.getItem('Token'),{
+        fetch(process.env.REACT_APP_API_URL+'/pens/'+ID+'?token='+localStorage.getItem('Token'),{
             method:'DELETE'
         })
         .then(response => response.json())
