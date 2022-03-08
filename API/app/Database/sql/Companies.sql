@@ -76,3 +76,5 @@ CREATE TABLE `Pens` (
     `ID` int unsigned NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB;
+
+Insert Into Pens (Name) Values ('Main Pen');
