@@ -24,7 +24,7 @@ function CowsAdd() {
           console.log(res)
         }
     }
-    console.log(formData.form)
+
     return (
       <div className="formWrap">
         <Link to='/'><button className='btn'>Back</button></Link>
