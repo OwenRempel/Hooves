@@ -44,9 +44,9 @@ if(isset($Routes[1])){
                         }
                     }
                 }
-                echo json_encode(['success'=>1, "Message"=>'Company successfuly Added']);
+                echo json_encode(['success'=>1, "Message"=>'Company successfully Added']);
             }else{
-                echo json_encode(['Error'=>1, "Message"=>'Incorect URL']);
+                echo json_encode(['Error'=>1, "Message"=>'Incorrect URL']);
             }
             
         }
