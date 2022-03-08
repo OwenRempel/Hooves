@@ -30,6 +30,9 @@ import AllSettings from "./components/routes/Settings/AllSettings";
 import NotFound from "./components/routes/NotFound";
 //imports for pens
 import Pens from "./components/routes/Pens/Pens";
+import PenDelete from "./components/routes/Pens/PenDelete";
+import PenUpdate from "./components/routes/Pens/PenUpdate";
+import PenOutlet from "./components/routes/Pens/PenOutlet";
 //logout component
 import Logout from "./components/Logout";
 
@@ -71,7 +74,11 @@ render(
         <Route path='/settings' element={<Settings/>}>
         <Route index element={<AllSettings />} />
           <Route path='profile' element={<Profile/>}/>
-          <Route path="pens" element={<Pens/>}/>
+          <Route path="pens" element={<PenOutlet/>}>
+            <Route index element={<Pens/>}/>
+            <Route path="edit/:ID" element={<PenUpdate/>}/>
+            <Route path="delete/:ID" element={<PenDelete/>}/>
+          </Route>
         </Route>
         <Route path='*' element={<NotFound />} />
       </Route>
