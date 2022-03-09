@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import Back from "../../Back";
 function PenDelete() {
 
-    //TODO: Make it so that the last pen cannot be deleted
 
     //TODO: Add system to move any cows from pen being deleted
 
@@ -22,6 +21,8 @@ function PenDelete() {
         .then(result => {
             if(result.success){
                 nav('/settings/pens');
+            }else{
+                console.log(result);
             }
         });
     }
