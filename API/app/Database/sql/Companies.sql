@@ -35,7 +35,7 @@ CREATE TABLE `Cattle` (
     PRIMARY KEY (`RID`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE `Groups` (
+CREATE TABLE `GroupData` (
     `Pen` varchar(100) DEFAULT NULL,
     `GroupName` text NOT NULL,
     `BcData` text,
@@ -43,7 +43,7 @@ CREATE TABLE `Groups` (
     `Stats` json DEFAULT NULL,
     `Package` json DEFAULT NULL,
     `SlDate` date DEFAULT NULL,
-    `Done` varchar(20) NOT NULL,
+    `Done` varchar(20) DEFAULT 0 NOT NULL,
     `Adate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `ID` varchar(100) NOT NULL,
     `RID` int unsigned NOT NULL AUTO_INCREMENT,
