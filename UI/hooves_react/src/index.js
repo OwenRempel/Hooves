@@ -33,6 +33,10 @@ import Pens from "./components/routes/Pens/Pens";
 import PenDelete from "./components/routes/Pens/PenDelete";
 import PenUpdate from "./components/routes/Pens/PenUpdate";
 import PenOutlet from "./components/routes/Pens/PenOutlet";
+//imports for groups
+import GroupOutlet from "./components/routes/Group";
+import GroupAdd from "./components/routes/Group/GroupAdd";
+import GroupList from "./components/routes/Group/GroupList";
 //logout component
 import Logout from "./components/Logout";
 
@@ -73,6 +77,10 @@ render(
             <Route path="edit/:Cow/:ID" element={<EditMedicine/>}/>
             <Route path="delete/:Cow/:ID" element={<DeleteMedicine/>}/>
           </Route>
+        </Route>
+        <Route path="groups" element={<GroupOutlet/>}>
+          <Route index element={<GroupList/>}/>
+          <Route path="add" element={<GroupAdd/>}/>  
         </Route>
         <Route path='/settings' element={<Settings/>}>
         <Route index element={<AllSettings />} />
