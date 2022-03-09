@@ -310,9 +310,11 @@ $FormBuilderArray = [
         'pens'=>[
             'formTitle'=>'Add Pen',
             'formName'=>'PenAddItem',
+            'formDesc'=>'Pen',
             'loginAuth'=>true,
             'tableName'=>'Pens',
             'success'=>'Pen successfully added!',
+            'allowCompleteDelete'=>false,
             'UUID'=>false,
             'items'=>[
                 [
