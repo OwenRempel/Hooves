@@ -50,6 +50,10 @@ function stouts($message, $type='info'){
 }
 //Gets the company DB and Display Pref
 function getInfoFromToken($token){
+    if(!$token){
+        http_response_code(404);
+        return array('Error'=>'No Token included');
+    }
     $DBAdmin = new DB_Admin;
     $loginData = $DBAdmin->query('SELECT DBName, ListDisplayPref FROM
         `LoginAuth` inner join Companies on LoginAuth.CompaniesID = Companies.ID
@@ -57,6 +61,7 @@ function getInfoFromToken($token){
     if(isset($loginData[0]['DBName'])){
         return $loginData[0];
     }else{
+        http_response_code(404);
         return array('Error'=>'That token is not connected to company');
     }
 }
@@ -89,6 +94,9 @@ function InitRouter(){
     }elseif($Routes[0] == 'logout'){
         //handle logout
         include('Extras/logout.php');
+    }elseif($Routes[0] == 'group'){
+        include('Extras/group.php');
+        exit();
     }elseif(isset($FormBuilderArray['Routes'][$Routes[0]])){
         //checks if the route is in the route array
         $localArray = $FormBuilderArray['Routes'][$Routes[0]];
@@ -106,6 +114,7 @@ function InitRouter(){
             }elseif(isset($PostInput[$localArray['formName']])){
                 $PostData = $PostInput;
             }else{
+                http_response_code(400);
                 echo stouts('No data Received', 'error');
                 exit();
             }
@@ -125,13 +134,14 @@ function InitRouter(){
                 selectUpdateFormItem($localArray, $Routes[0], $Routes[2]);
             }elseif(isset($Routes[1]) and  strtolower($Routes[1]) == 'info'){
                 //get the form structure for 
-                getFormStruct($localArray, $Routes[0], $Routes[1]);
+                getFormStruct($localArray, $Routes[0]);
             }elseif(isset($Routes[1]) and !in_array(strtolower($Routes[1]), $requestTypes)){
                 //Handle the individual requests
                 selectFormItem($localArray, $Routes[1]);
             }elseif(!isset($Routes[1]) or empty($Routes[1])){
                 selectFormData($localArray);
             }else{
+                http_response_code(400);
                 echo stouts('The action you have entered is not allowed on a GET Request', 'error');
             }
         }elseif($method == "POST"){
@@ -140,22 +150,26 @@ function InitRouter(){
             if(!empty($PostData)){
                 insertFormData($PostData, $localArray, $Routes);
             }else{
+                http_response_code(400);
                 echo stouts('No data received', 'error');
             }
         }elseif($method == 'PUT'){
             if(!empty($PostData) and !empty($Routes[1])){
                 updateFormData($PostData, $localArray, $Routes[1]);
             }else{
+                http_response_code(400);
                 echo stouts('No data received', 'error');
             }
         }elseif($method == 'DELETE'){
             if(!empty($Routes[1])){
                 deleteItem($localArray, $Routes[1]);
             }else{
+                http_response_code(400);
                 echo stouts('Please include an ID', 'error');
             }
         }
     }else{
+        http_response_code(404);
         echo stouts('That Route Does Not Exist', 'error');
     }
 }
@@ -164,12 +178,14 @@ function updateFormData($formData, $localArray, $ID){
     $DBAdmin = new DB_Admin;
     
     if(!isset($formData['Token'])){
+        http_response_code(401);
         echo stouts('Please include Login token', 'error');
         exit();
     }
     $data = $DBAdmin->query('SELECT * FROM `LoginAuth` inner join Companies on LoginAuth.CompaniesID = Companies.ID WHERE Token = :token', array('token'=>$formData['Token']));
 
     if(empty($data)){
+        http_response_code(401);
         echo stouts('Auth Token has expired or is invalid', 'error');
         exit();
     }
@@ -189,7 +205,7 @@ function updateFormData($formData, $localArray, $ID){
     $final = implode(', ', $final);
     $dataArray['ID'] = $ID;
     $dataUpdate = $DB->query('UPDATE '.$localArray['tableName'].' SET '.$final.' WHERE ID=:ID', $dataArray);
-
+    http_response_code(201);
     echo stouts('Cow Updated successfully', 'success');
 
 
@@ -198,6 +214,7 @@ function updateFormData($formData, $localArray, $ID){
 function selectUpdateFormItem($formArray, $redirectName, $ID){
     $sendData = [];
     if(!isset($_GET['token'])){
+        http_response_code(401);
         echo stouts('Please include token parm', 'error');
         exit();
     }
@@ -231,6 +248,7 @@ function selectUpdateFormItem($formArray, $redirectName, $ID){
 
     $data = $DB->query("SELECT $selectItems from ".$formArray['tableName']." WHERE ID=:ID order By Adate Desc", array('ID'=>$ID));
     if(!isset($data[0]['ID'])){
+        http_response_code(404);
         echo stouts('The ID is invalid', 'error');
         exit();
     }
@@ -286,15 +304,14 @@ function selectUpdateFormItem($formArray, $redirectName, $ID){
          
         $arrayToSend['form']['fields'][] = $itemArray;
     }
+    http_response_code(201);
     echo json_encode($arrayToSend); 
 }
 //get structure for building the add forms
-function getFormStruct($formArray, $redirectName, $action){
-    if($action == 'add'){
-        $redirectName = $redirectName.'/'.$action;
-    }
+function getFormStruct($formArray, $redirectName){
 
     if(!isset($_GET['token'])){
+        http_response_code(401);
         echo stouts('Please include token parm', 'error');
         exit();
     }
@@ -353,6 +370,7 @@ function getFormStruct($formArray, $redirectName, $action){
         }
         $arrayToSend['form']['fields'][] = $itemArray;
     }
+    http_response_code(200);
     echo json_encode($arrayToSend);
 }
 //get individual info
@@ -360,6 +378,7 @@ function selectFormItem($localArray, $ID){
     global $FormBuilderArray;
     $sendData = [];
     if(!isset($_GET['token'])){
+        http_response_code(401);
         echo stouts('Please include token parm', 'error');
         exit();
     }
@@ -443,8 +462,10 @@ function selectFormItem($localArray, $ID){
             }
         }
         $sendData['Data'] = $data;
+        http_response_code(201);
         echo json_encode($sendData);
     }else{
+        http_response_code(404);
         echo stouts('The ID is invalid', 'error');
     }
     
@@ -453,6 +474,7 @@ function selectFormItem($localArray, $ID){
 function selectFormData($localArray){
     $sendData = [];
     if(!isset($_GET['token'])){
+        http_response_code(401);
         echo stouts('Please include token pram', 'error');
         exit();
     }
@@ -504,31 +526,35 @@ function selectFormData($localArray){
 //insert form data
 function insertFormData($ReceivedFormData, $localArray, $Routes){
     $DBAdmin = new DB_Admin;
-   
+    
     if(isset($localArray['tokenAuth']) and isset($localArray['dbCreate'])){
         if(!isset($ReceivedFormData['Token'])){
+            http_response_code(401);
             echo stouts('Please include auth token', 'error');
             exit();
         }
         $data = $DBAdmin->query('SELECT Token, Expire from LoginAuth WHERE Token = :token', array('token'=>$ReceivedFormData['Token']));
         
         if(empty($data)){
+            http_response_code(401);
             echo stouts('Auth Token has expired or is invalid', 'error');
             exit();
         }
     }elseif(isset($localArray['loginAuth'])){
         if(!isset($ReceivedFormData['Token'])){
+            http_response_code(401);
             echo stouts('Please include Login token', 'error');
             exit();
         }
         $loginData = $DBAdmin->query('SELECT * FROM `LoginAuth` inner join Companies on LoginAuth.CompaniesID = Companies.ID WHERE Token = :token', array('token'=>$ReceivedFormData['Token']));
         if(!isset($loginData[0]['DBName'])){
+            http_response_code(401);
             echo stouts('Your Token is not linked to a company', 'error');
             exit();
         }
     }
     
-
+   
     if(isset($localArray['dbCreate'])){
         $DB = $DBAdmin;
     }else{
@@ -554,6 +580,7 @@ function insertFormData($ReceivedFormData, $localArray, $Routes){
                     $table = (isset($localArray['secondTable']) ? $localArray['secondTable'] : $localArray['tableName'] );
                     $check = $DB->query("SELECT $itemKey From $table WHERE $itemKey=:$itemKey", array($itemKey=>$item));
                     if(!empty($check)){
+                        http_response_code(409);
                         echo stouts("This $itemKey Already Exists", 'error');
                         exit();
                     }                    
@@ -578,12 +605,16 @@ function insertFormData($ReceivedFormData, $localArray, $Routes){
                 $pdoDataArray[$localArray['masterLink']] = $Routes[1]; 
                 $insertStringArray[] = $localArray['masterLink'];
             }else{
+                http_response_code(400);
                 echo stouts('Please Include A valid UUID', 'error');
             }
         }else{
+            http_response_code(400);
             echo stouts('Please Include a UUID in the url', 'error');
         }
     }
+   
+    
     //creation of the UUID for the table item
     if(!isset($localArray['UUID']) or $localArray['UUID'] == true){
         do{
@@ -592,6 +623,7 @@ function insertFormData($ReceivedFormData, $localArray, $Routes){
         $insertStringArray[] = 'ID';
         $pdoDataArray['ID'] = $UUID;
     }
+   
     if(isset($localArray['dbCreate'])){
         do{
             $UUID = bin2hex(random_bytes(8));
@@ -609,7 +641,7 @@ function insertFormData($ReceivedFormData, $localArray, $Routes){
             $DB_Local->exFile(file_get_contents($dbBuildData));
         }
     }
-
+    
     if(isset($localArray['secondTable'])){
         do{
             $secUUID = bin2hex(random_bytes(8));
@@ -631,14 +663,14 @@ function insertFormData($ReceivedFormData, $localArray, $Routes){
     if(isset($localArray['tokenAuth'])){
         $data = $DB->query('DELETE from '.$localArray['tokenAuth'].' WHERE Token = :token', array('token'=>$ReceivedFormData['Token']));
     }
-
+    http_response_code(201);
     echo stouts($localArray['success'], 'success');
     
 }
-
 //delete item
 function deleteItem($formArray, $ID){
     if(!isset($_GET['token'])){
+        http_response_code(401);
         echo stouts('Please include token parm', 'error');
         exit();
     }
@@ -650,9 +682,21 @@ function deleteItem($formArray, $ID){
     }
 
     $DB = new DB($DBNameCheck['DBName']);
+    
+    if(isset($formArray['allowCompleteDelete']) and $formArray['allowCompleteDelete'] == false){
+        $checkNumber = count($DB->query("SELECT ID from ".$formArray['tableName'].""));
+        if($checkNumber == 1){
+            http_response_code(409);
+            echo stouts('This is the last '.$formArray['formDesc'].' You cannot delete it', 'error');
+            exit();
+        }
+    }
+
+    //TODO: When deleting a pen move any cows in it to a pen that the user provides
 
     $data = $DB->query("SELECT ID from ".$formArray['tableName']." WHERE ID=:ID", array('ID'=>$ID));
     if(!isset($data[0]['ID'])){
+        http_response_code(404);
         echo stouts('The ID is invalid', 'error');
         exit();
     }
