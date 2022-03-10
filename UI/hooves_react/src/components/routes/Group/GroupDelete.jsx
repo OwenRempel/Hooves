@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Back from '../../Back'
 
 
+//TODO: add system to remove groups from any entries that are in the group
+
 function GroupDelete() {
     const { ID } = useParams();
     const nav = useNavigate();
