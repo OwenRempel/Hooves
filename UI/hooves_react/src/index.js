@@ -37,6 +37,8 @@ import PenOutlet from "./components/routes/Pens/PenOutlet";
 import GroupOutlet from "./components/routes/Group";
 import GroupAdd from "./components/routes/Group/GroupAdd";
 import GroupList from "./components/routes/Group/GroupList";
+import GroupEdit from "./components/routes/Group/GroupEdit";
+import GroupDelete from "./components/routes/Group/GroupDelete";
 //logout component
 import Logout from "./components/Logout";
 
@@ -81,6 +83,8 @@ render(
         <Route path="groups" element={<GroupOutlet/>}>
           <Route index element={<GroupList/>}/>
           <Route path="add" element={<GroupAdd/>}/>  
+          <Route path="edit/:ID" element={<GroupEdit/>}/>
+          <Route path="delete/:ID" element={<GroupDelete/>}/>
         </Route>
         <Route path='/settings' element={<Settings/>}>
         <Route index element={<AllSettings />} />
