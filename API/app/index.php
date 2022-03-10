@@ -580,8 +580,17 @@ function insertFormData($ReceivedFormData, $localArray, $Routes){
                     $table = (isset($localArray['secondTable']) ? $localArray['secondTable'] : $localArray['tableName'] );
                     $check = $DB->query("SELECT $itemKey From $table WHERE $itemKey=:$itemKey", array($itemKey=>$item));
                     if(!empty($check)){
+                        if(isset($formItem['inputLabel'])){
+                            $label = $formItem['inputLabel'];
+                        }elseif(isset($formItem['selectLabel'])){
+                            $label = $formItem['selectLabel'];
+                        }elseif(isset($formItem['textareaLabel'])){
+                            $label = $formItem['textareaLabel'];
+                        }else{
+                            $label = $itemKey;
+                        }
                         http_response_code(409);
-                        echo stouts("This $itemKey Already Exists", 'error');
+                        echo stouts("This $label Already Exists", 'error');
                         exit();
                     }                    
                 }
