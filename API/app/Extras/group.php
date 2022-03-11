@@ -161,14 +161,18 @@ switch ($method) {
         }
         break;
     case 'POST':
-        if($Routes[1] == 'entries'){
-            if(isset($Routes[4])){
+        if($Routes[2] == 'entries'){
+            if(isset($Routes[3])){
+                if(!isset($PostData['entryID'])){
+                    echo stouts('Please include an ID you wish to add', 'error');
+                    exit();
+                }
                 switch ($Routes[3]) {
                     case 'add':
-                        addEntry($DB, $groupFormData, $Routes[2], $Routes[4]);
+                        addEntry($DB, $groupFormData, $Routes[1], $PostData['entryID']);
                         break;
                     case 'remove':
-                        removeEntry($DB, $groupFormData, $Routes[2], $Routes[4]);
+                        removeEntry($DB, $groupFormData, $Routes[1], $PostData['entryID']);
                         break;
                     default:
                         http_response_code(404);
