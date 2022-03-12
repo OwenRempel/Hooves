@@ -43,9 +43,42 @@ if(isset($userData['Error'])){
 
 $DB = new DB($userData['DBName']);
 
-function getEntries($DB, $formData, $groupID ){
-    $groupData = $DB->query('SELECT data from '.$formData['tableName'].' WHERE ID=:id', array('id'=>$groupID));
-    echo json_encode($groupData);
+function getEntries($DB, $formData, $groupID, $return = false ){
+    $groupData = $DB->query('SELECT '.$formData['entriesShowData'].', ID from '.$formData['entriesTarget'].' WHERE '.$formData['entriesLink'].'=:id', array('id'=>$groupID));
+    if(!isset($groupData[0])){
+        http_response_code(404);
+        echo stouts('No Cattle in that Group', 'error');
+        exit();
+    }
+    $send = [];
+    $info = [];
+    $data = [];
+    foreach($groupData[0] as $key=>$row){
+        if(isset($formData['entriesLabels'][$key])){
+            $label = $formData['entriesLabels'][$key];
+        }else{
+            $label = $key;
+        }
+        $info[$key] = $label; 
+    }
+    $send['Info'] = $info;
+
+    
+    $replaceQuery = [];
+    $replaceData = $DB->query('SELECT Name, ID FROM Pens'); //TODO: This is hard coded I might change this later
+    foreach($replaceData as $rep){
+        $replaceQuery[$rep['ID']] = $rep['Name'];
+    }
+    foreach($groupData as $dataKey=>$dataItem){
+        $groupData[$dataKey]['Pen'] = $replaceQuery[$dataItem['Pen']];
+    }
+    
+    $send["Data"] = $groupData;
+    if($return){
+        return $send;
+    }else{
+        echo json_encode($send);
+    }
 }
 
 
@@ -72,14 +105,16 @@ function addEntry($DB, $formData, $groupID, $entryID){
     }
 
     if(in_array($entryID, $DataArray)){
-        echo stouts('Entry already in Group', 'success');
+        echo stouts('Entry already in Group', 'error');
         exit();
     }
     $DataArray[] = $entryID;
     $sendData = json_encode($DataArray);
     $DB->query('Update '.$formData['tableName'].' SET data=:group WHERE ID=:id', array('group'=>$sendData, 'id'=>$groupID));
     $DB->query('Update '.$formData['entriesTarget'].' SET '.$formData['entriesLink'].'=:group WHERE ID=:id', array('group'=>$groupID, 'id'=>$entryID));
-    echo stouts('Entry added to Group', 'success');
+    $send = getEntries($DB, $formData, $groupID, true);
+    $send['success'] = 'Entry added to Group';
+    echo json_encode($send);
     exit();
 }
 
@@ -115,7 +150,9 @@ function removeEntry($DB, $formData, $groupID, $entryID){
     $sendData = json_encode($DataArray);
     $DB->query('Update '.$formData['tableName'].' SET data=:group WHERE ID=:id', array('group'=>$sendData, 'id'=>$groupID));
     $DB->query('Update '.$formData['entriesTarget'].' SET '.$formData['entriesLink'].'=null WHERE ID=:id', array('id'=>$entryID));
-    echo stouts('Entry removed from Group', 'success');
+    $send = getEntries($DB, $formData, $groupID, true);
+    $send['error'] = 'Entry removed from Group';
+    echo json_encode($send);
     exit();
 }
 
@@ -128,6 +165,8 @@ $groupFormData = [
     'success'=>'Group successfully created!',
     'entriesTarget'=>'Cattle',
     'entriesLink'=>'GroupId',
+    'entriesShowData'=>'Tag, BuyDate, Pen',
+    'entriesLabels'=>['BuyDate'=>'Date Bought'],
     'items'=>[
         [
             'name'=>'GroupName',
@@ -154,8 +193,8 @@ switch ($method) {
             getFormStruct($groupFormData, 'group');
         }elseif($Routes[1] == 'info' and isset($Routes[2])){
             selectUpdateFormItem($groupFormData, $Routes[0], $Routes[2]);
-        }elseif($Routes[1] == 'entries' and isset($Routes[2])){
-            getEntries($DB, $groupFormData, $Routes[2]);
+        }elseif($Routes[2] == 'entries'){
+            getEntries($DB, $groupFormData, $Routes[1]);
         }else{
             selectFormData($groupFormData);
         }
@@ -176,7 +215,7 @@ switch ($method) {
                         break;
                     default:
                         http_response_code(404);
-                        echo stouts('Please Choose a valid action', 'error');
+                        echo stouts('Please Choos`e a valid action', 'error');
                         break;
                 }
             }else{
