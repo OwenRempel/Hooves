@@ -39,6 +39,7 @@ import GroupAdd from "./components/routes/Group/GroupAdd";
 import GroupList from "./components/routes/Group/GroupList";
 import GroupEdit from "./components/routes/Group/GroupEdit";
 import GroupDelete from "./components/routes/Group/GroupDelete";
+import GroupEntries from "./components/routes/Group/GroupEntries";
 //logout component
 import Logout from "./components/Logout";
 
@@ -85,6 +86,7 @@ render(
           <Route path="add" element={<GroupAdd/>}/>  
           <Route path="edit/:ID" element={<GroupEdit/>}/>
           <Route path="delete/:ID" element={<GroupDelete/>}/>
+          <Route path="entries/:ID" element={<GroupEntries/>}/>
         </Route>
         <Route path='/settings' element={<Settings/>}>
         <Route index element={<AllSettings />} />
