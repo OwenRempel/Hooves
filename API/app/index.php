@@ -184,6 +184,11 @@ function search($localArray, $searchVal){
         exit();
     }
     $userData = getInfoFromToken($_GET['token']);
+ 
+    if(isset($userData['Error'])){
+        echo stouts($userData['Error'], 'error');
+        exit();
+    }
 
     $tokenData = json_decode($userData['ListDisplayPref'], true);
 
@@ -367,6 +372,12 @@ function getFormStruct($formArray, $redirectName){
 
     $tokenData = json_decode($userData['ListDisplayPref'], true);
   
+
+    if(isset($userData['Error'])){
+        echo stouts($userData['Error'], 'error');
+        exit();
+    }
+
     $DB = new DB($userData['DBName']);
 
     $FormPassthroughItems = [
@@ -459,7 +470,14 @@ function selectFormItem($localArray, $ID){
     
     $DB = new DB($DBNameCheck['DBName']);
 
-    //check for sub forms
+    $data = $DB->query("SELECT $selectItems from ".$localArray['tableName']." WHERE ID=:ID order By Adate Desc", array('ID'=>$ID));
+
+    $send = buildOutput($localArray, $data, $DB, $ID, false);
+
+    echo json_encode($send);
+
+
+    /* //check for sub forms
     $subArray = [];
     if(isset($localArray['subArrays']) and isset($localArray['subLink'])){
        
@@ -509,14 +527,63 @@ function selectFormItem($localArray, $ID){
                 }
             }
         }
-        $sendData['Data'] = $data;
-        http_response_code(201);
+        $sendData['Data'] = $data; 
+        http_response_code(200);
         echo json_encode($sendData);
     }else{
         http_response_code(404);
         echo stouts('The ID is invalid', 'error');
     }
+    */
     
+}
+function buildOutput($localArray, $data, $DB, $ID = null, $sub = false){
+//check for sub forms
+$subArray = [];
+if(isset($localArray['subArrays']) and isset($localArray['subLink']) and $sub){
+    foreach($localArray['subArrays'] as $sub){
+        if(isset($FormBuilderArray['Routes'][$sub]['orderIndex'])){
+            $order = $FormBuilderArray['Routes'][$sub]['orderIndex'];
+        }else{
+            $order = "Adate";
+        }
+        $check = true;
+        $da = $DB->query('SELECT * From '.$FormBuilderArray['Routes'][$sub]['tableName'].' WHERE '.$localArray['subLink'].'=:ID order by '.$order.' DESC',array('ID'=>$ID));
+        foreach($da as $row){
+            $each = [];
+            foreach($FormBuilderArray['Routes'][$sub]['items'] as $item){
+                if(isset($row[$item['name']])){
+                    $each[$item['name']] = $row[$item['name']];
+                    if($check){
+                        $subArray[$sub]['Info'][$item['name']] = $item['inputLabel'];
+                    }
+                    
+                }
+            }
+            $each['ID'] = $row['ID'];
+            
+            $subArray[$sub]["Data"][] = $each;
+            $check = false;
+        }
+    }
+    $sendData['Sub'] = $subArray;
+}
+
+if(isset($data[0]['ID'])){
+    foreach($localArray['items'] as $items){
+        if(isset($items['OptionsLoad'])){
+            $replaceQuery = [];
+            $replaceData = $DB->query('SELECT '.$items['OptionsLoad'][1].', ID FROM '.$items['OptionsLoad'][0].'');
+            foreach($replaceData as $rep){
+                $replaceQuery[$rep['ID']] = $rep[$items['OptionsLoad'][1]];
+            }
+            foreach($data as $dataKey=>$dataItem){
+                $data[$dataKey][$items['name']] = $replaceQuery[$dataItem[$items['name']]];
+            }
+        }
+    }
+    $sendData['Data'] = $data;
+}
 }
 //get bulk data
 function selectFormData($localArray){
