@@ -177,6 +177,15 @@ font-size: 12px;
     text-align: center;
   }
 }
+/*/////////// Groups Css ///////////*/
+
+.linkClick{
+  cursor: pointer;
+
+}
+.linkClick:hover{
+  text-decoration: underline;
+}
 
 /*/////////// Settings Css ///////////*/
 
