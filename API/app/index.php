@@ -178,6 +178,7 @@ function InitRouter(){
 }
 //search form data
 function search($localArray, $searchVal){
+    $sendData = [];
     if(!isset($_GET['token'])){
         http_response_code(401);
         echo stouts('Please include token parm', 'error');
@@ -219,7 +220,10 @@ function search($localArray, $searchVal){
     $DB = new DB($userData['DBName']);
 
     $data = $DB->query('SELECT '.$selectItems.' from '.$localArray['tableName'].' WHERE '.$searchQuery.'');
-    echo json_encode($data);
+
+    $sendData["Data"] = $data;
+
+    echo json_encode($sendData);
 }
 //handler updating the db
 function updateFormData($formData, $localArray, $ID){
