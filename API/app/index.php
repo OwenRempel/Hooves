@@ -135,6 +135,9 @@ function InitRouter(){
             }elseif(isset($Routes[1]) and  strtolower($Routes[1]) == 'info'){
                 //get the form structure for 
                 getFormStruct($localArray, $Routes[0]);
+            }elseif(isset($Routes[1]) and $Routes[1] == 'search'){
+                //Handle the individual requests
+                search($localArray, $Routes[2]);
             }elseif(isset($Routes[1]) and !in_array(strtolower($Routes[1]), $requestTypes)){
                 //Handle the individual requests
                 selectFormItem($localArray, $Routes[1]);
@@ -172,6 +175,51 @@ function InitRouter(){
         http_response_code(404);
         echo stouts('That Route Does Not Exist', 'error');
     }
+}
+//search form data
+function search($localArray, $searchVal){
+    if(!isset($_GET['token'])){
+        http_response_code(401);
+        echo stouts('Please include token parm', 'error');
+        exit();
+    }
+    $userData = getInfoFromToken($_GET['token']);
+
+    $tokenData = json_decode($userData['ListDisplayPref'], true);
+
+    $selectItems = [];
+    if($tokenData != null){
+        
+        foreach($localArray['items'] as $item){
+            if(isset($onlyDisplay[$item['name']])){
+                $sendData['Info'][$item['name']] = $item['inputLabel'];
+                $selectItems[] = $item['name'];
+            }
+        }
+    }else{
+        foreach($localArray['items'] as $item){
+            $sendData['Info'][$item['name']] = $item['inputLabel'];
+            $selectItems[] = $item['name'];
+        }
+    }
+    $selectItems[] = 'ID';
+    $selectItems = implode(', ', $selectItems);
+
+    if(!isset($localArray['search'])){
+        http_response_code(404);
+        echo stouts('You cant search this data', 'error');
+        exit();
+    }
+    $searchData=[];
+    foreach($localArray['search'] as $searchItem){
+        $searchData[] = ' '.$searchItem.' LIKE "%'.$searchVal.'%"';
+    }
+  
+    $searchQuery = implode(' or ', $searchData);
+    $DB = new DB($userData['DBName']);
+
+    $data = $DB->query('SELECT '.$selectItems.' from '.$localArray['tableName'].' WHERE '.$searchQuery.'');
+    echo json_encode($data);
 }
 //handler updating the db
 function updateFormData($formData, $localArray, $ID){
