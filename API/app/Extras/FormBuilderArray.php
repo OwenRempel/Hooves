@@ -51,6 +51,7 @@ $FormBuilderArray = [
             'success'=>'Cow successfully created!',
             'subArrays'=>['weight', 'medical'],
             'subLink'=>'CowID',
+            'search'=>['Tag', 'HerdsMan', 'Investor', 'Description'],
             'items'=>[
                 [
                     'name'=>'Tag',
