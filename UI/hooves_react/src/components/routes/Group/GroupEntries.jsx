@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom"
 
 function GroupEntries() {
     const [ Entries, setEntries] = useState({});
+    const [ Search, setSearch ] = useState({});
     const { ID } = useParams();
     useEffect(() => {
     fetch(process.env.REACT_APP_API_URL+'/group/'+ID+'/entries?token='+localStorage.getItem('Token'))
@@ -70,7 +71,14 @@ function GroupEntries() {
     }
     const searchEntrys = (e) =>{
       var val = e.target.value
-      
+      if(val){
+        fetch(process.env.REACT_APP_API_URL+'/cattle/search/'+val+'?token='+localStorage.getItem('Token'))
+          .then(response => response.json())
+          .then(result => {
+            setSearch(result)
+        })
+      }
+        
     }
     const removeEntry = (EntryID) =>{
         console.log(EntryID);
@@ -79,6 +87,7 @@ function GroupEntries() {
     const addEntry = (EntryID) =>{
         console.log(EntryID);
     }
+    console.log(Search);
   return (
     <>
         <h2>Group Items</h2>
@@ -88,7 +97,9 @@ function GroupEntries() {
         <div className="groupSearch">
           <input type='search' onKeyUp={searchEntrys}/>
         </div>
-        
+        {Search.Data &&
+          <List data={Search} type='add'/>
+        }
     </>
   )
 }
