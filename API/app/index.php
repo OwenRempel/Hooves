@@ -189,19 +189,13 @@ function search($localArray, $searchVal){
     $tokenData = json_decode($userData['ListDisplayPref'], true);
 
     $selectItems = [];
-    if($tokenData != null){
-        
-        foreach($localArray['items'] as $item){
-            if(isset($onlyDisplay[$item['name']])){
-                $sendData['Info'][$item['name']] = $item['inputLabel'];
-                $selectItems[] = $item['name'];
-            }
-        }
-    }else{
-        foreach($localArray['items'] as $item){
+    foreach($localArray['items'] as $item){
+        if(in_array($item['name'], $localArray['search'])){
             $sendData['Info'][$item['name']] = $item['inputLabel'];
             $selectItems[] = $item['name'];
         }
+        
+        
     }
     $selectItems[] = 'ID';
     $selectItems = implode(', ', $selectItems);
