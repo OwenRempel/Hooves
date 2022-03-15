@@ -13,6 +13,7 @@
   --text-color-light:#c9d1d9;
   /*--background:#39414b;*/
   --background:#0d1117;
+  --search-background:#21262e;
   --display-items:#9e9e9e1c;
   --mainFont:'Roboto', sans-serif;
 }
@@ -31,6 +32,7 @@
     --text-color:black;
     --text-color-light:white;
     --background:white;
+    --search-background:white;
   }
 }
 
@@ -426,7 +428,7 @@ font-size: 12px;
   width: 100%;
   margin: 17px auto;
   padding: 0px 20px;
-  background-color: var(--background);
+  background-color: var(--search-background);
   border-radius: 4px;
   color:var(--text-color);
   font-size: 18px;
