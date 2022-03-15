@@ -72,7 +72,7 @@ function GroupEntries() {
     const searchEntrys = (e) =>{
       var val = e.target.value
       if(val){
-        fetch(process.env.REACT_APP_API_URL+'/cattle/search/'+val+'?token='+localStorage.getItem('Token'))
+        fetch(process.env.REACT_APP_API_URL+'/cattle/search/'+val+'?group=1&token='+localStorage.getItem('Token'))
           .then(response => response.json())
           .then(result => {
             setSearch(result)
@@ -80,22 +80,76 @@ function GroupEntries() {
       }
         
     }
-    const removeEntry = (EntryID) =>{
-        console.log(EntryID);
+    const removeEntry = (Entry) =>{
+      fetch(process.env.REACT_APP_API_URL+'/group/'+ID+'/entries/remove', {
+        method:'POST',
+        headers:{
+          'Content-Type': '"application/x-form-urlencoded"'
+          },
+        body:JSON.stringify({
+          Token:localStorage.getItem('Token'),
+          GroupMod:1,
+          entryID:Entry
+        })
+      })
+        .then(response => response.json())
+        .then(result => {
+          if(result.success){
+            setEntries(result);
+          }else{
+            console.log(result)
+          }
+      })
     }
 
-    const addEntry = (EntryID) =>{
-        console.log(EntryID);
+    const addEntry = (Entry) =>{
+
+      function removeArray(Item, arr){
+        var newArr = []
+        arr.map((i, j)=>{
+          if(i.ID !== Item){
+            newArr.push(i)
+          }
+          return null
+        })
+        return newArr
+      }
+
+
+      fetch(process.env.REACT_APP_API_URL+'/group/'+ID+'/entries/add', {
+        method:'POST',
+        headers:{
+          'Content-Type': '"application/x-form-urlencoded"'
+          },
+        body:JSON.stringify({
+          Token:localStorage.getItem('Token'),
+          GroupMod:1,
+          entryID:Entry
+        })
+      })
+        .then(response => response.json())
+        .then(result => {
+          if(result.success){
+            setEntries(result);
+            var reset = Search
+            reset.Data = removeArray(Entry, Search.Data)
+            setSearch(reset)
+          }else{
+            console.log(result)
+          }
+      })
     }
-    console.log(Search);
+    
+    console.log(Search)
   return (
     <>
         <h2>Group Items</h2>
         {Entries.Data &&
           <List data={Entries} type='remove'/>
         }
-        <div className="groupSearch">
-          <input type='search' onKeyUp={searchEntrys}/>
+        
+        <div className="search">
+          <input type='search' className="searchInput" placeholder="Search" onKeyUp={searchEntrys}/>
         </div>
         {Search.Data &&
           <List data={Search} type='add'/>
