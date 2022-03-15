@@ -185,6 +185,11 @@ function search($localArray, $searchVal){
         exit();
     }
     $userData = getInfoFromToken($_GET['token']);
+    if(isset($userData['Error'])){
+        echo stouts($userData['Error'], 'error');
+        exit();
+    }
+
 
     $tokenData = json_decode($userData['ListDisplayPref'], true);
 
@@ -210,10 +215,15 @@ function search($localArray, $searchVal){
         $searchData[] = ' '.$searchItem.' LIKE "%'.$searchVal.'%"';
     }
   
-    $searchQuery = implode(' or ', $searchData);
+    $searchQuery = '('. implode(' or ', $searchData).')';
     $DB = new DB($userData['DBName']);
 
-    $data = $DB->query('SELECT '.$selectItems.' from '.$localArray['tableName'].' WHERE '.$searchQuery.'');
+    $groupCheck = '';
+    if(isset($_GET['group'])){
+        $groupCheck = ' and GroupId IS NULL';
+    }
+
+    $data = $DB->query('SELECT '.$selectItems.' from '.$localArray['tableName'].' WHERE '.$searchQuery.' '.$groupCheck.'');
 
     $sendData["Data"] = $data;
 
