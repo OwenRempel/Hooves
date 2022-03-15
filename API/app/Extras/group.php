@@ -44,12 +44,13 @@ if(isset($userData['Error'])){
 $DB = new DB($userData['DBName']);
 
 function getEntries($DB, $formData, $groupID, $return = false ){
-    $groupData = $DB->query('SELECT '.$formData['entriesShowData'].', ID from '.$formData['entriesTarget'].' WHERE '.$formData['entriesLink'].'=:id', array('id'=>$groupID));
-    if(!isset($groupData[0])){
+    $groupCheck = $DB->query('SELECT ID FROM GroupData WHERE ID=:id', array('id'=>$groupID));
+    if(!isset($groupCheck[0])){
         http_response_code(404);
-        echo stouts('No Cattle in that Group', 'error');
+        echo stouts('That Group Dosen\'t Exist', 'error');
         exit();
     }
+    $groupData = $DB->query('SELECT '.$formData['entriesShowData'].', ID from '.$formData['entriesTarget'].' WHERE '.$formData['entriesLink'].'=:id', array('id'=>$groupID));
     $send = [];
     $info = [];
     $data = [];
@@ -151,7 +152,7 @@ function removeEntry($DB, $formData, $groupID, $entryID){
     $DB->query('Update '.$formData['tableName'].' SET data=:group WHERE ID=:id', array('group'=>$sendData, 'id'=>$groupID));
     $DB->query('Update '.$formData['entriesTarget'].' SET '.$formData['entriesLink'].'=null WHERE ID=:id', array('id'=>$entryID));
     $send = getEntries($DB, $formData, $groupID, true);
-    $send['error'] = 'Entry removed from Group';
+    $send['success'] = 'Entry removed from Group';
     echo json_encode($send);
     exit();
 }
@@ -203,7 +204,7 @@ switch ($method) {
         if($Routes[2] == 'entries'){
             if(isset($Routes[3])){
                 if(!isset($PostData['entryID'])){
-                    echo stouts('Please include an ID you wish to add', 'error');
+                    echo stouts('Please include an ID you wish to alter', 'error');
                     exit();
                 }
                 switch ($Routes[3]) {
@@ -215,7 +216,7 @@ switch ($method) {
                         break;
                     default:
                         http_response_code(404);
-                        echo stouts('Please Choos`e a valid action', 'error');
+                        echo stouts('Please Choose a valid action', 'error');
                         break;
                 }
             }else{
