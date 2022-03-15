@@ -21,7 +21,7 @@ function GroupList() {
             {Groups.Data &&
             <Table table={Groups} UrlKey={[
                 {
-                    title:'Add',
+                    title:'Entries',
                     link:'/groups/entries/'
                 },
                 {
