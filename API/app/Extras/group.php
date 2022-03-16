@@ -71,7 +71,11 @@ function getEntries($DB, $formData, $groupID, $return = false ){
         $replaceQuery[$rep['ID']] = $rep['Name'];
     }
     foreach($groupData as $dataKey=>$dataItem){
-        $groupData[$dataKey]['Pen'] = $replaceQuery[$dataItem['Pen']];
+        if(isset($replaceQuery[$dataItem['Pen']])){
+            $groupData[$dataKey]['Pen'] = $replaceQuery[$dataItem['Pen']];
+        }else{
+            $groupData[$dataKey]['Pen'] = 'Pen Removed';
+        }
     }
     
     $send["Data"] = $groupData;
