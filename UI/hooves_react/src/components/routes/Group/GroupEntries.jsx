@@ -69,9 +69,9 @@ function GroupEntries() {
         </>
       )
     }
-    const searchEntrys = (e) =>{
+    const searchEntries = (e) =>{
       var val = e.target.value
-      if(val){
+      if(val && val !== ' ' && val !== '%' && val !== '#'){
         fetch(process.env.REACT_APP_API_URL+'/cattle/search/'+val+'?group=1&token='+localStorage.getItem('Token'))
           .then(response => response.json())
           .then(result => {
@@ -104,7 +104,9 @@ function GroupEntries() {
 
     const addEntry = (Entry) =>{
 
-      function removeArray(Item, arr){
+      function removeArray(Item){
+        var arr = Search.Data
+        var reset = Search
         var newArr = []
         arr.map((i, j)=>{
           if(i.ID !== Item){
@@ -112,9 +114,10 @@ function GroupEntries() {
           }
           return null
         })
-        return newArr
+        
+        reset.Data = newArr
+        setSearch(reset)
       }
-
 
       fetch(process.env.REACT_APP_API_URL+'/group/'+ID+'/entries/add', {
         method:'POST',
@@ -130,17 +133,16 @@ function GroupEntries() {
         .then(response => response.json())
         .then(result => {
           if(result.success){
+            removeArray(Entry)
+           
             setEntries(result);
-            var reset = Search
-            reset.Data = removeArray(Entry, Search.Data)
-            setSearch(reset)
+            
           }else{
             console.log(result)
           }
       })
     }
-    
-    console.log(Search)
+
   return (
     <>
         <h2>Group Items</h2>
@@ -149,7 +151,7 @@ function GroupEntries() {
         }
         
         <div className="search">
-          <input type='search' className="searchInput" placeholder="Search" onKeyUp={searchEntrys}/>
+          <input type='search' className="searchInput" placeholder="Search" onKeyUp={searchEntries}/>
         </div>
         {Search.Data &&
           <List data={Search} type='add'/>
