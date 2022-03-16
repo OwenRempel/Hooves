@@ -239,6 +239,8 @@ font-size: 12px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  grid-row: 1;
+  grid-column: 3;
 }
 
 
@@ -447,7 +449,7 @@ font-size: 12px;
 }
 
 @media only screen and (max-width: 800px) {
-  .search {
+  .mobHide{
     display: none;
   }
 }
