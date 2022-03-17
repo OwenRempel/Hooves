@@ -411,6 +411,12 @@ function getFormStruct($formArray, $redirectName){
         if($items['typeName'] == 'FormSelect' and isset($items['OptionsLoad'])){
             $sendOption = [];
             $optionData = $DB->query('SELECT '.$items['OptionsLoad'][1].', ID FROM '.$items['OptionsLoad'][0].'');
+            if(isset($items['allowNull'])){
+                $sendOption[] = [
+                    'value'=>null,
+                    'option'=>'None'
+                ];
+            }
             foreach($optionData as $option){
                 $sendOption[] = [
                     'value'=>$option['ID'],
