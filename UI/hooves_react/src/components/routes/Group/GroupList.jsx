@@ -22,15 +22,18 @@ function GroupList() {
             <Table table={Groups} UrlKey={[
                 {
                     title:'Entries',
-                    link:'/groups/entries/'
+                    link:'/groups/entries/',
+                    className:'btn yes-btn btn-small'
                 },
                 {
                     title:'Edit',
-                    link:'/groups/edit/'
+                    link:'/groups/edit/',
+                    className:'btn  btn-small'
                 },
                 {
                     title:'Delete',
-                    link:'/groups/delete/'
+                    link:'/groups/delete/',
+                    className:'btn no-btn  btn-small'
                 }
             ]}/>
             }

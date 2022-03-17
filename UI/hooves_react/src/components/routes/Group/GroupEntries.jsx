@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 
 
 function GroupEntries() {
@@ -34,10 +34,10 @@ function GroupEntries() {
       return(
         <tr>
           {type === 'remove' &&
-            <td className="linkClick" onClick={()=>removeEntry(row.ID)}>Remove</td>
+            <td onClick={()=>removeEntry(row.ID)}><span className="btn no-btn btn-small">Remove</span><Link to={'/cows/'+row.ID} className='btn btn-small'>View</Link></td>
           }
           {type === 'add' &&
-            <td className="linkClick" onClick={()=>addEntry(row.ID)}>Add</td>
+            <td onClick={()=>addEntry(row.ID)}><span className="btn yes-btn btn-small">Add</span><Link to={'/cows/'+row.ID} className='btn btn-small'>View</Link></td>
           }
             {Object.keys(row).map((key, i)=>{
               if(key !== "ID"){
