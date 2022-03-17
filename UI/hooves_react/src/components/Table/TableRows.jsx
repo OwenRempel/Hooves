@@ -19,7 +19,7 @@ function TableRows({ Rows, UrlKey }) {
             <td>
                 {
                     Object.keys(UrlKey).map((key, i) => (
-                        <Link key={i} className='linkClick' to={UrlKey[key].link+ID}>{UrlKey[key].title}</Link>
+                        <Link key={i} className={UrlKey[key].className ? UrlKey[key].className : 'linkClick'} to={UrlKey[key].link+ID}>{UrlKey[key].title}</Link>
                     ))
                 }
             </td>
