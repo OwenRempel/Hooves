@@ -182,6 +182,7 @@ $groupFormData = [
         ],
         [
             'name'=>'Pen',
+            'allowNull'=>true,
             'typeName'=>'FormSelect',
             'inputLabel'=>'Pen',
             'OptionsLoad'=>['Pens', 'Name'],
