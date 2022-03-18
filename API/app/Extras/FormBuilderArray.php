@@ -50,7 +50,7 @@ $FormBuilderArray = [
             'tableName'=>'Cattle',
             'success'=>'Cow successfully created!',
             'subArrays'=>['weight', 'medical'],
-            //'location'=>'Pen',
+            'location'=>'Pen',
             'subLink'=>'CowID',
             'search'=>['Tag', 'BuyDate', 'HerdsMan', 'Investor', 'Description'],
             'items'=>[
@@ -224,6 +224,7 @@ $FormBuilderArray = [
             'masterTable'=>'Cattle',
             'masterLink'=>'CowID',
             'orderIndex'=>'MedDate',
+            'location'=>'CowVaccine',
             'items'=>[
                 [
                     'name'=>'CowVaccine',
