@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import Form from "../../Form";
 import { formHandle } from '../../../lib/FormHandle';
-import { Link } from 'react-router-dom';
+
+import Back from '../../Back';
 function CowsAdd() {
     const [formData, setFormData] = useState({});
     useEffect(() => {
@@ -27,7 +28,7 @@ function CowsAdd() {
 
     return (
       <div className="formWrap">
-        <Link to='/'><button className='btn'>Back</button></Link>
+        <Back link='/'/>
         {formData.form && <Form onSubmit={returnFormData}  {...formData} />}
       </div>
     )
