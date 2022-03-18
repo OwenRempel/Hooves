@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { formHandle } from "../../../lib/FormHandle";
+import Back from "../../Back";
 import Form from "../../Form";
 
 
@@ -32,7 +33,7 @@ function GroupAdd() {
     }
 
     return(
-        <>
+        <>  <Back link='/groups/'/>
             {FormData.form &&  <Form {...FormData} onSubmit={submitHandle}/> }
         </>
     )
