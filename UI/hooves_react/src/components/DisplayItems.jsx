@@ -20,7 +20,7 @@ function DisplayItems({ data }) {
                 {Object.keys(Sub).map((key, i) =>(
                     <span key={i}>
                         <h2>{key.charAt(0).toUpperCase() + key.slice(1)}</h2>
-                        <Table table={Sub[key]} UrlKey={
+                        <Table stick={false} table={Sub[key]} UrlKey={
                             [
                                 {
                                     title:'Edit',
