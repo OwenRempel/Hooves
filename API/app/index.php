@@ -580,7 +580,23 @@ function selectFormData($localArray){
             }
         }
     }
-    $sendData['Data'] = $data;
+    
+    if(isset($localArray['location'])){
+        $tempArray = [];
+
+        foreach($data as $row){
+            if($row[$localArray['location']] != ''){
+                $tempArray[$row[$localArray['location']]][] = $row;
+            }else{
+                $tempArray['No Pen'][] = $row;
+            }
+        }
+        $sendData['Data']['Locations'] = $tempArray;
+    }else{
+        $sendData['Data'] = $data;
+    }
+
+    
     echo json_encode($sendData);
     
     
