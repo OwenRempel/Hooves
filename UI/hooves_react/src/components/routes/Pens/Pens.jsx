@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Link, Outlet } from 'react-router-dom';
 
 import { formHandle } from '../../../lib/FormHandle';
+import Back from '../../Back';
 import Form from '../../Form';
 
 
@@ -63,12 +64,13 @@ function Pens() {
     function Builder(data){
       return(
         <>
+        
           {
             data.map((item, i)=>(
               <div key={i} className='penItems'>
                 <h3>{item.Name}</h3>
-                <Link className='btn' to={`/settings/pens/edit/${item.ID}`}>Edit</Link>
-                <Link className='btn no-btn' to={`/settings/pens/delete/${item.ID}`}>Delete</Link>
+                <Link className='btn btn-small' to={`/settings/pens/edit/${item.ID}`}>Edit</Link>
+                <Link className='btn btn-small no-btn' to={`/settings/pens/delete/${item.ID}`}>Delete</Link>
               </div>
             ))
           }
@@ -78,6 +80,7 @@ function Pens() {
     
     return(
       <>
+      
         {data &&
         <>
           <h2>All pens</h2>
@@ -90,8 +93,9 @@ function Pens() {
 
   return (
       <>
+      <Back link='/settings/'/>
         <h1>Pens</h1>
-        <button className='btn' onClick={() => {setNav(!Nav)}}>{!Nav ? 'Add' : 'Close'}</button>
+        <button className='btn btn-small' onClick={() => {setNav(!Nav)}}>{!Nav ? 'Add' : 'Close'}</button>
         {Nav && <PenAdd/>}
         <Outlet/>
         <PenList/>
