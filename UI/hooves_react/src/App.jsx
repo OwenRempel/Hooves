@@ -59,7 +59,7 @@ export default function App() {
       localStorage.setItem('Company', checkAuthData.Company);
       setAuth(true);
     }else if(checkAuthData.error){
-      setFormError({"error":checkAuthData.error});
+      setFormError({"Error":checkAuthData.error});
     }
   }
   //checks to see if the token is set in local storage
