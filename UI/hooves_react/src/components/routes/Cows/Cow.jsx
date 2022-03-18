@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { useState, useEffect} from 'react';
 
 import DisplayItems from '../../DisplayItems';
@@ -10,7 +10,6 @@ import Back from '../../Back'
 
 
 function Cow() {
-    
     const { ID } = useParams();
     const [Cow, setCow] = useState({});
     useEffect(() => {
@@ -21,13 +20,18 @@ function Cow() {
               
             })
     }, [ID]);
+
+    const [searchParams ] = useSearchParams();
+
+    const back = searchParams.get('group-back')
+
     return (
         <div>
            
             {Cow.Data &&
             <div className='viewWrap'>
                 <div className="cowMenu">
-                    <Back link='/cows' />
+                    <Back link={back ? '/groups/entries/'+back : '/cows/'} />
                     <Link to={`/cows/update/${ID}`}>
                         <button className='btn'>Edit</button>
                     </Link>
