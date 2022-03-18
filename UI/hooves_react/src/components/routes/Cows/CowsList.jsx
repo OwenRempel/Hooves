@@ -15,9 +15,13 @@ function CowsList() {
     return (
         <div>
             <Back link='/'/>
-            <h1>All Cattle</h1>
             {AllCows.Data &&
-               <Table stick={true} table={AllCows} UrlKey={[{title:'View',link:'/cows/', className:'btn btn-small'}]}/>
+            <>
+              {!AllCows.Data.Locations &&
+                <h1>All Cattle</h1>
+              }
+              <Table stick={true} table={AllCows} UrlKey={[{title:'View',link:'/cows/', className:'btn btn-small'}]}/>
+            </>
             }
             
         </div>
