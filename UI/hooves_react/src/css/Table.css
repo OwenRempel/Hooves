@@ -2,6 +2,9 @@
 table, th, td {
     border: none;
   }
+  table td{
+    font-weight: 200;
+  }
   
   table {
     width: 100%;

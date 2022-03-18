@@ -105,6 +105,14 @@ h1, h2, h3, h4, h5, h6, p, a, button, span, input, textarea, select, label, tabl
 .loginBlock  h1{
   font-size: 60px;
 }
+.LoginError{
+  margin: 10px auto;
+    background-color: var(--no-button-color);
+    border-radius: 4px;
+    padding: 1px 20px;
+    width: max-content;
+    color: var(--text-color-light);
+}
 
 .formItem{
   display: block;
@@ -180,6 +188,26 @@ font-size: 12px;
     text-align: center;
   }
 }
+
+
+
+.arrow {
+  border: solid var(--text-color-light);
+  border-width: 0 1.5px 1.5px 0;
+  display: inline-block;
+  padding: 3px;
+  top: -3px;
+  position: relative;
+}
+
+
+.left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+
+
+
 /*/////////// Groups Css ///////////*/
 
 .linkClick{
@@ -404,7 +432,7 @@ font-size: 12px;
   height: fit-content;
 }
 .cowMenu .btn{
-  width: 100%;
+  width: calc(100% - 10px);
   margin: 5px 5px;
 }
 
@@ -419,8 +447,15 @@ font-size: 12px;
     display: flex;
     flex-direction: column;
     margin: auto;
-    width: calc(90% - 20px);
+    width: 100%;
     height: fit-content;
+  }
+  .cowInfo {
+    width: 100%;
+   
+  }
+  .subInfo {
+    width: 100%;
   }
 }
 

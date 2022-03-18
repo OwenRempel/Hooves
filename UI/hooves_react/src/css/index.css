@@ -42,6 +42,14 @@ select option{
   margin: 5px;
 }
 
+@media only screen and (max-width: 800px) {
+  .btn-small {
+    padding: 10px 20px;
+    font-size: 18px;
+    margin: 5px;
+  }
+}
+
 .MainContent {
   width: 100%;
   min-height: calc(100vh - 45px);
@@ -71,7 +79,7 @@ select option{
 
 @media only screen and (max-width: 800px) {
   .container {
-    padding: 20px;
+    padding: 20px 0px;
     width: 95%;
     margin: 0px auto;
     grid-column: 1 / span 2;
