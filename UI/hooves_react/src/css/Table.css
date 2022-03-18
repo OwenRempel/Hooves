@@ -9,6 +9,16 @@ table, th, td {
     border-collapse: collapse;
     border-spacing: 0;
   }
+  table.stick{
+    position: relative;
+  }
+  table.stick > thead > tr:nth-child(1){
+    position: relative;
+  }
+  table.stick th{
+    position: sticky;
+    top: 0;
+  }
   
   table.striped tr {
     border-bottom: none;
