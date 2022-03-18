@@ -583,14 +583,15 @@ function selectFormData($localArray){
     
     if(isset($localArray['location'])){
         $tempArray = [];
-
+        $nopen = [];
         foreach($data as $row){
             if($row[$localArray['location']] != ''){
                 $tempArray[$row[$localArray['location']]][] = $row;
             }else{
-                $tempArray['No Pen'][] = $row;
+                $nopen[] = $row;
             }
         }
+        $tempArray['None'] = $nopen;
         $sendData['Data']['Locations'] = $tempArray;
     }else{
         $sendData['Data'] = $data;
