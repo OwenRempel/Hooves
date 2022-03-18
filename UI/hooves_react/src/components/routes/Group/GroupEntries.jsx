@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
+import Back from "../../Back";
 
 
 function GroupEntries() {
@@ -12,6 +13,9 @@ function GroupEntries() {
             .then(result => {
             setEntries(result)
             })
+            return () => {
+              setEntries({}); 
+            };
     }, [ID]);
 
     const Thead = ({info}) =>{
@@ -30,18 +34,18 @@ function GroupEntries() {
         </thead>
       )
     }
-    const Trow = ({row, type}) =>{
+    const Trow = ({row, type }) =>{
       return(
         <tr>
           {type === 'remove' &&
-            <td onClick={()=>removeEntry(row.ID)}><span className="btn no-btn btn-small">Remove</span><Link to={'/cows/'+row.ID} className='btn btn-small'>View</Link></td>
+            <td ><span onClick={()=>removeEntry(row.ID)} className="btn no-btn btn-small">Remove</span><Link to={'/cows/'+row.ID+"?group-back="+ID} className='btn btn-small'>View</Link></td>
           }
           {type === 'add' &&
-            <td onClick={()=>addEntry(row.ID)}><span className="btn yes-btn btn-small">Add</span><Link to={'/cows/'+row.ID} className='btn btn-small'>View</Link></td>
+            <td ><span onClick={()=>addEntry(row.ID)} className="btn yes-btn btn-small">Add</span><Link to={'/cows/'+row.ID+"?group-back="+ID} className='btn btn-small'>View</Link></td>
           }
             {Object.keys(row).map((key, i)=>{
               if(key !== "ID"){
-                return <th key={i}>{row[key]}</th>
+                return <td key={i}>{row[key]}</td>
               }else{
                 return null
               }
@@ -53,7 +57,7 @@ function GroupEntries() {
       return(
         <tbody>
           {data.map((item, i)=>(
-            <Trow key={i} type={type} row={item}/>
+            <Trow key={i} type={type} row={item} />
           ))}
 
         </tbody>
@@ -62,10 +66,12 @@ function GroupEntries() {
     const List = ({data, type}) =>{
       return(
         <>
-          <table>
-            <Thead info={data.Info}/>
-            <Tbody type={type} data={data.Data}/>
-          </table>
+          <div className="tableCatch">
+            <table>
+              <Thead info={data.Info}/>
+              <Tbody type={type} data={data.Data}/>
+            </table>
+          </div>
         </>
       )
     }
@@ -145,17 +151,18 @@ function GroupEntries() {
 
   return (
     <>
-        <h2>Group Items</h2>
-        {Entries.Data &&
-          <List data={Entries} type='remove'/>
-        }
-        
-        <div className="search">
-          <input type='search' className="searchInput" placeholder="Search" onKeyUp={searchEntries}/>
-        </div>
-        {Search.Data &&
-          <List data={Search} type='add'/>
-        }
+      <Back link='/groups/'/>
+      <h2>Group Items</h2>
+      {Entries.Data &&
+        <List data={Entries} type='remove'/>
+      }
+      
+      <div className="search">
+        <input type='search' className="searchInput" placeholder="Search" onKeyUp={searchEntries}/>
+      </div>
+      {Search.Data &&
+        <List data={Search} type='add'/>
+      }
     </>
   )
 }
