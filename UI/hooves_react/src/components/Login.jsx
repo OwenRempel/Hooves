@@ -12,7 +12,7 @@ function Login({ onSubmit, error }) {
                     <input type="password" name='password' className='formItem' />
                     <button className='loginSubmit'>Submit</button>
 
-                    {error && <> <br></br><span className="LoginError">{error}</span></>}
+                    {error && <> <br></br><div className="LoginError"><p>{error}</p></div></>}
                 </form>
             </div>
         </div>
