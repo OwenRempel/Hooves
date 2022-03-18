@@ -2,18 +2,9 @@ import { Link } from "react-router-dom"
 
 function TableRows({ Rows, UrlKey }) {
     let ID = ''
+    
+    ID = Rows.ID
    
-    Object.keys(Rows).map((key, i) => {
-        if(key === "ID"){
-            ID = Rows[key]
-            delete Rows[key]
-        }
-     
-       
-        return(
-            <></>
-        )
-    })
     return (
         <>
             <td>
@@ -25,9 +16,11 @@ function TableRows({ Rows, UrlKey }) {
             </td>
             {
                 Object.keys(Rows).map((key, i) => {
-                    return(
-                        <td key={i}>{Rows[key]}</td>
-                    )
+                    if(key !== 'ID'){
+                        return <td key={i}>{Rows[key]}</td>
+                    }else{
+                        return false
+                    }
                 })
             }
         </>
