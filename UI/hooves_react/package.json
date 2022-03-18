@@ -14,7 +14,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "BUILD_PATH='../../Built/app/' react-scripts build && cp ../../Built/.htaccess ../../Built/app/",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
