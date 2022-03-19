@@ -31,7 +31,9 @@ function CowDelete() {
             <Back link={`/cows/${ID}`} />
             <div className="delWrap">
                 <h2>Delete</h2>
-                <p>Are you sure you want to delete this cow?</p>
+                <p>Are you sure you want to delete this cow?<br></br>
+                    This will also delete any data associated with this cow.
+                </p>
                 <button className="btn yes-btn" onClick={del}>Yes</button>
                 <button className="btn no-btn" onClick={no}>No</button>
             </div>
