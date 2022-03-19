@@ -47,7 +47,14 @@ function Cow() {
                 </div>
                 <DisplayItems data={Cow}/>
             </div>
-            }        
+            } 
+            {!Cow.Data &&
+                <>
+                    <Back link={back ? '/groups/entries/'+back : '/cows/'} />
+                    <h1>404</h1>
+                    <h4>That cow doesn't exist</h4>
+                </> 
+            }       
         </div>
     )
 }
