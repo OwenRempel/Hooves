@@ -53,6 +53,11 @@ $FormBuilderArray = [
             'location'=>'Pen',
             'subLink'=>'CowID',
             'search'=>['Tag', 'BuyDate', 'HerdsMan', 'Investor', 'Description'],
+            'cleanUp'=>[
+                'type'=>'delete',
+                'target'=>['Weight', 'Medical'],
+                'query'=>'CowID'
+            ],
             'items'=>[
                 [
                     'name'=>'Tag',
@@ -319,6 +324,11 @@ $FormBuilderArray = [
             'success'=>'Pen successfully added!',
             'allowCompleteDelete'=>false,
             'UUID'=>false,
+            'cleanUp'=>[
+                'type'=>'move',
+                'target'=>['Cattle'],
+                'query'=>'Pen'
+            ],
             'items'=>[
                 [
                     'name'=>'Name',
