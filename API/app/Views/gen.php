@@ -14,11 +14,11 @@ echo "http://".$_SERVER['SERVER_NAME'].":3000/companies/add?token=$uid";
 
 $DB = new DB('Hoves$2$OwensRanch$250d03a4be0f7c37');
 $i = 0;
-while($i < 100){
+while($i < 1000){
     $users = ['Terrilee', 'Clintin', 'John', 'Dustin', 'Terry', 'Agnes', 'Owen'];
     $age = ['Heffer', 'Steer', 'Bull'];
     $des = ['This is a cow', 'What a great cow', 'This cow is a bad one', 'Look out for this one'];
-    $pens = [14, 17, 18, ''];
+    $pens = [14, 21, 22, 23, 24, ''];
     do{
         $secUUID = bin2hex(random_bytes(24));
     }while(!empty($DB->query("SELECT ID from Cattle WHERE ID='$secUUID'")));
