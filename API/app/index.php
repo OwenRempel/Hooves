@@ -768,7 +768,6 @@ function deleteItem($formArray, $ID){
         echo stouts($DBNameCheck['Error'], 'error');
         exit();
     }
-
     $DB = new DB($DBNameCheck['DBName']);
     
     if(isset($formArray['allowCompleteDelete']) and $formArray['allowCompleteDelete'] == false){
@@ -780,13 +779,40 @@ function deleteItem($formArray, $ID){
         }
     }
 
-    //TODO: When deleting a pen move any cows in it to a pen that the user provides
-
     $data = $DB->query("SELECT ID from ".$formArray['tableName']." WHERE ID=:ID", array('ID'=>$ID));
     if(!isset($data[0]['ID'])){
         http_response_code(404);
         echo stouts('The ID is invalid', 'error');
         exit();
+    }
+
+
+    if(isset($formArray['cleanUp']) and isset($formArray['cleanUp']['type']) and isset($formArray['cleanUp']['target']) and isset($formArray['cleanUp']['query'])){
+        if($formArray['cleanUp']['type'] == 'move'){
+            if(!isset($_GET['move'])){
+                http_response_code(404);
+                echo stouts('Please Include a move ID to move items to', 'error');
+                exit();
+            }
+            foreach($formArray['cleanUp']['target'] as $target){
+                $check = $DB->query('SELECT ID from '.$formArray['tableName'].' WHERE ID=:id',array('id'=>$_GET['move']));
+                if(!isset($check[0]['ID'])){
+                    http_response_code(404);
+                    echo stouts('Move ID does not exist', 'error');
+                    exit();
+                }
+                if($_GET['move'] == $ID){
+                    http_response_code(404);
+                    echo stouts('Both ID\'s are the same no action taken', 'error');
+                    exit();
+                }
+                $data = $DB->query('UPDATE '.$target.' SET Pen=:pen WHERE '.$formArray['cleanUp']['query'].'=:id',array('pen'=>$_GET['move'], 'id'=>$ID));
+            }
+        }elseif($formArray['cleanUp']['type'] == 'delete'){
+            foreach($formArray['cleanUp']['target'] as $target){
+                $DB->query("DELETE FROM $target WHERE ".$formArray['cleanUp']['query']."=:id", array('id'=>$ID));
+            }
+        }
     }
 
     $del = $DB->query('DELETE FROM '.$formArray['tableName'].' WHERE ID=:ID', array('ID'=>$ID));
