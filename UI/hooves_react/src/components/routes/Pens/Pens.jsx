@@ -68,9 +68,9 @@ function Pens() {
           {
             data.map((item, i)=>(
               <div key={i} className='penItems'>
-                <h3>{item.Name}</h3>
                 <Link className='btn btn-small' to={`/settings/pens/edit/${item.ID}`}>Edit</Link>
                 <Link className='btn btn-small no-btn' to={`/settings/pens/delete/${item.ID}`}>Delete</Link>
+                <h3>{item.Name}</h3>
               </div>
             ))
           }
