@@ -1,24 +1,14 @@
 <?php
 /*
-$DB = new DB_Admin;
-
-$uid = bin2hex(random_bytes(24));
-
-$DB->query('INSERT into CompCreateAuth (Token, Expire) Values (:token, :expire)', array(
-    'token'=> $uid,
-    'expire'=>date('Y-m-d H:i:s', (time()+(60 * 24 * 10)))
-));
-echo "http://".$_SERVER['SERVER_NAME'].":3000/companies/add?token=$uid";
 
 
-
-$DB = new DB('Hoves$2$OwensRanch$250d03a4be0f7c37');
+$DB = new DB('Hoves$2$TheGreatCompany$7ac50e39d8a2cd16');
 $i = 0;
-while($i < 1000){
-    $users = ['Terrilee', 'Clintin', 'John', 'Dustin', 'Terry', 'Agnes', 'Owen'];
+while($i < 100){
+    $users = ['Adam', 'Caleb', 'John', 'Dusty', 'Rose', 'Jen', 'Tyler'];
     $age = ['Heffer', 'Steer', 'Bull'];
     $des = ['This is a cow', 'What a great cow', 'This cow is a bad one', 'Look out for this one'];
-    $pens = [14, 21, 22, 23, 24, ''];
+    $pens = [1, 2, 3, 4, ''];
     do{
         $secUUID = bin2hex(random_bytes(24));
     }while(!empty($DB->query("SELECT ID from Cattle WHERE ID='$secUUID'")));
