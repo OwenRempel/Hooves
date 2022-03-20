@@ -2,16 +2,17 @@ import React, {useEffect, useState} from 'react';
 import Form from "../../Form";
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 function CompAdd() {
-    const [formData, setFormData] = useState({});
-    useEffect(() => {
-      fetch(process.env.REACT_APP_API_URL+'/companies/add')
+  const [formData, setFormData] = useState({});
+  const [searchParams] = useSearchParams();
+  const tok = searchParams.get('token'); 
+  useEffect(() => {
+      fetch(process.env.REACT_APP_API_URL+'/companies/info?token='+tok)
             .then(response => response.json())
             .then(result => {
               setFormData(result)
             });
-    }, [])
+    }, [tok])
     
-    const [searchParams] = useSearchParams();
     
     let navagate = useNavigate();
     const returnFormData = async e => {
@@ -44,7 +45,7 @@ function CompAdd() {
           console.log('Please Include a token');
           return
         }
-        const res = await fetch(callBack+'/add', {
+        const res = await fetch(callBack, {
             method: 'POST',
             headers:{
               'Content-Type': '"application/x-form-urlencoded"'
