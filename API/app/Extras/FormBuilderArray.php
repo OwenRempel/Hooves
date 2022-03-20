@@ -250,6 +250,9 @@ $FormBuilderArray = [
         'gen'=>[
             'view'=>true
         ],
+        'company-add'=>[
+            'view'=>true
+        ],
         'server'=>[
             'view'=>True
         ],
