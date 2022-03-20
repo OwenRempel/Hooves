@@ -365,17 +365,33 @@ function selectUpdateFormItem($formArray, $redirectName, $ID){
 }
 //get structure for building the add forms
 function getFormStruct($formArray, $redirectName){
+    $tokenData = false;
+    if(isset($formArray['tokenAuth'])){
+        $DB = new DB_Admin;
+        if(!isset($_GET['token'])){
+            http_response_code(404);
+            echo stouts('Please include create token parm', 'error');
+            exit();
+        }
+        $authCheck = $DB->query("SELECT Token from CompCreateAuth WHERE token=:token", array('token' => $_GET['token']));
+        if(!isset($authCheck[0]['Token'])){
+            http_response_code(401);
+            echo stouts('Invalid Token', 'error');
+            exit();
+        }
 
-    if(!isset($_GET['token'])){
-        http_response_code(401);
-        echo stouts('Please include token parm', 'error');
-        exit();
+    }else{
+        if(!isset($_GET['token'])){
+            http_response_code(401);
+            echo stouts('Please include token parm', 'error');
+            exit();
+        }
+        $userData = getInfoFromToken($_GET['token']);
+    
+        $tokenData = json_decode($userData['ListDisplayPref'], true);
+      
+        $DB = new DB($userData['DBName']);
     }
-    $userData = getInfoFromToken($_GET['token']);
-
-    $tokenData = json_decode($userData['ListDisplayPref'], true);
-  
-    $DB = new DB($userData['DBName']);
 
     $FormPassthroughItems = [
         'name',
@@ -396,7 +412,6 @@ function getFormStruct($formArray, $redirectName){
     $arrayToSend['form']['formTitle'] = (isset($formArray['formDesc']) ? "Add ". $formArray['formDesc'] : $formArray['formTitle']);
     $arrayToSend['form']['callBack'] = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].'/'.$redirectName;
     foreach($formArray['items'] as $items){
-       // echo json_encode($tokenData);
         if($tokenData and isset($tokenData[$items['name']]) and $tokenData[$items['name']] == false){
             continue;
         }
@@ -612,7 +627,7 @@ function insertFormData($ReceivedFormData, $localArray, $Routes){
             echo stouts('Please include auth token', 'error');
             exit();
         }
-        $data = $DBAdmin->query('SELECT Token, Expire from LoginAuth WHERE Token = :token', array('token'=>$ReceivedFormData['Token']));
+        $data = $DBAdmin->query('SELECT Token, Expire from CompCreateAuth WHERE Token = :token', array('token'=>$ReceivedFormData['Token']));
         
         if(empty($data)){
             http_response_code(401);
