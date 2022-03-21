@@ -598,6 +598,8 @@ function selectFormData($localArray){
             }
         }
     }
+
+    //TODO: Update this so that it sorts the locations event if you don't include that
     
     if(isset($localArray['location'])){
         $tempArray = [];
