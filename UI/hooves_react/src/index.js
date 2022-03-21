@@ -42,6 +42,7 @@ import GroupDelete from "./components/routes/Group/GroupDelete";
 import GroupEntries from "./components/routes/Group/GroupEntries";
 //logout component
 import Logout from "./components/Logout";
+import ViewItems from "./components/routes/Settings/ViewItems";
 
 
 
@@ -89,7 +90,8 @@ render(
           <Route path="entries/:ID" element={<GroupEntries/>}/>
         </Route>
         <Route path='/settings' element={<Settings/>}>
-        <Route index element={<AllSettings />} />
+          <Route index element={<AllSettings />} />
+          <Route path="view-items" element={<ViewItems/>}/>
           <Route path='profile' element={<Profile/>}/>
           <Route path="pens" element={<PenOutlet/>}>
             <Route index element={<Pens/>}/>
