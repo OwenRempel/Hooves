@@ -272,6 +272,19 @@ font-size: 12px;
   grid-column: 3;
   padding-right: 20px;
 }
+.viewItems{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height:30px;
+}
+.viewItems p{
+  margin-left: 15px;
+}
+.viewItems input{
+  width: 20px;
+  height: 20px;
+}
 
 @media only screen and (max-width: 800px) {
   .profileWrap{
