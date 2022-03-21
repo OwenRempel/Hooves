@@ -97,6 +97,9 @@ function InitRouter(){
     }elseif($Routes[0] == 'group'){
         include('Extras/group.php');
         exit();
+    }elseif($Routes[0] == 'settings'){
+        include('Extras/settings.php');
+        exit();
     }elseif(isset($FormBuilderArray['Routes'][$Routes[0]])){
         //checks if the route is in the route array
         $localArray = $FormBuilderArray['Routes'][$Routes[0]];
