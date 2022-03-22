@@ -66,7 +66,7 @@ select option{
     margin: auto;
     display: grid;
     grid-template-columns: 90px 1fr;
-    grid-template-rows: 90px 1fr;
+    grid-template-rows: 140px 1fr;
   }
 }
 

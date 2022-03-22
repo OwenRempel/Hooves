@@ -178,6 +178,7 @@ font-size: 12px;
       display: grid;
       grid-template-columns: 2fr  90px;
       z-index: 5;
+      height: 140px;
       grid-row: 1;
       grid-column: 2;
       width: calc(100%);
@@ -346,7 +347,7 @@ font-size: 12px;
     display: unset;
     position:absolute;
     left: 25px;
-    top: 25px;
+    top: 45px;
   }
   .menuBackIcon i{
     cursor: pointer;
@@ -355,13 +356,10 @@ font-size: 12px;
   }
   .menu {
     position: relative;
-    padding-top: 90px;
+    padding-top: 140px;
     top: 0px;
     overflow: hidden;
-    /* max-width: calc(100vh - 100px); */
-   
     display: flex;
-    /* align-items: center; */
     flex-direction: column;
     height: calc(100vh + 180px);
     color: var(--text-color-light);
@@ -375,7 +373,7 @@ font-size: 12px;
   }
   .menuSmall{
     width: 90px;
-    height: 90px;
+    height: 140px;
   }
   .menuBig{
     width: 150px;
@@ -503,12 +501,52 @@ font-size: 12px;
 .search{
   width: 85%;
   margin: auto;
+  height: 80px;
   grid-column: 2;
+  position: relative;
+}
+.searchItems{
+  background-color: var(--search-background);
+  box-shadow: 1px 1px 5px #0000002b;
+  padding: 10px;
+  position: relative;
+  top: -16px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  
+}
+.searchItems a{
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr;
+  padding: 10px 20px;
+  transition: all 300ms;
+  margin: 5px;
+}
+.searchItems a:hover{
+  background-color: var(--background);
+}
+.searchClose{
+  position: absolute;
+  right: 15px;
+  top: 3px;
+  font-weight: 800;
+  color:var(--no-button-color);
+  font-size: 24px;
+  cursor: pointer;
+}
+
+input[type="search" i]::-webkit-search-cancel-button {
+  display: none;
 }
 
 @media only screen and (max-width: 800px) {
   .mobHide{
     display: none;
+  }
+  .search{
+    grid-column: 1/span 2;
+    grid-row: 2;
   }
 }
 /*/////////// Footer Css ///////////*/
