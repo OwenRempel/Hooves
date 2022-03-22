@@ -36,10 +36,10 @@ function Table({ stick, table, UrlKey }) {
         return(
            <>
                 {title &&
-                    <div>
+                    <>
                         <h2>{title}</h2>
                         <TablePart info={data.Info} body={loc[title]}/>
-                    </div>    
+                    </>    
                 }
            </> 
         )

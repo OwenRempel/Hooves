@@ -17,7 +17,7 @@ function CowsList() {
             })
     }, []);
     return (
-        <div>
+        <>
             <Back link='/'/>
             {AllCows.Data &&
             <>
@@ -28,7 +28,7 @@ function CowsList() {
             </>
             }
             
-        </div>
+        </>
     )
 }
 

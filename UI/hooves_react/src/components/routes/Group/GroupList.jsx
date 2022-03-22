@@ -18,7 +18,7 @@ function GroupList() {
             })
     }, []);
     return (
-        <div>
+        <>
             <Back link='/'/>
             <h1>All Cattle</h1>
             <Link to='/groups/add' className='btn'>Add Group</Link>
@@ -42,7 +42,7 @@ function GroupList() {
             ]}/>
             }
             
-        </div>
+        </>
     )
 }
 

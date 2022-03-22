@@ -30,8 +30,7 @@ function Cow() {
     const back = searchParams.get('group-back')
 
     return (
-        <div>
-           
+        <>
             {Cow.Data &&
             <div className='viewWrap'>
                 <div className="cowMenu">
@@ -59,7 +58,7 @@ function Cow() {
                     <h4>That cow doesn't exist</h4>
                 </> 
             }       
-        </div>
+        </>
     )
 }
 

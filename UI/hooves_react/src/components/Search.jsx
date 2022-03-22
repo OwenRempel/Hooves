@@ -26,7 +26,7 @@ function Search() {
         return(
             <div className="searchItems">
                 {data.map((item, key)=>(
-                    <Link key={key} to={`/cows/${item.ID}`} onClick={()=>setSearch(false)}><span>{item.Tag}</span> <span>{item.BuyDate}</span> <span>{item.HerdsMan}</span></Link>
+                    <Link key={key} to={`/cows/${item.ID}`} onClick={()=>setSearch(false)}><span>{item.Tag}</span> <span>{item.StartDate}</span> <span>{item.HerdsMan}</span></Link>
                 ))}
             </div>
         )
