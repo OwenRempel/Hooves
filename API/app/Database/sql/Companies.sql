@@ -1,6 +1,6 @@
 CREATE TABLE `Cattle` (
     `Tag` varchar(100)  DEFAULT NULL,
-    `BuyDate` date DEFAULT NULL,
+    `StartDate` date DEFAULT NULL,
     `HerdsMan` varchar(100)  DEFAULT NULL,
     `Investor` varchar(100)  DEFAULT NULL,
     `FeedPrice` text DEFAULT NULL,
@@ -22,8 +22,6 @@ CREATE TABLE `Cattle` (
     `Remarks` varchar(1000)  DEFAULT NULL,
     `Description` varchar(1000)  DEFAULT NULL,
     `Source` varchar(10)  NOT NULL DEFAULT 'yes',
-    `CalfState` text DEFAULT NULL ,
-    `CalfDate` date DEFAULT NULL,
     `MotherTag` text DEFAULT NULL,
     `Death` varchar(100)  DEFAULT NULL,
     `DeathDate` date DEFAULT NULL,

@@ -68,10 +68,10 @@ $FormBuilderArray = [
                     
                 ],
                 [
-                    'name'=>'BuyDate',
+                    'name'=>'StartDate',
                     'typeName'=>'FormInput',
                     'type'=>'date',
-                    'inputLabel'=>'Date Bought',
+                    'inputLabel'=>'Date Born/Bought',
                     
                 ],
                 [
