@@ -77,7 +77,7 @@ function getInfoFromBearerToken($token){
     }
     $token = explode(' ', $token)[1];
     $DBAdmin = new DB_Admin;
-    $loginData = $DBAdmin->query('SELECT DBName, ListDisplayPref FROM
+    $loginData = $DBAdmin->query('SELECT DBName, ListDisplayPref, CompaniesID FROM
         `LoginAuth` inner join Companies on LoginAuth.CompaniesID = Companies.ID
          WHERE Token = :token', array('token'=>$token));
     if(isset($loginData[0]['DBName'])){
@@ -133,6 +133,9 @@ function InitRouter(){
     }elseif($Routes[0] == 'logout'){
         //handle logout
         include('Extras/logout.php');
+    }elseif($Routes[0] == 'users'){
+        //handle logout
+        include('Extras/users.php');
     }elseif($Routes[0] == 'group'){
         include('Extras/group.php');
         exit();

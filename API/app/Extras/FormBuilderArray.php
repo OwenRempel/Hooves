@@ -257,68 +257,6 @@ $FormBuilderArray = [
         'server'=>[
             'view'=>True
         ],
-        'users'=>[
-            'formTitle'=>'Add Company',
-            'formName'=>'CompanyAddItem',
-            'items'=>[
-                [
-                    'name'=>'CompanyName',
-                    'typeName'=>'FormInput',
-                    'type'=>'text',
-                    'inputLabel'=>'Company Name',
-                    
-                ],
-                [
-                    'name'=>'UserEmail',
-                    'typeName'=>'FormSelect',
-                    'selectLabel'=>'User',
-                    'options'=>[
-                        [
-                            "value"=>'Owen',
-                            "option"=>'owen'
-                        ],
-                        [
-                            "value"=>'Terrilee',
-                            "option"=>'terrilee'
-                        ],
-                        [
-                            "value"=>'Dustin',
-                            "option"=>'dustin'
-                        ]  
-                    ]
-                    
-                ],
-                [
-                    'name'=>'UserPassword',
-                    'typeName'=>'FormInput',
-                    'type'=>'password',
-                    'inputLabel'=>'Password'
-                    
-                ],
-                [
-                    'name'=>'Age',
-                    'typeName'=>'FormCheckbox',
-                    'checkboxTitle'=>'18+',
-                    'checkboxLabel'=>'Age',
-                    "required"=>true
-                    
-                ],
-                [
-                    'name'=>'Address',
-                    'typeName'=>'FormInput',
-                    'type'=>'text',
-                    'inputLabel'=>'Address'
-                    
-                ],
-                [
-                    'name'=>'Message',
-                    'typeName'=>'FormTextarea',
-                    'placeholder'=>'Type your message here',
-                    'textareaLabel'=>'Message'
-                    
-                ]
-            ]
-        ],
         'pens'=>[
             'formTitle'=>'Add Pen',
             'formName'=>'PenAddItem',
