@@ -78,7 +78,7 @@ function GroupEntries() {
     const searchEntries = (e) =>{
       var val = e.target.value
       if(val && val !== ' ' && val !== '%' && val !== '#'){
-        fetch(process.env.REACT_APP_API_URL+'/cattle/search/'+val+'?group=1&token='+localStorage.getItem('Token'))
+        fetch(process.env.REACT_APP_API_URL+'/cattle/search/'+val+'?group=1&limit=10&token='+localStorage.getItem('Token'))
           .then(response => response.json())
           .then(result => {
             setSearch(result)
