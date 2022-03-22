@@ -3,6 +3,8 @@ include('../Extras/FormBuilderArray.php');
 
 echo json_encode($_SERVER);
 
+
+echo json_encode(apache_request_headers());
 /*
 global $FormBuilderArray;
  

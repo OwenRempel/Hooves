@@ -39,6 +39,11 @@ if(!is_file('Build/Built')){
 //Functions
 //|\|/\|/|\|/|\|/|\|/|\|/|\|/|\|/|\|/|\|/|\|/|\
 
+$ApacheHeaders = apache_request_headers();
+// Server-side fix for bug in old Android versions (a nice side-effect of this fix means we don't care about capitalization for Authorization)
+//$requestHeaders = array_combine(array_map('ucwords', array_keys($requestHeaders)), array_values($requestHeaders));
+print_r($ApacheHeaders['Authorization']);
+
 //push output as json
 function stouts($message, $type='info'){
     $types = explode(',', str_replace(' ', '', 'info, success, error'));
@@ -608,7 +613,7 @@ function selectFormData($localArray){
                 $replaceQuery[$rep['ID']] = $rep[$items['OptionsLoad'][1]];
             }
             foreach($data as $dataKey=>$dataItem){
-                $data[$dataKey][$items['name']] = $replaceQuery[$dataItem[$items['name']]];
+                $data[$dataKey][$items['name']] = ($dataItem[$items['name']] != '' ? $replaceQuery[$dataItem[$items['name']]] : '');
             }
         }
     }
