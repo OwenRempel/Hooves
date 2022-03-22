@@ -138,3 +138,9 @@ table, th, td {
     width: 80vw;
     overflow-x: auto;
 }
+@media only screen and (max-width: 800px) {
+  .tableCatch{
+      width: unset;
+      overflow-x: auto;
+  }
+}

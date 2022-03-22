@@ -292,6 +292,7 @@ font-size: 12px;
     justify-content: center;
     grid-column: 2;
     padding: 0px;
+    margin-top: 20px;
   }
 }
 
@@ -521,7 +522,7 @@ font-size: 12px;
 }
 .searchItems a{
   display: grid;
-  grid-template-columns: 1fr 1fr 2fr;
+  grid-template-columns: 1fr 1fr 1fr;
   padding: 10px 20px;
   transition: all 300ms;
   margin: 5px;
@@ -550,6 +551,13 @@ input[type="search" i]::-webkit-search-cancel-button {
   .search{
     grid-column: 1/span 2;
     grid-row: 2;
+  }
+  .searchItems{
+    position: absolute;
+    top: 67px;
+    left: calc(-17% - 20px );
+    
+    width: calc(100% + 24%);
   }
 }
 /*/////////// Footer Css ///////////*/
