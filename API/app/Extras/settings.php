@@ -44,7 +44,7 @@ if(isset($userData['Error'])){
 $DB = new DB($userData['DBName']);
 $DB_Admin = new DB_Admin;
 
-$Builditems = $FormBuilderArray['Routes']['cattle']['items'];
+$BuildItems = $FormBuilderArray['Routes']['cattle']['items'];
 
 function addLabels($arr){
     Global $FormBuilderArray;
@@ -75,7 +75,7 @@ if($Routes[1] == 'view-items'){
             }
             $arrayOut = [];
             //TODO: This will have to be updated to allow for weights and other items
-            foreach($Builditems as $item){
+            foreach($BuildItems as $item){
                 $name = $item['name'];
                 if(isset($list[$name])){
                     $arrayOut[$name] = $list[$name];
@@ -91,7 +91,7 @@ if($Routes[1] == 'view-items'){
         }
     }elseif($method == 'POST'){
         $build = [];
-        foreach($Builditems as $item){
+        foreach($BuildItems as $item){
             $name = $item['name'];
             if(isset($PostData[$name])){
                 $build[$name] = $PostData[$name];
