@@ -50,10 +50,17 @@
    padding: 15px;
    width: 100%;
 }
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 600px) and (max-width: 1200px) {
     .inputForm{
         display: grid;
         grid-template-columns: 1fr 1fr;
+    }
+}
+@media only screen and (min-width: 1200px){
+    .inputForm{
+        display: grid;
+        max-width: 1800px;
+        grid-template-columns: 1fr 1fr 1fr;
     }
 }
 .inputItem input{
