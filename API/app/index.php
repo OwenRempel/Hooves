@@ -617,7 +617,7 @@ function selectFormData($localArray){
     
     if(isset($localArray['location'])){
         $tempArray = [];
-        $nopen = [];
+        $noPen = [];
         foreach($data as $row){
             $loc = $row[$localArray['location']];
             if($locCheck){
@@ -626,10 +626,10 @@ function selectFormData($localArray){
             if($loc != ''){
                 $tempArray[$loc][] = $row;
             }else{
-                $nopen[] = $row;
+                $noPen[] = $row;
             }
         }
-        $tempArray['None'] = $nopen;
+        $tempArray['None'] = $noPen;
         $sendData['Data']['Locations'] = $tempArray;
     }else{
         $sendData['Data'] = $data;

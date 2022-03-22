@@ -1,11 +1,9 @@
 <?php
 
-// Resources $localarray, $PostData, $Routes, $FormBuilderArray
-
 $PHPinput = file_get_contents('php://input');
 $PostInput = json_decode($PHPinput, 1);
 parse_str($PHPinput, $_PUT);
-//echo json_encode($PostInput);
+
 //This is the check to see if the api should use $_POST or php://input
 if($method == 'POST' or $method == 'PUT'){
     if(isset($_POST['SettingsMod'])){
@@ -21,8 +19,6 @@ if($method == 'POST' or $method == 'PUT'){
     }
 }
 
-
-
 if(!isset($_GET['token']) and !isset($PostData['Token'])){
     http_response_code(401);
     echo stouts('Please include token parm', 'error');
@@ -34,12 +30,10 @@ if(isset($_GET['token'])){
     $userData = getInfoFromToken($PostData['Token']);
 }
 
-
 if(isset($userData['Error'])){
     echo stouts($userData['Error'], 'error');
     exit();
 }
-
 
 $DB = new DB($userData['DBName']);
 $DB_Admin = new DB_Admin;
@@ -59,10 +53,8 @@ function addLabels($arr){
             ];
         }
     }
-   
     return $out;
 }
-
 
 if($Routes[1] == 'view-items'){
     $da = $DB_Admin->query('SELECT ListDisplayPref FROM Companies WHERE DBName=:db', array('db'=>$userData['DBName']));
@@ -104,7 +96,6 @@ if($Routes[1] == 'view-items'){
         exit();
     }
     
-
 }else{
     http_response_code(404);
     echo stouts('That view dosen\'t Exist', 'error');
