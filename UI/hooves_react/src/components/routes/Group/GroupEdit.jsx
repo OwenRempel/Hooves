@@ -12,7 +12,11 @@ function GroupEdit() {
     const nav = useNavigate();
     const [FormData, setFormData] = useState({})
     useEffect(() => {
-        fetch(process.env.REACT_APP_API_URL+'/group/info/'+ID+'?token='+localStorage.getItem('Token'))
+        fetch(process.env.REACT_APP_API_URL+'/group/info/'+ID,{
+          headers:{
+            'Authorization': 'Bearer '+localStorage.getItem('Token'),
+          }
+        })
               .then(response => response.json())
               .then(result => {
                 setFormData(result)

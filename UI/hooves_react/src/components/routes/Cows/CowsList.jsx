@@ -6,7 +6,11 @@ import Table from '../../Table/Table';
 function CowsList() {
     const [AllCows, setAllCows] = useState({});
     useEffect(() => {
-      fetch(process.env.REACT_APP_API_URL+'/cattle?token='+localStorage.getItem('Token'))
+      fetch(process.env.REACT_APP_API_URL+'/cattle',{
+        headers:{
+          'Authorization': 'Bearer '+localStorage.getItem('Token'),
+        }
+      })
             .then(response => response.json())
             .then(result => {
               setAllCows(result)

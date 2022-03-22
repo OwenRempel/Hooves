@@ -13,9 +13,9 @@ function Cow() {
     const { ID } = useParams();
     const [Cow, setCow] = useState({});
     useEffect(() => {
-      fetch(process.env.REACT_APP_API_URL+'/cattle/'+ID+'?token='+localStorage.getItem('Token'),{
+      fetch(process.env.REACT_APP_API_URL+'/cattle/'+ID,{
           headers:{
-            'Authorization': 'Token '+localStorage.getItem('Token'),
+            'Authorization': 'Bearer '+localStorage.getItem('Token'),
           }
       })
             .then(response => response.json())

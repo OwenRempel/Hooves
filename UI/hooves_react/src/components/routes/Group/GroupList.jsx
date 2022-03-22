@@ -7,7 +7,11 @@ import Table from '../../Table/Table';
 function GroupList() {
     const [Groups, setGroups] = useState({});
     useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL+'/group?token='+localStorage.getItem('Token'))
+    fetch(process.env.REACT_APP_API_URL+'/group',{
+        headers:{
+            'Authorization': 'Bearer '+localStorage.getItem('Token')
+          }
+    })
             .then(response => response.json())
             .then(result => {
             setGroups(result)

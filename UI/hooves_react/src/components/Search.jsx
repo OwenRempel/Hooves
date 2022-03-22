@@ -8,7 +8,11 @@ function Search() {
     const searchCatch =  async (e) =>{
         let val = e.target.value
         if(val && val !== ' ' && val !== '%' && val !== '#'){
-            fetch(process.env.REACT_APP_API_URL+'/cattle/search/'+val+'?limit=10&token='+localStorage.getItem('Token'))
+            fetch(process.env.REACT_APP_API_URL+'/cattle/search/'+val+'?limit=10',{
+                headers:{
+                    'Authorization': 'Bearer '+localStorage.getItem('Token')
+                  }
+            })
               .then(response => response.json())
               .then(result => {
                 setSearch(result)

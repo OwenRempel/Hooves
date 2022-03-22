@@ -12,8 +12,11 @@ function GroupDelete() {
     const [Delete, setDelete] = useState(false);
     
     if(Delete === true){
-        fetch(process.env.REACT_APP_API_URL+'/group/'+ID+'?token='+localStorage.getItem('Token'),{
-            method:'DELETE'
+        fetch(process.env.REACT_APP_API_URL+'/group/'+ID,{
+            method:'DELETE',
+            headers:{
+                'Authorization': 'Bearer '+localStorage.getItem('Token'),
+              }
         })
         .then(response => response.json())
         .then(result => {

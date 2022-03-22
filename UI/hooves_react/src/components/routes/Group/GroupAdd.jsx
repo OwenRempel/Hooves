@@ -10,7 +10,11 @@ function GroupAdd() {
     const nav = useNavigate();
     const [FormData, setFormData] = useState({})
     useEffect(() => {
-        fetch(process.env.REACT_APP_API_URL+'/group/info?token='+localStorage.getItem('Token'))
+        fetch(process.env.REACT_APP_API_URL+'/group/info', {
+          headers:{
+            'Authorization': 'Bearer '+localStorage.getItem('Token'),
+          }
+        })
               .then(response => response.json())
               .then(result => {
                 setFormData(result)

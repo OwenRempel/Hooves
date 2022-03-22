@@ -18,24 +18,10 @@ if($method == 'POST' or $method == 'PUT'){
         exit();
     }
 }
+//this is where the auth header is checked
+$AuthData = checkAuth();
 
-if(!isset($_GET['token']) and !isset($PostData['Token'])){
-    http_response_code(401);
-    echo stouts('Please include token parm', 'error');
-    exit();
-}
-if(isset($_GET['token'])){
-    $userData = getInfoFromToken($_GET['token']);
-}else{
-    $userData = getInfoFromToken($PostData['Token']);
-}
-
-if(isset($userData['Error'])){
-    echo stouts($userData['Error'], 'error');
-    exit();
-}
-
-$DB = new DB($userData['DBName']);
+$DB = new DB($AuthData['DBName']);
 $DB_Admin = new DB_Admin;
 
 $BuildItems = $FormBuilderArray['Routes']['cattle']['items'];
@@ -57,7 +43,7 @@ function addLabels($arr){
 }
 
 if($Routes[1] == 'view-items'){
-    $da = $DB_Admin->query('SELECT ListDisplayPref FROM Companies WHERE DBName=:db', array('db'=>$userData['DBName']));
+    $da = $DB_Admin->query('SELECT ListDisplayPref FROM Companies WHERE DBName=:db', array('db'=>$AuthData['DBName']));
    
     if($method == 'GET'){
         if($Routes[2] == 'info'){
@@ -90,7 +76,7 @@ if($Routes[1] == 'view-items'){
             }
         }
        
-        $DB_Admin->query('UPDATE Companies SET ListDisplayPref=:di WHERE DBName=:db', array('di'=>json_encode($build),'db'=>$userData['DBName']));    
+        $DB_Admin->query('UPDATE Companies SET ListDisplayPref=:di WHERE DBName=:db', array('di'=>json_encode($build),'db'=>$AuthData['DBName']));    
         http_response_code(200);
         echo stouts('View Items Updated', 'success');
         exit();

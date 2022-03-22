@@ -9,7 +9,11 @@ function  CowUpdate() {
     const [formData, setFormData] = useState({});
     const nav = useNavigate();
     useEffect(() => {
-      fetch(process.env.REACT_APP_API_URL+'/cattle/info/'+ID+'?token='+localStorage.getItem('Token'))
+      fetch(process.env.REACT_APP_API_URL+'/cattle/info/'+ID,{
+        headers:{
+            'Authorization': 'Bearer '+localStorage.getItem('Token'),
+          }
+      })
             .then(response => response.json())
             .then(result => {
               setFormData(result)

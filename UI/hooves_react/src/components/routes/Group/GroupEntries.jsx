@@ -8,7 +8,11 @@ function GroupEntries() {
     const [ Search, setSearch ] = useState({});
     const { ID } = useParams();
     useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL+'/group/'+ID+'/entries?token='+localStorage.getItem('Token'))
+    fetch(process.env.REACT_APP_API_URL+'/group/'+ID+'/entries',{
+      headers:{
+        'Authorization': 'Bearer '+localStorage.getItem('Token')
+      }
+    })
             .then(response => response.json())
             .then(result => {
             setEntries(result)
@@ -78,7 +82,11 @@ function GroupEntries() {
     const searchEntries = (e) =>{
       var val = e.target.value
       if(val && val !== ' ' && val !== '%' && val !== '#'){
-        fetch(process.env.REACT_APP_API_URL+'/cattle/search/'+val+'?group=1&limit=10&token='+localStorage.getItem('Token'))
+        fetch(process.env.REACT_APP_API_URL+'/cattle/search/'+val+'?group=1&limit=10',{
+          headers:{
+            'Authorization': 'Bearer '+localStorage.getItem('Token')
+          }
+        })
           .then(response => response.json())
           .then(result => {
             setSearch(result)
@@ -90,7 +98,8 @@ function GroupEntries() {
       fetch(process.env.REACT_APP_API_URL+'/group/'+ID+'/entries/remove', {
         method:'POST',
         headers:{
-          'Content-Type': '"application/x-form-urlencoded"'
+          'Content-Type': '"application/x-form-urlencoded"',
+          'Authorization': 'Bearer '+localStorage.getItem('Token')
           },
         body:JSON.stringify({
           Token:localStorage.getItem('Token'),
@@ -128,7 +137,8 @@ function GroupEntries() {
       fetch(process.env.REACT_APP_API_URL+'/group/'+ID+'/entries/add', {
         method:'POST',
         headers:{
-          'Content-Type': '"application/x-form-urlencoded"'
+          'Content-Type': '"application/x-form-urlencoded"',
+          'Authorization': 'Bearer '+localStorage.getItem('Token')
           },
         body:JSON.stringify({
           Token:localStorage.getItem('Token'),

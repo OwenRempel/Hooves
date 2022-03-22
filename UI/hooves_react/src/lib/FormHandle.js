@@ -18,8 +18,6 @@ export async function formHandle(formData, FormItem, methodType='POST', ID){
         //FormOut.append(item.name, item.value);         
         FormOut[item.name] = item.value;
     }
-    const token = localStorage.getItem('Token');
-    FormOut['Token'] = token;
     if(ID){
          url =  callBack+'/'+ID
     }else{
@@ -28,7 +26,8 @@ export async function formHandle(formData, FormItem, methodType='POST', ID){
     const res = await fetch(url, {
         method: methodType,
         headers:{
-        'Content-Type': '"application/x-form-urlencoded"'
+        'Content-Type': '"application/x-form-urlencoded"',
+        'Authorization': 'Bearer '+localStorage.getItem('Token')
         },
         body: JSON.stringify(FormOut)
     });

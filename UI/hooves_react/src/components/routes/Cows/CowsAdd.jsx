@@ -6,7 +6,11 @@ import Back from '../../Back';
 function CowsAdd() {
     const [formData, setFormData] = useState({});
     useEffect(() => {
-      fetch(process.env.REACT_APP_API_URL+'/cattle/info?token='+localStorage.getItem('Token'))
+      fetch(process.env.REACT_APP_API_URL+'/cattle/info',{
+        headers:{
+          'Authorization': 'Bearer '+localStorage.getItem('Token'),
+        }
+      })
             .then(response => response.json())
             .then(result => {
               setFormData(result)
@@ -16,6 +20,7 @@ function CowsAdd() {
     
     
     const returnFormData = async e => {
+        window.scrollTo(0, 0)
         e.preventDefault();
         const  res = await formHandle(formData, e.target);
         if(res.success){

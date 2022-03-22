@@ -13,7 +13,11 @@ function PenDelete() {
     const [Pens, setPens] = useState({})
 
     useEffect(() => {
-        fetch(process.env.REACT_APP_API_URL+'/pens?token='+localStorage.getItem('Token'))
+        fetch(process.env.REACT_APP_API_URL+'/pens',{
+            headers:{
+                'Authorization': 'Bearer '+localStorage.getItem('Token')
+            }
+        })
         .then(response => response.json())
         .then(result => {
             setPens(result)
@@ -23,8 +27,11 @@ function PenDelete() {
     const del = (e) => {
         e.preventDefault()
         let move = e.target[0].value
-        fetch(process.env.REACT_APP_API_URL+'/pens/'+ID+'?move='+move+'&token='+localStorage.getItem('Token'),{
-            method:'DELETE'
+        fetch(process.env.REACT_APP_API_URL+'/pens/'+ID+'?move='+move,{
+            method:'DELETE',
+            headers:{
+                'Authorization': 'Bearer '+localStorage.getItem('Token')
+              }
         })
         .then(response => response.json())
         .then(result => {

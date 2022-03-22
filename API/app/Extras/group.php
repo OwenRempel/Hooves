@@ -23,25 +23,11 @@ if($method == 'POST' or $method == 'PUT'){
 
 
 
-if(!isset($_GET['token']) and !isset($PostData['Token'])){
-    http_response_code(401);
-    echo stouts('Please include token parm', 'error');
-    exit();
-}
-if(isset($_GET['token'])){
-    $userData = getInfoFromToken($_GET['token']);
-}else{
-    $userData = getInfoFromToken($PostData['Token']);
-}
+//this is where the auth header is checked
+$AuthData = checkAuth();
 
 
-if(isset($userData['Error'])){
-    echo stouts($userData['Error'], 'error');
-    exit();
-}
-
-
-$DB = new DB($userData['DBName']);
+$DB = new DB($AuthData['DBName']);
 
 function getEntries($DB, $formData, $groupID, $return = false ){
     $groupCheck = $DB->query('SELECT ID FROM GroupData WHERE ID=:id', array('id'=>$groupID));
@@ -170,7 +156,7 @@ $groupFormData = [
     'success'=>'Group successfully created!',
     'entriesTarget'=>'Cattle',
     'entriesLink'=>'GroupId',
-    'entriesShowData'=>'Tag, BuyDate, Pen',
+    'entriesShowData'=>'Tag, StartDate, Pen',
     'entriesLabels'=>['BuyDate'=>'Date Bought'],
     'items'=>[
         [

@@ -30,6 +30,9 @@ if($_SERVER["REQUEST_METHOD"] == "OPTIONS"){
     //Just exit with 200 OK with the above headers for OPTIONS method
     exit(0);
 }
+
+$ApacheHeaders = apache_request_headers();
+
 //Check to see if Setup complete
 if(!is_file('Build/Built')){
     DB_Admin::mkDB('HovesAdmin');
@@ -38,11 +41,6 @@ if(!is_file('Build/Built')){
 }
 //Functions
 //|\|/\|/|\|/|\|/|\|/|\|/|\|/|\|/|\|/|\|/|\|/|\
-
-$ApacheHeaders = apache_request_headers();
-// Server-side fix for bug in old Android versions (a nice side-effect of this fix means we don't care about capitalization for Authorization)
-//$requestHeaders = array_combine(array_map('ucwords', array_keys($requestHeaders)), array_values($requestHeaders));
-print_r($ApacheHeaders['Authorization']);
 
 //push output as json
 function stouts($message, $type='info'){
@@ -69,6 +67,42 @@ function getInfoFromToken($token){
         http_response_code(404);
         return array('Error'=>'That token is not connected to company');
     }
+}
+//Get data from bearer token
+//Gets the company DB and Display Pref
+function getInfoFromBearerToken($token){
+    if(!$token){
+        http_response_code(404);
+        return array('Error'=>'No Token included');
+    }
+    $token = explode(' ', $token)[1];
+    $DBAdmin = new DB_Admin;
+    $loginData = $DBAdmin->query('SELECT DBName, ListDisplayPref FROM
+        `LoginAuth` inner join Companies on LoginAuth.CompaniesID = Companies.ID
+         WHERE Token = :token', array('token'=>$token));
+    if(isset($loginData[0]['DBName'])){
+        return $loginData[0];
+    }else{
+        http_response_code(404);
+        return array('Error'=>'That token is not connected to company');
+    }
+}
+//token auth
+function checkAuth(){
+    Global $ApacheHeaders;
+    
+    if(!isset($ApacheHeaders['Authorization'])){
+        http_response_code(401);
+        echo stouts('Please include Token auth header', 'error');
+        exit();
+    }
+    
+    $userData = getInfoFromBearerToken($ApacheHeaders['Authorization']);
+    if(isset($userData['Error'])){
+        echo stouts($userData['Error'], 'error');
+        exit();
+    }
+    return $userData;
 }
 //Main router for all incoming requests
 function InitRouter(){
@@ -187,19 +221,11 @@ function InitRouter(){
 //search form data
 function search($localArray, $searchVal){
     $sendData = [];
-    if(!isset($_GET['token'])){
-        http_response_code(401);
-        echo stouts('Please include token parm', 'error');
-        exit();
-    }
-    $userData = getInfoFromToken($_GET['token']);
-    if(isset($userData['Error'])){
-        echo stouts($userData['Error'], 'error');
-        exit();
-    }
 
+    //this is where the auth header is checked
+    $AuthData = checkAuth();
 
-    $tokenData = json_decode($userData['ListDisplayPref'], true);
+    $tokenData = json_decode($AuthData['ListDisplayPref'], true);
 
     $selectItems = [];
     foreach($localArray['items'] as $item){
@@ -228,7 +254,7 @@ function search($localArray, $searchVal){
     }
   
     $searchQuery = '('. implode(' or ', $searchData).')';
-    $DB = new DB($userData['DBName']);
+    $DB = new DB($AuthData['DBName']);
 
     $groupCheck = '';
     if(isset($_GET['group'])){
@@ -243,21 +269,12 @@ function search($localArray, $searchVal){
 }
 //handler updating the db
 function updateFormData($formData, $localArray, $ID){
-    $DBAdmin = new DB_Admin;
-    
-    if(!isset($formData['Token'])){
-        http_response_code(401);
-        echo stouts('Please include Login token', 'error');
-        exit();
-    }
-    $data = $DBAdmin->query('SELECT * FROM `LoginAuth` inner join Companies on LoginAuth.CompaniesID = Companies.ID WHERE Token = :token', array('token'=>$formData['Token']));
+    Global $ApacheHeaders;
 
-    if(empty($data)){
-        http_response_code(401);
-        echo stouts('Auth Token has expired or is invalid', 'error');
-        exit();
-    }
-    $DB = new DB($data[0]['DBName']);
+    //this is where the auth header is checked
+    $AuthData = checkAuth();
+    
+    $DB = new DB($AuthData['DBName']);
     $outArray = [];
     $dataArray = [];
     foreach($localArray['items'] as $items){
@@ -281,21 +298,13 @@ function updateFormData($formData, $localArray, $ID){
 //form builder for the update system
 function selectUpdateFormItem($formArray, $redirectName, $ID){
     $sendData = [];
-    if(!isset($_GET['token'])){
-        http_response_code(401);
-        echo stouts('Please include token parm', 'error');
-        exit();
-    }
     
-    $DBNameCheck = getInfoFromToken($_GET['token']);
-
-    if(isset($DBNameCheck['Error'])){
-        echo stouts($DBNameCheck['Error'], 'error');
-        exit();
-    }
+    //this is where the auth header is checked
+    $AuthData = checkAuth();
+    
     $onlyDisplay = null;
     if(isset($localArray['ListDisplayPref']) and $localArray['ListDisplayPref']){
-        $onlyDisplay = json_decode($DBNameCheck['ListDisplayPref'], true);
+        $onlyDisplay = json_decode($AuthData['ListDisplayPref'], true);
     }
     $selectItems = [];
     if($onlyDisplay != null){
@@ -314,7 +323,7 @@ function selectUpdateFormItem($formArray, $redirectName, $ID){
     }
     $selectItems[] = 'ID';
     $selectItems = implode(', ', $selectItems);
-    $DB = new DB($DBNameCheck['DBName']);
+    $DB = new DB($AuthData['DBName']);
 
     $data = $DB->query("SELECT $selectItems from ".$formArray['tableName']." WHERE ID=:ID order By Adate Desc", array('ID'=>$ID));
     if(!isset($data[0]['ID'])){
@@ -388,16 +397,11 @@ function getFormStruct($formArray, $redirectName){
         }
 
     }else{
-        if(!isset($_GET['token'])){
-            http_response_code(401);
-            echo stouts('Please include token parm', 'error');
-            exit();
-        }
-        $userData = getInfoFromToken($_GET['token']);
-    
-        $tokenData = json_decode($userData['ListDisplayPref'], true);
+
+        //this is where the auth header is checked
+        $AuthData = checkAuth();
       
-        $DB = new DB($userData['DBName']);
+        $DB = new DB($AuthData['DBName']);
     }
 
     $FormPassthroughItems = [
@@ -419,7 +423,7 @@ function getFormStruct($formArray, $redirectName){
     $arrayToSend['form']['formTitle'] = (isset($formArray['formDesc']) ? "Add ". $formArray['formDesc'] : $formArray['formTitle']);
     $arrayToSend['form']['callBack'] = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].'/'.$redirectName;
     foreach($formArray['items'] as $items){
-        if($tokenData and isset($tokenData[$items['name']]) and $tokenData[$items['name']] == false){
+        if($tokenData and isset($AuthData[$items['name']]) and $AuthData[$items['name']] == false){
             continue;
         }
         $itemArray = [];
@@ -462,20 +466,11 @@ function getFormStruct($formArray, $redirectName){
 function selectFormItem($localArray, $ID){
     global $FormBuilderArray;
     $sendData = [];
-    if(!isset($_GET['token'])){
-        http_response_code(401);
-        echo stouts('Please include token parm', 'error');
-        exit();
-    }
-    
-    $DBNameCheck = getInfoFromToken($_GET['token']);
 
-    if(isset($DBNameCheck['Error'])){
-        echo stouts($DBNameCheck['Error'], 'error');
-        exit();
-    }
+    //this is where the auth header is checked
+    $AuthData = checkAuth();
 
-    $onlyDisplay = json_decode($DBNameCheck['ListDisplayPref'], true);
+    $onlyDisplay = json_decode($AuthData['ListDisplayPref'], true);
     $selectItems = [];
     if($onlyDisplay != null){
         
@@ -494,7 +489,7 @@ function selectFormItem($localArray, $ID){
     $selectItems[] = 'ID';
     $selectItems = implode(', ', $selectItems);
     
-    $DB = new DB($DBNameCheck['DBName']);
+    $DB = new DB($AuthData['DBName']);
 
     //check for sub forms
     $subArray = [];
@@ -558,21 +553,13 @@ function selectFormItem($localArray, $ID){
 //get bulk data
 function selectFormData($localArray){
     $sendData = [];
-    if(!isset($_GET['token'])){
-        http_response_code(401);
-        echo stouts('Please include token pram', 'error');
-        exit();
-    }
-    
-    $DBNameCheck = getInfoFromToken($_GET['token']);
+   
+    //this is where the auth header is checked
+    $AuthData = checkAuth();
 
-    if(isset($DBNameCheck['Error'])){
-        echo stouts($DBNameCheck['Error'], 'error');
-        exit();
-    }
     $onlyDisplay = null;
     if(isset($localArray['ListDisplayPref']) and $localArray['ListDisplayPref']){
-        $onlyDisplay = json_decode($DBNameCheck['ListDisplayPref'], true);
+        $onlyDisplay = json_decode($AuthData['ListDisplayPref'], true);
     }
     
 
@@ -602,7 +589,7 @@ function selectFormData($localArray){
     $selectItems[] = 'ID';
     $selectItems = implode(', ', $selectItems);
 
-    $DB = new DB($DBNameCheck['DBName']);
+    $DB = new DB($AuthData['DBName']);
 
     $data = $DB->query("SELECT $selectItems from ".$localArray['tableName']." order By Adate Desc ");
     foreach($localArray['items'] as $items){
@@ -663,24 +650,15 @@ function insertFormData($ReceivedFormData, $localArray, $Routes){
             exit();
         }
     }elseif(isset($localArray['loginAuth'])){
-        if(!isset($ReceivedFormData['Token'])){
-            http_response_code(401);
-            echo stouts('Please include Login token', 'error');
-            exit();
-        }
-        $loginData = $DBAdmin->query('SELECT * FROM `LoginAuth` inner join Companies on LoginAuth.CompaniesID = Companies.ID WHERE Token = :token', array('token'=>$ReceivedFormData['Token']));
-        if(!isset($loginData[0]['DBName'])){
-            http_response_code(401);
-            echo stouts('Your Token is not linked to a company', 'error');
-            exit();
-        }
+        //this is where the auth header is checked
+        $AuthData = checkAuth();
     }
     
    
     if(isset($localArray['dbCreate'])){
         $DB = $DBAdmin;
     }else{
-        $DB = new DB($loginData[0]['DBName']);
+        $DB = new DB($AuthData['DBName']);
     }
     
     $insertStringArray = [];
@@ -800,18 +778,11 @@ function insertFormData($ReceivedFormData, $localArray, $Routes){
 }
 //delete item
 function deleteItem($formArray, $ID){
-    if(!isset($_GET['token'])){
-        http_response_code(401);
-        echo stouts('Please include token parm', 'error');
-        exit();
-    }
-    $DBNameCheck = getInfoFromToken($_GET['token']);
-
-    if(isset($DBNameCheck['Error'])){
-        echo stouts($DBNameCheck['Error'], 'error');
-        exit();
-    }
-    $DB = new DB($DBNameCheck['DBName']);
+    
+    //this is where the auth header is checked
+    $AuthData = checkAuth();
+    
+    $DB = new DB($AuthData['DBName']);
     
     if(isset($formArray['allowCompleteDelete']) and $formArray['allowCompleteDelete'] == false){
         $checkNumber = count($DB->query("SELECT ID from ".$formArray['tableName'].""));

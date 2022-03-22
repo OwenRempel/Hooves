@@ -7,20 +7,17 @@ import { formHandle } from '../../../lib/FormHandle';
 import Back from '../../Back';
 import Form from '../../Form';
 
-
-
-
-
-
-
-
 function Pens() {
   const [Nav, setNav] = useState(false)
 
   function PenAdd() {
     const [FormData, setFormData] = useState({})
     useEffect(() => {
-        fetch(process.env.REACT_APP_API_URL+'/pens/info?token='+localStorage.getItem('Token'))
+        fetch(process.env.REACT_APP_API_URL+'/pens/info', {
+          headers:{
+            'Authorization': 'Bearer '+localStorage.getItem('Token')
+          }
+        })
               .then(response => response.json())
               .then(result => {
                 setFormData(result)
@@ -52,7 +49,11 @@ function Pens() {
   function PenList() {
     const [AllCows, setAllCows] = useState({});
     useEffect(() => {
-      fetch(process.env.REACT_APP_API_URL+'/pens?token='+localStorage.getItem('Token'))
+      fetch(process.env.REACT_APP_API_URL+'/pens', {
+        headers:{
+          'Authorization': 'Bearer '+localStorage.getItem('Token')
+        }
+      })
             .then(response => response.json())
             .then(result => {
               setAllCows(result)

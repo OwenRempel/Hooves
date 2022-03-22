@@ -9,7 +9,11 @@ function AddWeight() {
     const { ID } = useParams();
     const [formData, setFormData] = useState({});
     useEffect(() => {
-      fetch(process.env.REACT_APP_API_URL+'/weight/info?token='+localStorage.getItem('Token'))
+      fetch(process.env.REACT_APP_API_URL+'/weight/info', {
+        headers:{
+          'Authorization': 'Bearer '+localStorage.getItem('Token')
+        }
+      })
             .then(response => response.json())
             .then(result => {
               setFormData(result)

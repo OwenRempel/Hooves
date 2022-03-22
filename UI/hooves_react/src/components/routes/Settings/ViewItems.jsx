@@ -7,7 +7,11 @@ function ViewItems() {
     const [ Items, setItems] = useState(false);
 
     useEffect(() => {
-        fetch(process.env.REACT_APP_API_URL+'/settings/view-items/info?token='+localStorage.getItem('Token'))
+        fetch(process.env.REACT_APP_API_URL+'/settings/view-items/info', {
+            headers:{
+                'Authorization': 'Bearer '+localStorage.getItem('Token')
+              }
+        })
               .then(response => response.json())
               .then(result => {
                 setItems(result)
@@ -23,12 +27,12 @@ function ViewItems() {
             const item = FormItem[i]; 
             FormOut[item.name] = (item.checked ? true : false);
         }
-        const token = localStorage.getItem('Token');
-        FormOut['Token'] = token;
+    
         const res = await fetch(process.env.REACT_APP_API_URL+'/settings/view-items/', {
             method: 'POST',
             headers:{
-            'Content-Type': '"application/x-form-urlencoded"'
+            'Content-Type': '"application/x-form-urlencoded"',
+            'Authorization': 'Bearer '+localStorage.getItem('Token')
             },
             body: JSON.stringify(FormOut)
         });
