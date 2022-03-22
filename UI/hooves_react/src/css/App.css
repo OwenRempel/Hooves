@@ -424,6 +424,9 @@ font-size: 12px;
   flex-direction: column;
   gap: 20px;
 }
+.subInfo .tableCatch{
+  width: unset;
+}
 .subInfo span{
   background-color: var(--display-items);
   padding: 20px;

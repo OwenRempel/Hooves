@@ -135,6 +135,6 @@ table, th, td {
     }
   }
 .tableCatch{
-    width: 100%;
+    width: 80vw;
     overflow-x: auto;
 }
