@@ -217,6 +217,10 @@ function search($localArray, $searchVal){
     foreach($localArray['search'] as $searchItem){
         $searchData[] = ' '.$searchItem.' LIKE "%'.$searchVal.'%"';
     }
+    $limit = '';
+    if(isset($_GET['limit'])){
+        $limit = ' LIMIT '. intval($_GET['limit']);
+    }
   
     $searchQuery = '('. implode(' or ', $searchData).')';
     $DB = new DB($userData['DBName']);
@@ -226,7 +230,7 @@ function search($localArray, $searchVal){
         $groupCheck = ' and GroupId IS NULL';
     }
 
-    $data = $DB->query('SELECT '.$selectItems.' from '.$localArray['tableName'].' WHERE '.$searchQuery.' '.$groupCheck.'');
+    $data = $DB->query('SELECT '.$selectItems.' from '.$localArray['tableName'].' WHERE '.$searchQuery.' '.$groupCheck.' '.$limit.' ');
 
     $sendData["Data"] = $data;
 
@@ -284,8 +288,10 @@ function selectUpdateFormItem($formArray, $redirectName, $ID){
         echo stouts($DBNameCheck['Error'], 'error');
         exit();
     }
-
-    $onlyDisplay = json_decode($DBNameCheck['ListDisplayPref'], true);
+    $onlyDisplay = null;
+    if(isset($localArray['ListDisplayPref']) and $localArray['ListDisplayPref']){
+        $onlyDisplay = json_decode($DBNameCheck['ListDisplayPref'], true);
+    }
     $selectItems = [];
     if($onlyDisplay != null){
         
@@ -314,11 +320,6 @@ function selectUpdateFormItem($formArray, $redirectName, $ID){
 
     $updateData = $data[0];
 
-    if(isset($_GET['token'])){
-        $tokenData = json_decode(getInfoFromToken($_GET['token'])['ListDisplayPref'], true);
-    }else{
-        $tokenData = null;
-    }
     $FormPassthroughItems = [
         'name',
         'type',
@@ -339,9 +340,7 @@ function selectUpdateFormItem($formArray, $redirectName, $ID){
     $arrayToSend['form']['formTitle'] = 'Update '.$formArray['formDesc'];
     $arrayToSend['form']['callBack'] = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].'/'.$redirectName.'/'.$ID;
     foreach($formArray['items'] as $items){
-        if($tokenData and !$tokenData[$items['name']]){
-            continue;
-        }
+
         if(isset($items['noEdit'])){
             continue;
         }
@@ -444,6 +443,7 @@ function getFormStruct($formArray, $redirectName){
             $itemArray['options'] = $sendOption;
         }
         foreach($items as $itemName => $item){
+            
             if(in_array($itemName, $FormPassthroughItems)){
                 $itemArray[$itemName] = $item;
             }
@@ -565,8 +565,17 @@ function selectFormData($localArray){
         echo stouts($DBNameCheck['Error'], 'error');
         exit();
     }
+    $onlyDisplay = null;
+    if(isset($localArray['ListDisplayPref']) and $localArray['ListDisplayPref']){
+        $onlyDisplay = json_decode($DBNameCheck['ListDisplayPref'], true);
+    }
+    
 
-    $onlyDisplay = json_decode($DBNameCheck['ListDisplayPref'], true);
+    $locCheck = false;
+    if(isset($onlyDisplay[$localArray['location']]) and !$onlyDisplay[$localArray['location']]){
+        $locCheck = true;
+    } 
+
     $selectItems = [];
     foreach($localArray['items'] as $item){
         if($onlyDisplay != null){
@@ -579,6 +588,11 @@ function selectFormData($localArray){
                 $selectItems[] = $item['name'];
         }
         
+    }
+    if(isset($localArray['location'])){
+        if(!in_array($localArray['location'], $selectItems)){
+            $selectItems[] = $localArray['location'];
+        }
     }
     $selectItems[] = 'ID';
     $selectItems = implode(', ', $selectItems);
@@ -605,8 +619,12 @@ function selectFormData($localArray){
         $tempArray = [];
         $nopen = [];
         foreach($data as $row){
-            if($row[$localArray['location']] != ''){
-                $tempArray[$row[$localArray['location']]][] = $row;
+            $loc = $row[$localArray['location']];
+            if($locCheck){
+                unset($row[$localArray['location']]);
+            }
+            if($loc != ''){
+                $tempArray[$loc][] = $row;
             }else{
                 $nopen[] = $row;
             }
