@@ -50,6 +50,7 @@ $FormBuilderArray = [
             'tableName'=>'Cattle',
             'success'=>'Cow successfully created!',
             'subArrays'=>['weight', 'medical'],
+            'ListDisplayPref'=>true,
             'location'=>'Pen',
             'subLink'=>'CowID',
             'search'=>['Tag', 'BuyDate', 'HerdsMan', 'Investor', 'Description'],
