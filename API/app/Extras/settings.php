@@ -69,18 +69,21 @@ if($Routes[1] == 'view-items'){
    
     if($method == 'GET'){
         if($Routes[2] == 'info'){
-            if($da[0]['ListDisplayPref'] == null){ 
-                $arrayOut = [];
-                //TODO: This will have to be updated to allow for weights and other items
-                foreach($Builditems as $item){
-                    $name = $item['name'];
+            $list = null;
+            if(isset($da[0]['ListDisplayPref'])){
+                $list = json_decode($da[0]['ListDisplayPref'], 1);
+            }
+            $arrayOut = [];
+            //TODO: This will have to be updated to allow for weights and other items
+            foreach($Builditems as $item){
+                $name = $item['name'];
+                if(isset($list[$name])){
+                    $arrayOut[$name] = $list[$name];
+                }else{
                     $arrayOut[$name] = true;
                 }
-
-                echo json_encode(addLabels($arrayOut));
-            }else{
-                echo json_encode(addLabels(json_decode($da[0]['ListDisplayPref'], 1)));
             }
+            echo json_encode(addLabels($arrayOut));
         }else{
             http_response_code(404);
             echo stouts('That view dosen\'t Exist', 'error');
