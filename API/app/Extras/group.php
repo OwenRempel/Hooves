@@ -164,7 +164,14 @@ $groupFormData = [
             'typeName'=>'FormInput',
             'type'=>'text',
             'inputLabel'=>'Group Name',
-            'unique'=>true
+            'unique'=>true,
+            'required'=>true
+        ],
+        [
+            'name'=>'Data',
+            'typeName'=>'DataOnly',
+            'count'=>true,
+            'inputLabel'=>'Cows In group'
         ],
         [
             'name'=>'Pen',
