@@ -65,6 +65,7 @@ $FormBuilderArray = [
                     'typeName'=>'FormInput',
                     'type'=>'text',
                     'inputLabel'=>'Tag',
+                    'required'=>true
                     
                 ],
                 [
@@ -210,7 +211,7 @@ $FormBuilderArray = [
                     'typeName'=>'FormInput',
                     'type'=>'number',
                     'inputLabel'=>'Weight',
-                    
+                    'required'=>true
                 ],
                 [
                     'name'=>'WeightDate',
@@ -237,7 +238,7 @@ $FormBuilderArray = [
                     'typeName'=>'FormInput',
                     'type'=>'text',
                     'inputLabel'=>'Medicine',
-                    
+                    'required'=>true
                 ],
                 [
                     'name'=>'MedDate',
