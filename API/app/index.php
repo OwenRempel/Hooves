@@ -429,6 +429,9 @@ function getFormStruct($formArray, $redirectName){
         if($tokenData and isset($AuthData[$items['name']]) and $AuthData[$items['name']] == false){
             continue;
         }
+        if($items['typeName'] == 'DataOnly'){
+            continue;
+        }
         $itemArray = [];
         if($items['type'] == 'date'){
             $itemArray['defaultValue'] = date('Y-m-d');
@@ -606,12 +609,24 @@ function selectFormData($localArray){
                 $data[$dataKey][$items['name']] = ($dataItem[$items['name']] != '' ? $replaceQuery[$dataItem[$items['name']]] : '');
             }
         }
+        if(isset($items['count'])){
+            foreach($data as $dataKey=>$dataItem){
+                $arr = json_decode($dataItem[$items['name']], 1);
+                if(is_array($arr)){
+                    $data[$dataKey][$items['name']] = count($arr);
+                }else{
+                    $data[$dataKey][$items['name']] = 0;
+                }
+            }
+
+        }
     }
 
-    //TODO: Update this so that it sorts the locations event if you don't include that
+    //TODO: Update this so that it sorts the locations even if you don't include that
     
     if(isset($localArray['location'])){
         $tempArray = [];
+        $locations = [];
         $noPen = [];
         foreach($data as $row){
             $loc = $row[$localArray['location']];
@@ -620,12 +635,19 @@ function selectFormData($localArray){
             }
             if($loc != ''){
                 $tempArray[$loc][] = $row;
+                if(!in_array($loc, $locations)){
+                    $locations[] = $loc;
+                }
             }else{
                 $noPen[] = $row;
             }
         }
-        $tempArray['None'] = $noPen;
-        $sendData['Data']['Locations'] = $tempArray;
+        sort($locations);
+        foreach($locations as $local){
+            $sendData['Data']['Locations'][$local] = $tempArray[$local];
+        }
+        $sendData['Data']['Locations']['None'] = $noPen;
+
     }else{
         $sendData['Data'] = $data;
     }
