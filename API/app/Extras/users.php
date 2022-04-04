@@ -1,7 +1,6 @@
 <?php
 
-echo 'Users';
-exit();
+$AuthData = checkAuth();
 
 //TODO: Lots of work here
 // Resources $localarray, $PostData, $Routes, $FormBuilderArray
@@ -27,14 +26,11 @@ if($method == 'POST' or $method == 'PUT'){
 
 
 
-//this is where the auth header is checked
-$AuthData = checkAuth();
-
 
 $DB = new DB_Admin;
 
 function getEntries($DB, $formData, $groupID, $return = false ){
-
+//h
 }
     
 
