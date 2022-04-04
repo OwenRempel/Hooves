@@ -442,7 +442,7 @@ function getFormStruct($formArray, $redirectName){
             $optionData = $DB->query('SELECT '.$items['OptionsLoad'][1].', ID FROM '.$items['OptionsLoad'][0].'');
             if(isset($items['allowNull'])){
                 $sendOption[] = [
-                    'value'=>null,
+                    'value'=>'',
                     'option'=>'None'
                 ];
             }
@@ -574,7 +574,7 @@ function selectFormData($localArray){
     $selectItems = [];
     foreach($localArray['items'] as $item){
         if($onlyDisplay != null){
-            if($onlyDisplay[$item['name']]){
+            if(isset($onlyDisplay[$item['name']]) and $onlyDisplay[$item['name']]){
                 $sendData['Info'][$item['name']] = $item['inputLabel'];
                 $selectItems[] = $item['name'];
             }
@@ -603,10 +603,16 @@ function selectFormData($localArray){
                 $replaceQuery[$rep['ID']] = $rep[$items['OptionsLoad'][1]];
             }
             foreach($data as $dataKey=>$dataItem){
-                $data[$dataKey][$items['name']] = ($dataItem[$items['name']] != '' ? $replaceQuery[$dataItem[$items['name']]] : '');
+                if($dataItem[$items['name']] == '' or $dataItem[$items['name']] == null or strtolower($dataItem[$items['name']]) == 'none'){
+                    $data[$dataKey][$items['name']] = '';
+                }else{
+                    $data[$dataKey][$items['name']] = $replaceQuery[$dataItem[$items['name']]];
+                }
+                
             }
         }
     }
+    
 
     //TODO: Update this so that it sorts the locations event if you don't include that
     
