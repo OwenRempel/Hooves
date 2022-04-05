@@ -6,3 +6,5 @@ refrence/*
 mon_new.sql
 
 Built/app**
+
+*/node_modules/*

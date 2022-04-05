@@ -1,9 +1,6 @@
 <?php
 
-
 $AuthData = checkAuth();
-
-
 
 //TODO: Lots of work here
 // Resources $localarray, $PostData, $Routes, $FormBuilderArray
@@ -30,11 +27,10 @@ if($method == 'POST' or $method == 'PUT'){
 
 
 
-
 $DB = new DB_Admin;
 
 function getEntries($DB, $formData, $groupID, $return = false ){
-
+//h
 }
     
 
