@@ -1,7 +1,9 @@
 <?php
 
-echo 'Users';
-exit();
+
+$AuthData = checkAuth();
+
+
 
 //TODO: Lots of work here
 // Resources $localarray, $PostData, $Routes, $FormBuilderArray
@@ -27,8 +29,6 @@ if($method == 'POST' or $method == 'PUT'){
 
 
 
-//this is where the auth header is checked
-$AuthData = checkAuth();
 
 
 $DB = new DB_Admin;
@@ -49,22 +49,22 @@ $groupFormData = [
             'unique'=>True,
             'type'=>'text',
             'inputLabel'=>'User Email',
-            'secondTable'=>True
-            
+            'required'=>true
         ],
         [
             'name'=>'UserPassword',
             'typeName'=>'FormInput',
             'type'=>'password',
             'inputLabel'=>'Password',
-            'secondTable'=>True                    
+            'required'=>true                 
         ],
         [
             'name'=>'UserPassword-confirm',
             'typeName'=>'FormInput',
             'passwordConfirm'=>'UserPassword',
             'type'=>'password',
-            'inputLabel'=>'Confirm Password'
+            'inputLabel'=>'Confirm Password',
+            'required'=>true
         ]
     ]
 ];
