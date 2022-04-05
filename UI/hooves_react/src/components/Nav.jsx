@@ -20,11 +20,18 @@ function Nav() {
       
        
     }
+
+    const handelBlur = (e) => {
+        if(!e.relatedTarget){
+            setToggleClass('menuSmall')
+            setIcon('menu')
+        }
+    }
     return (
         <nav className={`menu ${ToggleClass}`}>
-            <span className='menuBackIcon' >
+            <button className='menuBackIcon btnClear' onBlur={handelBlur}>
                 <i className="material-icons" id="menuic" onClick={menuToggle}>{Icon}</i>
-            </span>
+            </button>
             <Link to='/' onClick={menuToggle}>
                 <div >
                     <span className="material-icons menuIcon">home</span>

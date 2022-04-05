@@ -4,6 +4,7 @@ import { Link } from "react-router-dom"
 function Search() {
     const [ Search, setSearch ] = useState(false)
     const searchRef = useRef();
+    const itemsRef = useRef();
 
     const searchCatch =  async (e) =>{
         let val = e.target.value
@@ -24,7 +25,7 @@ function Search() {
     const SearchOut = (props) => {
         const { data } = props
         return(
-            <div className="searchItems">
+            <div className="searchItems" ref={itemsRef}>
                 {data.map((item, key)=>(
                     <Link key={key} to={`/cows/${item.ID}`} onClick={()=>setSearch(false)}><span>{item.Tag}</span> <span>{item.StartDate}</span> <span>{item.HerdsMan}</span></Link>
                 ))}
@@ -35,13 +36,21 @@ function Search() {
         setSearch(false)
         searchRef.current.value = ''
     }
+
+    const handleBlur = (e) =>{
+        if(!e.relatedTarget){
+            setSearch(false)
+            searchRef.current.value = ''
+        }
+
+    }
     //TODO: This still needs a bunch of work the UI is pretty rough but it is a working version now
     return (
         <div className='search'>
             {Search && 
                 <p className="searchClose" onClick={clickClose}>X</p>
             }
-            <input type="search" className='searchInput' ref={searchRef} onKeyUp={searchCatch}  placeholder='Search'/>
+            <input type="search" className='searchInput' ref={searchRef} onBlur={handleBlur} onKeyUp={searchCatch}  placeholder='Search'/>
             {Search && 
                 <SearchOut data={Search.Data}/>
             }
