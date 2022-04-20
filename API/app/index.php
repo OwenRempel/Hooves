@@ -509,7 +509,7 @@ function selectFormItem($localArray, $ID){
                 $order = "Adate";
             }
             $check = true;
-            $da = $DB->query('SELECT * From '.$FormBuilderArray['Routes'][$sub]['tableName'].' WHERE '.$localArray['subLink'].'=:ID order by '.$order.' DESC',array('ID'=>$ID));
+            $da = $DB->query('SELECT * From '.$FormBuilderArray['Routes'][$sub]['tableName'].' WHERE '.$localArray['subLink'].'=:ID order by '.$order.' DESC', array('ID'=>$ID));
             foreach($da as $row){
                 $each = [];
                 foreach($FormBuilderArray['Routes'][$sub]['items'] as $item){

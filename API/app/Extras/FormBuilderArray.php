@@ -196,6 +196,92 @@ $FormBuilderArray = [
                 ]
             ]
         ],
+        'calfs'=>[
+            'loginAuth'=>true,
+            'formDesc'=>'Cow',
+            'formName'=>'CattleAddItem',
+            'tableName'=>'Cattle',
+            'success'=>'Cow successfully created!',
+            'subArrays'=>['weight', 'medical'],
+            'ListDisplayPref'=>true,
+            'location'=>'Pen',
+            'subLink'=>'CowID',
+            'search'=>['Tag', 'StartDate', 'Description'],
+            'cleanUp'=>[
+                'type'=>'delete',
+                'target'=>['Weight', 'Medical'],
+                'query'=>'CowID'
+            ],
+            'items'=>[
+                [
+                    'name'=>'Tag',
+                    'typeName'=>'FormInput',
+                    'type'=>'text',
+                    'inputLabel'=>'Tag',
+                    'required'=>true
+                    
+                ],
+                [
+                    'name'=>'StartDate',
+                    'typeName'=>'FormInput',
+                    'type'=>'date',
+                    'inputLabel'=>'Date Born',
+                    
+                ],
+                [
+                    'name'=>'AgeState',
+                    'typeName'=>'FormSelect',
+                    'inputLabel'=>'Age-State',
+                    'options'=>[
+                        [
+                            "value"=>'heffer',
+                            "option"=>'Heffer'
+                        ],
+                        [
+                            "value"=>'steer',
+                            "option"=>'Steer'
+                        ]
+                    ]
+                ],
+                [
+                    'name'=>'PenDate',
+                    'typeName'=>'FormInput',
+                    'type'=>'date',
+                    'inputLabel'=>'Into Pen Date',
+                    'noEdit'=>true
+                    
+                ],
+                [
+                    'name'=>'Pen',
+                    'typeName'=>'FormSelect',
+                    'inputLabel'=>'Pen',
+                    'OptionsLoad'=>['Pens', 'Name'],
+                    'noEdit'=>true
+                    
+                ],
+                [
+                    'name'=>'Remarks',
+                    'typeName'=>'FormTextarea',
+                    'placeholder'=>'Type your remarks here',
+                    'inputLabel'=>'Remarks'
+                    
+                ],
+                [
+                    'name'=>'Description',
+                    'typeName'=>'FormTextarea',
+                    'placeholder'=>'Type your description here',
+                    'inputLabel'=>'Description'
+                    
+                ],
+                [
+                    'name'=>'MotherTag',
+                    'typeName'=>'FormInput',
+                    'type'=>'text',
+                    'inputLabel'=>'Mother Tag',
+                    
+                ]
+            ]
+        ],
         'weight'=>[
             'loginAuth'=>true,
             'formDesc'=>'Weight',
