@@ -196,7 +196,7 @@ $FormBuilderArray = [
                 ]
             ]
         ],
-        'calfs'=>[
+        'calves'=>[
             'loginAuth'=>true,
             'formDesc'=>'Cow',
             'formName'=>'CattleAddItem',
