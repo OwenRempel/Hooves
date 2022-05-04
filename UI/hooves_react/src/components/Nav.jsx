@@ -50,12 +50,15 @@ function Nav() {
                     <span>Groups</span>
                 </div>
             </Link>
-            <Link to='/feed' onClick={menuToggle}>
-                <div>
-                    <span className="material-icons menuIcon">grass</span>
-                    <span>Feed</span>
-                </div>
-            </Link>
+            {parseInt(localStorage.getItem('Feedlot')) === 1 && 
+                <Link to='/feed' onClick={menuToggle}>
+                    <div>
+                        <span className="material-icons menuIcon">grass</span>
+                        <span>Feed</span>
+                    </div>
+                </Link>
+            }
+            
         </nav>
     )
 }
