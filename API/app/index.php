@@ -403,6 +403,7 @@ function getFormStruct($formArray, $redirectName){
 
         //this is where the auth header is checked
         $AuthData = checkAuth();
+        
       
         $DB = new DB($AuthData['DBName']);
     }
@@ -425,8 +426,9 @@ function getFormStruct($formArray, $redirectName){
     $arrayToSend['form']['formName'] = $formArray['formName'];
     $arrayToSend['form']['formTitle'] = (isset($formArray['formDesc']) ? "Add ". $formArray['formDesc'] : $formArray['formTitle']);
     $arrayToSend['form']['callBack'] = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].'/'.$redirectName;
+    $displayItems = json_decode($AuthData['ListDisplayPref'], 1);
     foreach($formArray['items'] as $items){
-        if($tokenData and isset($AuthData[$items['name']]) and $AuthData[$items['name']] == false){
+        if(isset($displayItems[$items['name']]) and !$displayItems[$items['name']] and (!isset($items['required']) or $items['required'] != true)){
             continue;
         }
         if($items['typeName'] == 'DataOnly'){
