@@ -5,8 +5,16 @@ import Table from '../../Table/Table';
 
 function CowsList() {
     const [AllCows, setAllCows] = useState({});
+    let feedlot = 0;
+    if(localStorage.getItem('Feedlot')){
+       feedlot = parseInt(localStorage.getItem('Feedlot'));
+    }
     useEffect(() => {
-      fetch(process.env.REACT_APP_API_URL+'/cattle',{
+      let feedlotChoice = '/calves';
+      if(feedlot === 1){
+        feedlotChoice = '/cattle';
+      }
+      fetch(process.env.REACT_APP_API_URL+feedlotChoice,{
         headers:{
           'Authorization': 'Bearer '+localStorage.getItem('Token'),
         }
@@ -15,7 +23,7 @@ function CowsList() {
             .then(result => {
               setAllCows(result)
             })
-    }, []);
+    }, [feedlot]);
     return (
         <>
             <Back link='/'/>

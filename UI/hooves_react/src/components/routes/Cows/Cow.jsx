@@ -12,18 +12,26 @@ import Back from '../../Back'
 function Cow() {
     const { ID } = useParams();
     const [Cow, setCow] = useState({});
+    let feedlot = 0;
+    if(localStorage.getItem('Feedlot')){
+       feedlot = parseInt(localStorage.getItem('Feedlot'));
+    }
     useEffect(() => {
-      fetch(process.env.REACT_APP_API_URL+'/cattle/'+ID,{
-          headers:{
-            'Authorization': 'Bearer '+localStorage.getItem('Token'),
-          }
-      })
+        let feedlotChoice = '/calves';
+        if(feedlot === 1){
+            feedlotChoice = '/cattle';
+        }
+        fetch(process.env.REACT_APP_API_URL+feedlotChoice+'/'+ID,{
+            headers:{
+                'Authorization': 'Bearer '+localStorage.getItem('Token'),
+            }
+        })
             .then(response => response.json())
             .then(result => {
               setCow(result)
               
             })
-    }, [ID]);
+    }, [ID, feedlot]);
 
     const [searchParams ] = useSearchParams();
 

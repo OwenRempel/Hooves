@@ -8,8 +8,16 @@ function  CowUpdate() {
     const { ID } = useParams();
     const [formData, setFormData] = useState({});
     const nav = useNavigate();
+    let feedlot = 0;
+    if(localStorage.getItem('Feedlot')){
+       feedlot = parseInt(localStorage.getItem('Feedlot'));
+    }
     useEffect(() => {
-      fetch(process.env.REACT_APP_API_URL+'/cattle/info/'+ID,{
+        let feedlotChoice = '/calves';
+        if(feedlot === 1){
+            feedlotChoice = '/cattle';
+        }
+      fetch(process.env.REACT_APP_API_URL+feedlotChoice+'/info/'+ID,{
         headers:{
             'Authorization': 'Bearer '+localStorage.getItem('Token'),
           }
@@ -18,7 +26,7 @@ function  CowUpdate() {
             .then(result => {
               setFormData(result)
             });
-    }, [ID])
+    }, [ID, feedlot])
     const returnFormData = async (e) => {
         e.preventDefault();
         const  res = await formHandle(formData, e.target, 'PUT');

@@ -5,8 +5,16 @@ import { formHandle } from '../../../lib/FormHandle';
 import Back from '../../Back';
 function CowsAdd() {
     const [formData, setFormData] = useState({});
+    let feedlot = 0;
+    if(localStorage.getItem('Feedlot')){
+       feedlot = parseInt(localStorage.getItem('Feedlot'));
+    }
     useEffect(() => {
-      fetch(process.env.REACT_APP_API_URL+'/cattle/info',{
+      let feedlotChoice = '/calves';
+      if(feedlot === 1){
+        feedlotChoice = '/cattle';
+      }
+      fetch(process.env.REACT_APP_API_URL+feedlotChoice+'/info',{
         headers:{
           'Authorization': 'Bearer '+localStorage.getItem('Token'),
         }
@@ -15,7 +23,7 @@ function CowsAdd() {
             .then(result => {
               setFormData(result)
             });
-    }, [])
+    }, [feedlot])
     
     
     
