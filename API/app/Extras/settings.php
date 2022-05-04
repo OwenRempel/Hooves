@@ -23,8 +23,13 @@ $AuthData = checkAuth();
 
 $DB = new DB($AuthData['DBName']);
 $DB_Admin = new DB_Admin;
+$feedlot = $DB_Admin->query('SELECT Feedlot from Companies WHERE DBName = :db', array('db'=>$AuthData['DBName']));
 
 $BuildItems = $FormBuilderArray['Routes']['cattle']['items'];
+
+if(intval($feedlot[0]['Feedlot']) === 0){
+    $BuildItems = $FormBuilderArray['Routes']['calves']['items'];
+}
 
 function addLabels($arr){
     Global $FormBuilderArray;
@@ -82,6 +87,29 @@ if($Routes[1] == 'view-items'){
         exit();
     }
     
+}elseif($Routes[1] == 'feedlot-set'){
+    if($method == 'POST'){
+        if(!isset($PostData['Feedlot'])){
+            http_response_code(404);
+            echo stouts('Please include a Feedlot value in your body', 'error');
+            exit();
+        } 
+        if($PostData['Feedlot'] == 0 or $PostData['Feedlot'] == 1){
+            $DB_Admin->query('UPDATE Companies SET Feedlot=:feed WHERE DBName=:db', array('feed'=>$PostData['Feedlot'],'db'=>$AuthData['DBName']));
+            http_response_code(200);
+            echo stouts('Feedlot Status Updated Successfully', 'success');
+            exit();
+        }else{
+            http_response_code(403);
+            echo stouts('Invalid value please use a 1 or a 0', 'error');
+            exit();
+        }
+       
+    }else{
+        http_response_code(401);
+        echo stouts('You can only POST to this route', 'error');
+        exit();
+    }
 }else{
     http_response_code(404);
     echo stouts('That view dosen\'t Exist', 'error');
