@@ -56,6 +56,7 @@ export default function App() {
       localStorage.setItem('Token', checkAuthData.Token);
       localStorage.setItem('TokenExpire', time);
       localStorage.setItem('User', checkAuthData.User);
+      localStorage.setItem('Feedlot', checkAuthData.Feedlot);
       localStorage.setItem('Company', checkAuthData.Company);
       setAuth(true);
     }else if(checkAuthData.error){
