@@ -20,7 +20,7 @@ if(isset($_POST['username']) and isset($_POST['password'])){
 
 
 $userCheckData = $DB->query(
-    'SELECT UserEmail, UserPassword, Users.ID, Users.CompaniesID, Companies.CompanyName from Users inner join Companies on Users.CompaniesID = Companies.ID
+    'SELECT UserEmail, UserPassword, Users.ID, Users.CompaniesID, Companies.CompanyName, Companies.Feedlot from Users inner join Companies on Users.CompaniesID = Companies.ID
     WHERE UserEmail = :username',
   array('username'=> $PostInput['username']));
 
@@ -47,6 +47,7 @@ if(isset($checkUserIsLoggedIn[0]) and strtotime($checkUserIsLoggedIn[0]['Expire'
         'info'=>'Your already logged in',
         'Token'=>$checkUserIsLoggedIn[0]['Token'],
         'User'=>$userCheckData['UserEmail'],
+        'Feedlot'=>$userCheckData['Feedlot'],
         'Company'=>$userCheckData['CompanyName']
         ]);
     exit();
@@ -77,6 +78,7 @@ $sendData = [
     'success'=>'User Logged In',
     'Token'=>$UUID,
     'User'=>$userCheckData['UserEmail'],
+    'Feedlot'=>$userCheckData['Feedlot'],
     'Company'=>$userCheckData['CompanyName']
 ];
 

@@ -2,6 +2,7 @@ CREATE TABLE `HovesAdmin`.`Companies` (
     `CompanyName` TEXT NOT NULL ,
     `DBName` TEXT NOT NULL ,
     `ListDisplayPref` JSON DEFAULT NULL,
+    `Feedlot` INT default 0,
     `Adate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
     `ID` TEXT NOT NULL ,
     `RID` INT NOT NULL AUTO_INCREMENT ,
