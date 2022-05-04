@@ -244,14 +244,6 @@ $FormBuilderArray = [
                     ]
                 ],
                 [
-                    'name'=>'PenDate',
-                    'typeName'=>'FormInput',
-                    'type'=>'date',
-                    'inputLabel'=>'Into Pen Date',
-                    'noEdit'=>true
-                    
-                ],
-                [
                     'name'=>'Pen',
                     'typeName'=>'FormSelect',
                     'inputLabel'=>'Pen',
@@ -270,7 +262,8 @@ $FormBuilderArray = [
                     'name'=>'Description',
                     'typeName'=>'FormTextarea',
                     'placeholder'=>'Type your description here',
-                    'inputLabel'=>'Description'
+                    'inputLabel'=>'Description',
+        
                     
                 ],
                 [
