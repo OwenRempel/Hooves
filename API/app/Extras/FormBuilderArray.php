@@ -48,6 +48,7 @@ $FormBuilderArray = [
             'formDesc'=>'Cow',
             'formName'=>'CattleAddItem',
             'tableName'=>'Cattle',
+            'secondTable'=>'Weight',
             'success'=>'Cow successfully created!',
             'subArrays'=>['weight', 'medical'],
             'ListDisplayPref'=>true,
@@ -58,6 +59,14 @@ $FormBuilderArray = [
                 'type'=>'delete',
                 'target'=>['Weight', 'Medical'],
                 'query'=>'CowID'
+            ],
+            'StatIncludes'=>[
+                'LastWeight',
+                'FirstWeight',
+                'SecondLastWeight',
+                'SecondLastDate',
+                'DateWeight',
+                'FirstDate'
             ],
             'items'=>[
                 [
@@ -185,7 +194,22 @@ $FormBuilderArray = [
                     'inputLabel'=>'Source',
                     
                 ],
-
+                [
+                    'name'=>'CowWeight',
+                    'typeName'=>'FormInput',
+                    'type'=>'text',
+                    'inputLabel'=>'Cow Weight',
+                    'secondTable'=>True
+                    
+                ],
+                [
+                    'name'=>'WeightDate',
+                    'typeName'=>'FormInput',
+                    'type'=>'date',
+                    'inputLabel'=>'Date Weighed',
+                    'secondTable'=>True
+                ],
+                
                 //TODO:add CalfState, CalfDate
                 [
                     'name'=>'MotherTag',
@@ -193,7 +217,80 @@ $FormBuilderArray = [
                     'type'=>'text',
                     'inputLabel'=>'Mother Tag',
                     
-                ]
+                ],
+                [
+                    'name'=>'FeedTime',
+                    'typeName'=>'Stat',
+                    'type'=>'date-diff',
+                    'statData'=>'StartDate',
+                    'inputLabel'=>'Time in Feedlot',
+                    'suffix'=>'Days',
+                ],
+                [
+                    'name'=>'totalGain',
+                    'typeName'=>'Stat',
+                    'type'=>'diff',
+                    'statData'=>['FirstWeight', 'LastWeight'],
+                    'inputLabel'=>'Total Gain',
+                    'suffix'=>'KG'
+                ],
+                [
+                    'name'=>'currentWeight',
+                    'typeName'=>'Stat',
+                    'type'=>'format',
+                    'statData'=>'LastWeight',
+                    'inputLabel'=>'Current Weight',
+                    'empty'=>0,
+                    'suffix'=>'KG'
+                ],
+                [
+                    'name'=>'lastWeightDate',
+                    'typeName'=>'Stat',
+                    'type'=>'format',
+                    'statData'=>'DateWeight',
+                    'empty'=>'',
+                    'inputLabel'=>'Current Weight Date'
+                ],
+                [
+                    'name'=>'lastWeight',
+                    'typeName'=>'Stat',
+                    'type'=>'format',
+                    'statData'=>'SecondLastWeight',
+                    'inputLabel'=>'Second Last Weight',
+                    'empty'=>0,
+                    'suffix'=>'KG'
+                ],
+                [
+                    'name'=>'secondWeightDate',
+                    'typeName'=>'Stat',
+                    'type'=>'format',
+                    'statData'=>'SecondLastDate',
+                    'inputLabel'=>'Last Weight Date'
+                ],
+                [
+                    'name'=>'lastWeightDiff',
+                    'typeName'=>'Stat',
+                    'type'=>'diff',
+                    'statData'=>['SecondLastWeight', 'LastWeight'],
+                    'inputLabel'=>'Last Weight Diff',
+                    'suffix'=>'KG'
+                ],
+                [
+                    'name'=>'AvgLastGain',
+                    'typeName'=>'Stat',
+                    'type'=>'avg-time-gain',
+                    'statData'=>['SecondLastWeight', 'LastWeight', 'SecondLastDate', 'DateWeight'],
+                    'inputLabel'=>'AVG Last Gain',
+                    'suffix'=>'KG/Day'
+                ],
+                [
+                    'name'=>'AvgDailyGain',
+                    'typeName'=>'Stat',
+                    'type'=>'avg-time-gain',
+                    'statData'=>['FirstWeight', 'LastWeight', 'FirstDate', 'DateWeight'],
+                    'inputLabel'=>'AVG Daily Gain',
+                    'suffix'=>'KG/Day'
+                ],
             ]
         ],
         'calves'=>[
@@ -284,6 +381,7 @@ $FormBuilderArray = [
             'masterTable'=>'Cattle',
             'masterLink'=>'CowID',
             'orderIndex'=>'WeightDate',
+            'runStatsFunc'=>'weightUpdator',
             'items'=>[
                 [
                     'name'=>'CowWeight',
