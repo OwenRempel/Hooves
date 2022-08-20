@@ -4,7 +4,7 @@
 require_once("Database/DB.php");
 //Array that has all the data for the forms
 require('Extras/FormBuilderArray.php');
-
+require('Extras/statFuncs.php');
 //setting the correct timezone
 date_default_timezone_set('America/Dawson_Creek');
 
@@ -286,6 +286,11 @@ function updateFormData($formData, $localArray, $ID){
             $dataArray[$items['name']] =  $formData[$items['name']];
         }
     }
+
+    if(isset($localArray['runStatsFunc'])){
+        $StatID = $DB->query("SELECT ".$localArray['masterLink']." from ".$localArray['tableName']." WHERE ID=:ID", array('ID'=>$ID))[0][$localArray['masterLink']];
+    }
+
     $final = [];
     foreach($outArray as $out){
         $final[] = $out.'=:'.$out;
@@ -295,6 +300,11 @@ function updateFormData($formData, $localArray, $ID){
     $dataUpdate = $DB->query('UPDATE '.$localArray['tableName'].' SET '.$final.' WHERE ID=:ID', $dataArray);
     http_response_code(201);
     echo stouts('Cow Updated successfully', 'success');
+
+    if(isset($localArray['runStatsFunc'])){
+        $localArray['runStatsFunc']($localArray['masterTable'], $StatID, $DB);
+    }
+    
 
 
 }
@@ -431,11 +441,11 @@ function getFormStruct($formArray, $redirectName){
         if(isset($displayItems[$items['name']]) and !$displayItems[$items['name']] and (!isset($items['required']) or $items['required'] != true)){
             continue;
         }
-        if($items['typeName'] == 'DataOnly'){
+        if($items['typeName'] == 'DataOnly' or $items['typeName'] == 'Stat'){
             continue;
         }
         $itemArray = [];
-        if($items['type'] == 'date'){
+        if(isset($items['type']) and $items['type'] == 'date'){
             $itemArray['defaultValue'] = date('Y-m-d');
         }
         if(isset($items['passwordConfirm'])){
@@ -484,12 +494,14 @@ function selectFormItem($localArray, $ID){
         
         foreach($localArray['items'] as $item){
             if(isset($onlyDisplay[$item['name']])){
+                if($item['typeName'] == 'Stat') continue;
                 $sendData['Info'][$item['name']] = $item['inputLabel'];
                 $selectItems[] = $item['name'];
             }
         }
     }else{
         foreach($localArray['items'] as $item){
+            if($item['typeName'] == 'Stat') continue;
             $sendData['Info'][$item['name']] = $item['inputLabel'];
             $selectItems[] = $item['name'];
         }
@@ -581,11 +593,13 @@ function selectFormData($localArray){
         if($onlyDisplay != null){
             if(isset($onlyDisplay[$item['name']]) and $onlyDisplay[$item['name']]){
                 $sendData['Info'][$item['name']] = $item['inputLabel'];
+                if($item['typeName'] == 'Stat') continue;
                 $selectItems[] = $item['name'];
             }
         }else{
             $sendData['Info'][$item['name']] = $item['inputLabel'];
-                $selectItems[] = $item['name'];
+            if($item['typeName'] == 'Stat') continue;
+            $selectItems[] = $item['name'];
         }
         
     }
@@ -594,6 +608,13 @@ function selectFormData($localArray){
             $selectItems[] = $localArray['location'];
         }
     }
+
+    if(isset($localArray['StatIncludes'])){
+        foreach($localArray['StatIncludes'] as $stat){
+            $selectItems[] = $stat;
+        }
+    }
+
     $selectItems[] = 'ID';
     $selectItems = implode(', ', $selectItems);
 
@@ -601,6 +622,60 @@ function selectFormData($localArray){
 
     $data = $DB->query("SELECT $selectItems from ".$localArray['tableName']." order By Adate Desc ");
     foreach($localArray['items'] as $items){
+
+        if($items['typeName'] == 'Stat'){
+            if($items['type'] == 'date-diff'){
+                foreach($data as $dataKey=>$dataItem){
+                    $date1 = new DateTime($data[$dataKey][$items['statData']]);
+                    $date2 = new DateTime(date('Y-m-d'));
+                    $interval = $date1->diff($date2);
+                    $days = $interval->days;
+                    if(isset($items['suffix'])) $days = $days.' '.$items['suffix'];
+                    $data[$dataKey][$items['name']] = $days;
+                }
+            }elseif($items['type'] == 'diff'){
+                foreach($data as $dataKey=>$dataItem){
+                    $first = $data[$dataKey][$items['statData'][0]];
+                    $second = $data[$dataKey][$items['statData'][1]];
+                    $diff = $second - $first;
+                    if($first > $second) $diff = $first - $second;
+                    if(isset($items['suffix'])) $diff = $diff.' '.$items['suffix'];
+                    $data[$dataKey][$items['name']] = $diff;
+                }
+            }elseif($items['type'] == 'format'){
+                foreach($data as $dataKey=>$dataItem){
+                    $format = $data[$dataKey][$items['statData']];
+                    if($format == null and isset($items['empty'])) $format = $items['empty'];
+                    if(isset($items['suffix'])) $format = $format.' '.$items['suffix'];
+                    $data[$dataKey][$items['name']] = $format;
+                }
+            }elseif($items['type'] == 'avg-time-gain'){
+                foreach($data as $dataKey=>$dataItem){
+                    $statData = $items['statData'];
+                    $getDate1 = $data[$dataKey][$statData[2]];
+                    $getDate2 = $data[$dataKey][$statData[3]];
+                    $first = $data[$dataKey][$statData[0]];
+                    $second = $data[$dataKey][$statData[1]];
+                    if($getDate1 == Null or $getDate2 == Null or $first == Null or $second == Null){
+                        $data[$dataKey][$items['name']] = 0;
+                    }
+                    $date1 = new DateTime($getDate1);
+                    $date2 = new DateTime( $getDate2);
+                    $interval = $date1->diff($date2);
+                    $days = $interval->days + 1;
+                    $diff = $second - $first;
+                    if($first > $second) $diff = $first - $second;
+                    $avg = 0;
+                    if($diff != 0 and $days != 0){
+                        //echo $diff.'-'.$items['name'].' ';
+                        $avg = round($diff / $days, 2);
+                    }
+                    if(isset($items['suffix'])) $avg = $avg.' '.$items['suffix'];
+                    $data[$dataKey][$items['name']] = $avg;
+                }
+            }
+        }
+       
         if(isset($items['OptionsLoad'])){
             $replaceQuery = [];
             $replaceData = $DB->query('SELECT '.$items['OptionsLoad'][1].', ID FROM '.$items['OptionsLoad'][0].'');
@@ -628,6 +703,15 @@ function selectFormData($localArray){
 
         }
     }
+    $dataClean = [];
+    foreach($data as $keyL1=>$l1){
+        foreach($l1 as $keyL2=>$l2){
+            if(isset($sendData['Info'][$keyL2])){
+                $dataClean[$keyL1][$keyL2] = $l2;
+            }
+        }
+        $dataClean[$keyL1]['ID'] = $l1['ID'];
+    }
     
 
     //TODO: Update this so that it sorts the locations even if you don't include that
@@ -636,7 +720,7 @@ function selectFormData($localArray){
         $tempArray = [];
         $locations = [];
         $noPen = [];
-        foreach($data as $row){
+        foreach($dataClean as $row){
             $loc = $row[$localArray['location']];
             if($locCheck){
                 unset($row[$localArray['location']]);
@@ -657,7 +741,7 @@ function selectFormData($localArray){
         $sendData['Data']['Locations']['None'] = $noPen;
 
     }else{
-        $sendData['Data'] = $data;
+        $sendData['Data'] = $dataClean;
     }
 
     
@@ -667,6 +751,7 @@ function selectFormData($localArray){
 }
 //insert form data
 function insertFormData($ReceivedFormData, $localArray, $Routes){
+    Global $FormBuilderArray;
     $DBAdmin = new DB_Admin;
     
     if(isset($localArray['tokenAuth']) and isset($localArray['dbCreate'])){
@@ -706,7 +791,7 @@ function insertFormData($ReceivedFormData, $localArray, $Routes){
                 if(isset($formItem['passwordConfirm'])){
                     continue;
                 }
-                if($formItem['type'] == 'password'){
+                if(isset($formItem['type']) and $formItem['type'] == 'password'){
                     $item = password_hash($item, PASSWORD_BCRYPT);
                 }
                 if(isset($formItem['unique']) and $formItem['unique'] == true){
@@ -791,17 +876,40 @@ function insertFormData($ReceivedFormData, $localArray, $Routes){
         
         $secInsertStringArray[] = 'ID';
         $secPdoDataArray['ID'] = $secUUID;
-        $secPdoDataArray[$localArray['tableName'].'ID'] = $UUID;
-        $secInsertStringArray[] = $localArray['tableName'].'ID';
+        if(isset($localArray['subLink'])){
+            $secPdoDataArray[$localArray['subLink']] = $UUID;
+            $secInsertStringArray[] = $localArray['subLink'];
+        }else{
+            $secPdoDataArray[$localArray['tableName'].'ID'] = $UUID;
+            $secInsertStringArray[] = $localArray['tableName'].'ID';
+        }
+        
+       
         $secValues = implode(', ',$secInsertStringArray);
         $secDataValues =':'.implode(', :',$secInsertStringArray);
-        $DB->query("INSERT INTO ".$localArray['secondTable']." ($secValues) VALUES ($secDataValues)", $secPdoDataArray);    
+        $DB->query("INSERT INTO ".$localArray['secondTable']." ($secValues) VALUES ($secDataValues)", $secPdoDataArray);
+        
+       
     }
+    
     
     $values = implode(', ',$insertStringArray);
     $dataValues =':'.implode(', :',$insertStringArray);
     $DB->query("INSERT INTO ".$localArray['tableName']." ($values) VALUES ($dataValues)", $pdoDataArray);
     
+    if(isset($localArray['secondTable'])){
+        $secondArray = $FormBuilderArray['Routes'][strtolower($localArray['secondTable'])];
+        if(isset($secondArray['runStatsFunc'])){
+            $secondArray['runStatsFunc']($secondArray['masterTable'], $UUID, $DB);
+        } 
+    }
+
+    //this is where we will run the function that adds the stats to the master table
+
+    if(isset($localArray['runStatsFunc'])){
+        $localArray['runStatsFunc']($localArray['masterTable'], $Routes[1], $DB);
+    }
+
     if(isset($localArray['tokenAuth'])){
         $data = $DB->query('DELETE from '.$localArray['tokenAuth'].' WHERE Token = :token', array('token'=>$ReceivedFormData['Token']));
     }
@@ -831,6 +939,9 @@ function deleteItem($formArray, $ID){
         http_response_code(404);
         echo stouts('The ID is invalid', 'error');
         exit();
+    }
+    if(isset($formArray['runStatsFunc'])){
+        $StatID = $DB->query("SELECT ".$formArray['masterLink']." from ".$formArray['tableName']." WHERE ID=:ID", array('ID'=>$ID))[0][$formArray['masterLink']];
     }
 
 
@@ -864,6 +975,9 @@ function deleteItem($formArray, $ID){
 
     $del = $DB->query('DELETE FROM '.$formArray['tableName'].' WHERE ID=:ID', array('ID'=>$ID));
     echo stouts('Item Successfully deleted', 'success');
+    if(isset($formArray['runStatsFunc'])){
+        $formArray['runStatsFunc']($formArray['masterTable'], $StatID, $DB);
+    }
 }
 
 //init the router
