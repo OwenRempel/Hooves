@@ -22,12 +22,16 @@ function Search() {
             setSearch(null) 
         }
     }
+    const searchClick = () =>{
+        searchRef.current.value = ''
+        setSearch(false)
+    }
     const SearchOut = (props) => {
         const { data } = props
         return(
             <div className="searchItems" ref={itemsRef}>
                 {data.map((item, key)=>(
-                    <Link key={key} to={`/cows/${item.ID}`} onClick={()=>setSearch(false)}><span>{item.Tag}</span> <span>{item.StartDate}</span> <span>{item.HerdsMan}</span></Link>
+                    <Link key={key} to={`/cows/${item.ID}`} onClick={()=>searchClick()}><span>{item.Tag}</span> <span>{item.StartDate}</span> <span>{item.HerdsMan}</span></Link>
                 ))}
             </div>
         )
