@@ -23,65 +23,91 @@ $AuthData = checkAuth();
 
 $DB = new DB($AuthData['DBName']);
 $DB_Admin = new DB_Admin;
-$feedlot = $DB_Admin->query('SELECT Feedlot from Companies WHERE DBName = :db', array('db'=>$AuthData['DBName']));
+$CompData = $DB_Admin->query('SELECT ListDisplayPref, Feedlot, DBName from Companies WHERE DBName = :db', array('db'=>$AuthData['DBName']));
 
-$BuildItems = $FormBuilderArray['Routes']['cattle']['items'];
 
-if(intval($feedlot[0]['Feedlot']) === 0){
-    $BuildItems = $FormBuilderArray['Routes']['calves']['items'];
+
+
+
+function addLabels($arr, $BuildItems){
+    
 }
-
-function addLabels($arr){
+function parseDisplayPref($CompData, $values = false){
     Global $FormBuilderArray;
-    $items = $FormBuilderArray['Routes']['cattle']['items'];
-    $out = [];
-    foreach($items as $item){
-        
-        if(isset($arr[$item['name']])){
-            $out[$item['name']] = [
-                'value'=>$arr[$item['name']],
-                'name'=>(isset($item['inputLabel']) ? $item['inputLabel'] : $item['name'])
-            ];
+
+    $BuildItems = $FormBuilderArray['Routes']['cattle']['items'];
+
+    if(intval($CompData[0]['Feedlot']) === 0){
+        $BuildItems = $FormBuilderArray['Routes']['calves']['items'];
+    }
+    $list = null;
+    if(isset($CompData[0]['ListDisplayPref'])){
+        $list = json_decode($CompData[0]['ListDisplayPref'], 1);
+    }
+    $arrayOut = [];
+    foreach($BuildItems as $item){
+        $name = $item['name'];
+        if(isset($list[$name])){
+            $arrayOut[$name] = $list[$name];
+        }else{
+            $arrayOut[$name] = true;
         }
     }
-    return $out;
+    if(!$values){
+        $out = [];
+        foreach($BuildItems as $item){
+            
+            if(isset($arrayOut[$item['name']])){
+                $out[$item['name']] = [
+                    'value'=>$arrayOut[$item['name']],
+                    'name'=>(isset($item['inputLabel']) ? $item['inputLabel'] : $item['name'])
+                ];
+            }
+        }
+        return $out;
+    }else{
+        return $arrayOut;
+    }
+    
+}
+function updateDisplayPref($CompData, $PostData){
+    Global $FormBuilderArray;
+    
+
+    $BuildItems = $FormBuilderArray['Routes']['cattle']['items'];
+
+    if(intval($CompData[0]['Feedlot']) === 0){
+        $BuildItems = $FormBuilderArray['Routes']['calves']['items'];
+    }
+    $build = [];
+    foreach($BuildItems as $item){
+        $name = $item['name'];
+        if(isset($PostData[$name])){
+            $build[$name] = $PostData[$name];
+        }
+    }
+
+    $DB_Admin = new DB_Admin;
+    $DB_Admin->query('UPDATE Companies SET ListDisplayPref=:di WHERE DBName=:db', array('di'=>json_encode($build),'db'=>$CompData[0]['DBName']));    
+        
+
+
 }
 
+
 if($Routes[1] == 'view-items'){
-    $da = $DB_Admin->query('SELECT ListDisplayPref FROM Companies WHERE DBName=:db', array('db'=>$AuthData['DBName']));
    
     if($method == 'GET'){
         if($Routes[2] == 'info'){
-            $list = null;
-            if(isset($da[0]['ListDisplayPref'])){
-                $list = json_decode($da[0]['ListDisplayPref'], 1);
-            }
-            $arrayOut = [];
-            //TODO: This will have to be updated to allow for weights and other items
-            foreach($BuildItems as $item){
-                $name = $item['name'];
-                if(isset($list[$name])){
-                    $arrayOut[$name] = $list[$name];
-                }else{
-                    $arrayOut[$name] = true;
-                }
-            }
-            echo json_encode(addLabels($arrayOut));
+            echo json_encode(parseDisplayPref($CompData));
         }else{
+            
             http_response_code(404);
             echo stouts('That view dosen\'t Exist', 'error');
             exit();
         }
     }elseif($method == 'POST'){
-        $build = [];
-        foreach($BuildItems as $item){
-            $name = $item['name'];
-            if(isset($PostData[$name])){
-                $build[$name] = $PostData[$name];
-            }
-        }
-       
-        $DB_Admin->query('UPDATE Companies SET ListDisplayPref=:di WHERE DBName=:db', array('di'=>json_encode($build),'db'=>$AuthData['DBName']));    
+        updateDisplayPref($CompData, $PostData);
         http_response_code(200);
         echo stouts('View Items Updated', 'success');
         exit();
@@ -96,6 +122,8 @@ if($Routes[1] == 'view-items'){
         } 
         if($PostData['Feedlot'] == 0 or $PostData['Feedlot'] == 1){
             $DB_Admin->query('UPDATE Companies SET Feedlot=:feed WHERE DBName=:db', array('feed'=>$PostData['Feedlot'],'db'=>$AuthData['DBName']));
+            $CompData = $DB_Admin->query('SELECT ListDisplayPref, Feedlot, DBName from Companies WHERE DBName = :db', array('db'=>$AuthData['DBName']));
+            updateDisplayPref($CompData, parseDisplayPref($CompData, true));
             http_response_code(200);
             echo stouts('Feedlot Status Updated Successfully', 'success');
             exit();
