@@ -171,16 +171,16 @@ $groupFormData = [
             'name'=>'Data',
             'typeName'=>'DataOnly',
             'count'=>true,
-            'inputLabel'=>'Cows In group'
+            'inputLabel'=>'Cows in Group'
         ],
-        [
+        /* [
             'name'=>'Pen',
             'allowNull'=>true,
             'typeName'=>'FormSelect',
             'inputLabel'=>'Pen',
             'OptionsLoad'=>['Pens', 'Name'],
             'noEdit'=>true
-        ]
+        ] */
     ]
     
 ];
