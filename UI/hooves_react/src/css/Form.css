@@ -59,7 +59,7 @@
 @media only screen and (min-width: 1200px){
     .inputForm{
         display: grid;
-        max-width: 1800px;
+        max-width: 1200px;
         grid-template-columns: 1fr 1fr 1fr;
     }
 }
