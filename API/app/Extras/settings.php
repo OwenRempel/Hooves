@@ -46,6 +46,7 @@ function parseDisplayPref($CompData, $values = false){
     }
     $arrayOut = [];
     foreach($BuildItems as $item){
+        if(isset($item['secondTable'])) continue;
         $name = $item['name'];
         if(isset($list[$name])){
             $arrayOut[$name] = $list[$name];
