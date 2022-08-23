@@ -3,7 +3,7 @@ import TableHead from "./TableHead"
 import '../../css/Table.css'
 import { useEffect, useState } from "react"
 
-function Table({ stick, table, UrlKey }) {
+function Table({ stick, table, UrlKey, groupSelect = false, groupOnChange=null, groupList=null}) {
     const [Tables, setTables] = useState(null)
         useEffect(() => {
             if(table.Data.Locations){
@@ -22,8 +22,8 @@ function Table({ stick, table, UrlKey }) {
         return(
             <div className="tableCatch">
                 <table className={`BuildTable highlight ${stick && 'stick'}`}>
-                    <TableHead Head={info}/>
-                    <TableBody Body={body} UrlKey={UrlKey} />
+                    <TableHead Head={info} groupSelect={groupSelect}/>
+                    <TableBody Body={body} UrlKey={UrlKey} groupOnChange={groupOnChange} groupList={groupList} groupSelect={groupSelect}/>
                 </table>
             </div>
             

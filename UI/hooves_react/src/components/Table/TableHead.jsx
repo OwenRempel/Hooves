@@ -1,8 +1,11 @@
-function TableHead({ Head }) {
+function TableHead({ Head, groupSelect}) {
 
     return (
         <thead>
             <tr>
+                { groupSelect && 
+                <th></th>
+                }
                 <th></th>
                 {
                 Object.keys(Head).map((key, i) => (
