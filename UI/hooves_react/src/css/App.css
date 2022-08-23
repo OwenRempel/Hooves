@@ -410,6 +410,13 @@ font-size: 12px;
     width: calc(100% / 2 - 10px);
   }
 }
+
+.groupSelect{
+  width: 20px;
+  height: 20px;
+  margin-right: -30px;
+  margin-top: 15px;
+}
 /*/////////// Cow view Css ///////////*/
 
 .cowInfo {
