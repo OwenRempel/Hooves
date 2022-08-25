@@ -76,7 +76,7 @@ function getEntries($DB, $formData, $groupID, $return = false ){
 function addEntry($DB, $formData, $groupID, $entryID){
     $DataArray = [];
     $groupData = $DB->query('SELECT data from '.$formData['tableName'].' WHERE ID=:id', array('id'=>$groupID));
-    $entryData = $DB->query('SELECT ID from '.$formData['entriesTarget'].' WHERE ID=:id', array('id'=>$entryID));
+    
     if(!isset($groupData[0])){
         http_response_code(404);
         echo stouts('That Group Dosen\'t Exist', 'error');
@@ -85,24 +85,36 @@ function addEntry($DB, $formData, $groupID, $entryID){
         $groupData = $groupData[0];
     }
 
-    if(!isset($entryData[0]['ID'])){
-        http_response_code(404);
-        echo stouts('That Entry Dosen\'t Exist', 'error');
-        exit();
-    }
-
     if($groupData['data']){
         $DataArray = json_decode($groupData['data'], 1);
     }
-
-    if(in_array($entryID, $DataArray)){
-        echo stouts('Entry already in Group', 'error');
-        exit();
+    
+    if(!is_array($entryID)){
+        $tempID = $entryID;
+        $entryID = array($tempID);
     }
-    $DataArray[] = $entryID;
-    $sendData = json_encode($DataArray);
-    $DB->query('Update '.$formData['tableName'].' SET data=:group WHERE ID=:id', array('group'=>$sendData, 'id'=>$groupID));
-    $DB->query('Update '.$formData['entriesTarget'].' SET '.$formData['entriesLink'].'=:group WHERE ID=:id', array('group'=>$groupID, 'id'=>$entryID));
+
+    foreach($entryID as $row){
+        $entryData = $DB->query('SELECT ID from '.$formData['entriesTarget'].' WHERE ID=:id', array('id'=>$row));
+        
+        if(!isset($entryData[0]['ID'])){
+            http_response_code(404);
+            echo stouts('That Entry Dosen\'t Exist', 'error');
+            exit();
+        }
+    
+       
+    
+        if(in_array($row, $DataArray)){
+            echo stouts('Entry already in Group', 'error');
+            exit();
+        }
+        $DataArray[] = $row;
+        $sendData = json_encode($DataArray);
+        $DB->query('Update '.$formData['tableName'].' SET data=:group WHERE ID=:id', array('group'=>$sendData, 'id'=>$groupID));
+        $DB->query('Update '.$formData['entriesTarget'].' SET '.$formData['entriesLink'].'=:group WHERE ID=:id', array('group'=>$groupID, 'id'=>$row));
+    }
+    
     $send = getEntries($DB, $formData, $groupID, true);
     $send['success'] = 'Entry added to Group';
     echo json_encode($send);
