@@ -323,6 +323,8 @@ function selectUpdateFormItem($formArray, $redirectName, $ID){
     if($onlyDisplay != null){
         
         foreach($formArray['items'] as $item){
+            if($item['typeName'] == 'Stat') continue;
+            if(isset($item['secondTable'])) continue;
             if(isset($onlyDisplay[$item['name']])){
                 $sendData['Info'][$item['name']] = $item['inputLabel'];
                 $selectItems[] = $item['name'];
@@ -330,6 +332,8 @@ function selectUpdateFormItem($formArray, $redirectName, $ID){
         }
     }else{
         foreach($formArray['items'] as $item){
+            if($item['typeName'] == 'Stat') continue;
+            if(isset($item['secondTable'])) continue;
             $sendData['Info'][$item['name']] = $item['inputLabel'];
             $selectItems[] = $item['name'];
         }
@@ -369,6 +373,12 @@ function selectUpdateFormItem($formArray, $redirectName, $ID){
     foreach($formArray['items'] as $items){
 
         if(isset($items['noEdit'])){
+            continue;
+        }
+        if(isset($items['secondTable'])){
+            continue;
+        }
+        if($items['typeName'] == 'Stat'){
             continue;
         }
         $itemArray = [];
