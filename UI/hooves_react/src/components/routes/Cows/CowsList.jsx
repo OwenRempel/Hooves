@@ -10,7 +10,6 @@ function CowsList() {
     const [Groups, setGroups] = useState({});
     const [Pens, setPens] = useState({});
     
-    const nav = useNavigate();
 
     
     const getCattle = () => {
@@ -31,7 +30,7 @@ function CowsList() {
             .then(result => {
               setAllCows(result)
             })
-    }, [feedlot]);
+    }
    
     const handleGroupSelect = (e) => {
       if(e.target.checked){
