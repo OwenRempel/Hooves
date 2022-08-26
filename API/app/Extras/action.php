@@ -1,5 +1,7 @@
 <?php
 
+Global $FormBuilderArray;
+
 $PHPinput = file_get_contents('php://input');
 $PostInput = json_decode($PHPinput, 1);
 parse_str($PHPinput, $_PUT);
@@ -32,6 +34,34 @@ switch ($method) {
         break;
     case 'POST':
         if($Routes[1] == 'move'){
+            $penCheck = $DB->query('SELECT ID From Pens Where ID=:id', array('id'=>$PostData['Pen']));
+            if(!isset($penCheck[0]['ID'])){
+                http_response_code(404);
+                echo stouts('That is not a valid Pen', 'error');
+            }
+            $pen = $PostData['Pen'];
+            $entries = $PostData['Items'];
+
+            foreach($entries as $item){
+                $DB->query('UPDATE Cattle set Pen=:pen WHERE ID=:id', array('pen'=>$pen, 'id'=>$item));
+            }
+            http_response_code(200);
+            echo stouts('Cattle Moved Successfully', 'success');
+        }elseif($Routes[1] == 'delete'){
+            $formArray = $FormBuilderArray['Routes']['cattle'];
+            $entries = $PostData['Items'];
+            foreach($entries as $item){
+                $DB->query('DELETE From Cattle Where ID=:id', array('id'=>$item));
+                foreach($formArray['cleanUp']['target'] as $target){
+                    $DB->query('DELETE from '.$target.' WHERE '.$formArray['cleanUp']['query'].'=:id', array('id'=>$item));
+                }
+            }
+            http_response_code(200);
+            echo stouts('Cattle Deleted Successfully', 'success');
+        }else{
+            http_response_code(404);
+            echo stouts('That is not a valid Route', 'error');
+        }
            $penCheck = $DB->query('SELECT ID From Pens Where ID=:id', array('id'=>$PostData['Pen']));
            if(!isset($penCheck[0]['ID'])){
             http_response_code(404);
@@ -43,7 +73,7 @@ switch ($method) {
            foreach($entries as $item){
             $DB->query('UPDATE Cattle set Pen=:pen WHERE ID=:id', array('pen'=>$pen, 'id'=>$item));
            }
-        }
+        
         http_response_code(200);
         echo stouts('Cattle Moved Successfully', 'success');
         break;
