@@ -32,6 +32,12 @@ function Nav() {
             <button className='menuBackIcon btnClear' onBlur={handelBlur}>
                 <i className="material-icons" id="menuic" onClick={menuToggle}>{Icon}</i>
             </button>
+            <Link to='/search' className="mobSearch" onClick={menuToggle}>
+                <div >
+                    <span className="material-icons menuIcon">search</span>
+                    <span>Search</span>
+                </div>
+            </Link>
             <Link to='/' onClick={menuToggle}>
                 <div >
                     <span className="material-icons menuIcon">home</span>

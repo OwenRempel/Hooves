@@ -178,13 +178,13 @@ font-size: 12px;
       display: grid;
       grid-template-columns: 2fr  90px;
       z-index: 5;
-      height: 140px;
+      height: 90px;
       grid-row: 1;
       grid-column: 2;
       width: calc(100%);
   }
   .title{
-    margin-top: 30px;
+    margin-top: 20px;
     font-size: 24px;
     text-align: center;
   }
@@ -292,7 +292,7 @@ font-size: 12px;
     justify-content: center;
     grid-column: 2;
     padding: 0px;
-    margin-top: 20px;
+    /* margin-top: 20px; */
   }
 }
 
@@ -348,7 +348,7 @@ font-size: 12px;
     display: unset;
     position:absolute;
     left: 25px;
-    top: 45px;
+    top: 25px;
   }
   .menuBackIcon i{
     cursor: pointer;
@@ -357,7 +357,7 @@ font-size: 12px;
   }
   .menu {
     position: relative;
-    padding-top: 140px;
+    padding-top: 90px;
     top: 0px;
     overflow: hidden;
     display: flex;
@@ -374,7 +374,7 @@ font-size: 12px;
   }
   .menuSmall{
     width: 90px;
-    height: 140px;
+    height: 90px;
   }
   .menuBig{
     width: 150px;
@@ -405,13 +405,25 @@ font-size: 12px;
 .DisplayItem span:first-child{
   font-size: 22px;
 }
-@media only screen and (max-width: 800px) {
-  .DisplayItem{
-    width: calc(100% / 2 - 10px);
-  }
-}
+
 .groupOptionsDiv{
+  position: relative;
   width:fit-content;
+  min-width: 400px;
+    background-color: var(--search-background);
+    padding: 5px 20px;
+    margin-top: 30px;
+    border-radius: 4px;
+    box-shadow: 1px 1px 5px #0000003b;
+}
+.groupClose-btn{
+  position: absolute;
+  width: 25px;
+  padding: 0px;
+  border-radius: 5px;
+  height: 20px;
+  right: 0px;
+  top: 0px;
 }
 
 .groupSelect{
@@ -419,6 +431,24 @@ font-size: 12px;
   height: 20px;
   margin-right: -10px;
   margin-top: 5px;
+}
+@media only screen and (max-width: 800px) {
+  .DisplayItem{
+    width: calc(100% / 2 - 10px);
+  }
+  .groupOptionsDiv{
+    min-width: unset;
+    width: 100%;
+  }
+  .groupClose-btn{
+    width: 40px;
+    height: 35px;
+  }
+  .groupSelect{
+    width: 40px;
+    height: 40px;
+    margin-right: 5px;
+  }
 }
 /*/////////// Cow view Css ///////////*/
 
@@ -515,7 +545,7 @@ font-size: 12px;
 .search{
   width: 85%;
   margin: auto;
-  height: 80px;
+  min-height: 80px;
   grid-column: 2;
   position: relative;
 }
@@ -553,21 +583,25 @@ font-size: 12px;
 input[type="search" i]::-webkit-search-cancel-button {
   display: none;
 }
+.mobSearch{
+  display: none;
+}
 
 @media only screen and (max-width: 800px) {
   .mobHide{
     display: none;
   }
+  .header .search{
+    display: none;
+  }
   .search{
-    grid-column: 1/span 2;
-    grid-row: 2;
+    width: 95%;
   }
   .searchItems{
-    position: absolute;
-    top: 67px;
-    left: calc(-17% - 20px );
-    
-    width: calc(100% + 24%);
+    width: 100%;
+  }
+  .mobSearch{
+    display: unset;
   }
 }
 /*/////////// Footer Css ///////////*/

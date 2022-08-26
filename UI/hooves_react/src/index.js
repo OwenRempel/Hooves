@@ -6,6 +6,7 @@ import './css/index.css';
 import App from "./App";
 //default page probably stats later
 import Home from "./components/routes/Home";
+import SearchPage from "./components/routes/SearchPage";
 //routes for cows
 import CompAdd from "./components/routes/Companies/CompAdd";
 import CowsList from "./components/routes/Cows/CowsList";
@@ -57,6 +58,7 @@ render(
       <Route path='/logout' element={<Logout/>}/>
       <Route path="/" element={<App />}>
         <Route index element={<Home />} />
+        <Route path="/search" element={<SearchPage/>}/>
         <Route path="cows" element={<Cows />} >
           <Route index element={<CowsList />} />
           <Route path=":ID" element={<Cow/> } />
