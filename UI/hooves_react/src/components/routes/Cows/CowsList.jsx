@@ -117,6 +117,28 @@ function CowsList() {
           }
       })
     }
+    const groupDelCatch = function() {
+      fetch(process.env.REACT_APP_API_URL+'/action/delete', {
+        method:'POST',
+        headers:{
+          'Content-Type': '"application/x-form-urlencoded"',
+          'Authorization': 'Bearer '+localStorage.getItem('Token')
+          },
+        body:JSON.stringify({
+          Token:localStorage.getItem('Token'),
+          ActionMod:1,
+          Items:GroupOptions
+        })
+      })
+        .then(response => response.json())
+        .then(result => {
+          if(result.success){
+            setGroupOptions([])
+            setGroupAction(null)
+            getCattle()
+          }
+      })
+    }
     return (
         <>
           <Back link='/'/>
@@ -127,6 +149,7 @@ function CowsList() {
               }
               {GroupOptions.length !== 0 &&
                 <div className='groupOptionsDiv'>
+                  <button className='btn no-btn btn-small groupClose-btn' onClick={()=>{setGroupAction(null);  setGroupOptions([])}}>X</button>
                   {GroupSelAction !== null && 
                     <div className='groupActions'>
                       {GroupSelAction === 'add' && 
@@ -140,7 +163,7 @@ function CowsList() {
                                 ))}
                               </select>
                             </div>
-                            <button className='btn no-btn btn-small' onClick={()=>{setGroupAction(null)}}>Close</button>
+                            <button className='btn no-btn btn-small' onClick={()=>{setGroupAction(null)}}>Back</button>
                             <button className='btn yes-btn btn-small' type='submit'>Add</button>
                           </form>
                         </>
@@ -156,9 +179,16 @@ function CowsList() {
                                 ))}
                               </select>
                             </div>
-                            <button className='btn no-btn btn-small' onClick={()=>{setGroupAction(null)}}>Close</button>
+                            <button className='btn no-btn btn-small' onClick={()=>{setGroupAction(null)}}>Back</button>
                             <button className='btn yes-btn btn-small' type='submit'>Move</button>
                           </form>
+                        </>
+                      }
+                      {GroupSelAction === 'del' && 
+                        <>
+                          <h3>Are you sure you want to delete these Cows?</h3>
+                            <button className='btn no-btn btn-small' onClick={()=>{setGroupAction(null)}}>No</button>
+                            <button className='btn yes-btn btn-small' onClick={()=>{groupDelCatch()}}>Yes</button>
                         </>
                       }
                     </div>

@@ -62,20 +62,6 @@ switch ($method) {
             http_response_code(404);
             echo stouts('That is not a valid Route', 'error');
         }
-           $penCheck = $DB->query('SELECT ID From Pens Where ID=:id', array('id'=>$PostData['Pen']));
-           if(!isset($penCheck[0]['ID'])){
-            http_response_code(404);
-            echo stouts('That is not a valid Pen', 'error');
-           }
-           $pen = $PostData['Pen'];
-           $entries = $PostData['Items'];
-
-           foreach($entries as $item){
-            $DB->query('UPDATE Cattle set Pen=:pen WHERE ID=:id', array('pen'=>$pen, 'id'=>$item));
-           }
-        
-        http_response_code(200);
-        echo stouts('Cattle Moved Successfully', 'success');
         break;
     default:
         http_response_code(405);
