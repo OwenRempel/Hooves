@@ -23,7 +23,7 @@ export default function App() {
     });
     const tokenData = await checkToken.json();
     if(tokenData.success && tokenData.Token){
-      let time = (Math.round(new Date() / 1000) + (60*24*3))
+      let time = (Math.round(new Date() / 1000) + (60*3))
       localStorage.setItem('TokenExpire', time);
       setAuth(true);
     }else{
@@ -51,7 +51,7 @@ export default function App() {
       body:JSON.stringify(formItems)
     })
     const checkAuthData = await checkAuth.json();
-    let time = (Math.round(new Date() / 1000) + (60*24*3))
+    let time = (Math.round(new Date() / 1000) + (60*3))
     if(checkAuthData.Token && (checkAuthData.success || checkAuthData.info)){
       localStorage.setItem('Token', checkAuthData.Token);
       localStorage.setItem('TokenExpire', time);

@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { Link, useParams } from "react-router-dom"
 import Back from "../../Back";
+
 
 
 function GroupEntries() {
     const [ Entries, setEntries] = useState({});
     const [ Search, setSearch ] = useState({});
     const { ID } = useParams();
+    const searchVal = useRef();
     useEffect(() => {
     fetch(process.env.REACT_APP_API_URL+'/group/'+ID+'/entries',{
       headers:{
@@ -80,7 +82,8 @@ function GroupEntries() {
       )
     }
     const searchEntries = (e) =>{
-      var val = e.target.value
+      var val = searchVal.current.value;
+      console.log(val)
       if(val && val !== ' ' && val !== '%' && val !== '#'){
         fetch(process.env.REACT_APP_API_URL+'/cattle/search/'+val+'?group=1&limit=10',{
           headers:{
@@ -110,7 +113,8 @@ function GroupEntries() {
         .then(response => response.json())
         .then(result => {
           if(result.success){
-            setEntries(result);
+            setEntries(result)
+            searchEntries()
           }else{
             console.log(result)
           }
@@ -168,7 +172,7 @@ function GroupEntries() {
       }
       
       <div className="search">
-        <input type='search' className="searchInput" placeholder="Search" onKeyUp={searchEntries}/>
+        <input type='search' ref={searchVal} className="searchInput" placeholder="Search" onKeyUp={searchEntries}/>
       </div>
       {Search.Data &&
         <List data={Search} type='add'/>

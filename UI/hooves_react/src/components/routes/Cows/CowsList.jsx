@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Back from '../../Back'
 import Table from '../../Table/Table';
@@ -10,6 +11,7 @@ function CowsList() {
     const [Groups, setGroups] = useState({});
     const [Pens, setPens] = useState({});
     
+    const nav = useNavigate();
 
     
     const getCattle = () => {
@@ -26,11 +28,38 @@ function CowsList() {
           'Authorization': 'Bearer '+localStorage.getItem('Token'),
         }
       })
+      .then(response => response.json())
+      .then(result => {
+        setAllCows(result)
+      })
+    }
+    useEffect(() => {
+      getCattle();  
+    }, []);
+
+    useEffect(()=> {
+      fetch(process.env.REACT_APP_API_URL+"/pens",{
+        headers:{
+          'Authorization': 'Bearer '+localStorage.getItem('Token'),
+        }
+      })
             .then(response => response.json())
             .then(result => {
-              setAllCows(result)
+              setPens(result.Data);
             })
-    }
+    }, []);
+    useEffect(()=> {
+      fetch(process.env.REACT_APP_API_URL+"/group",{
+        headers:{
+          'Authorization': 'Bearer '+localStorage.getItem('Token'),
+        }
+      })
+            .then(response => response.json())
+            .then(result => {
+              setGroups(result.Data);
+            })
+    }, []);
+   
    
     const handleGroupSelect = (e) => {
       if(e.target.checked){
@@ -90,8 +119,8 @@ function CowsList() {
     }
     return (
         <>
-            <Back link='/'/>
-            {AllCows.Data &&
+          <Back link='/'/>
+          {AllCows.Data &&
             <>
               {!AllCows.Data.Locations &&
                 <h1>All Cattle</h1>
@@ -150,8 +179,7 @@ function CowsList() {
               }
               <Table stick={true} table={AllCows} UrlKey={[{title:'View',link:'/cows/', className:'btn btn-small'}]} groupSelect={true} groupList={GroupOptions} groupOnChange={handleGroupSelect}/>
             </>
-            }
-            
+          }            
         </>
     )
 }

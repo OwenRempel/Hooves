@@ -139,6 +139,9 @@ function InitRouter(){
     }elseif($Routes[0] == 'group'){
         include('Extras/group.php');
         exit();
+    }elseif($Routes[0] == 'action'){
+        include('Extras/action.php');
+        exit();
     }elseif($Routes[0] == 'settings'){
         include('Extras/settings.php');
         exit();
