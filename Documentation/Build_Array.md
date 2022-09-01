@@ -169,7 +169,7 @@ This is where you can define any form items, data only items and stat items.
         <br> 
         <code>statData</code>: String | Column Name
 
-        - <code>diff</code>: This is used to compute the difference between two numbers like two weights.
+        - <code>diff</code>: This is used to compute the difference between two numbers like two weights.[^2]
         <br>
         <code>statData</code>: Array ( 2 items ) | Column Names
 
@@ -191,3 +191,4 @@ This is where you can define any form items, data only items and stat items.
 
 
 [^1]: there is more to be said about that
+[^2]: This is something else
