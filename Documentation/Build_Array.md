@@ -31,14 +31,14 @@ As you can see with this system we can define all the data, stat and form items 
 At this top level we can define such things as the <code>tableName</code>, <code>formTitle</code> or even a <code>success</code> message for when the user completes an action.
 
 
-1. Auth
+1. ### Auth
     - <code>tokenAuth</code>: This is used for authorizing the user without them being logged in. For example in this project it is used to allow companies to be created from a link that can be emailed to a prospective user
     <br>**Value**: <code>POST</code> Auth String
     
     - <code>loginAuth</code>: This tells the system to check for user credentials before allowing them to add, edit or view the data from this table
     <br>**Value**: <code>true</code> | <code>false</code>
 
-2. Table Information
+2. ### Table Information
     - <code>tableName</code>: This links the table to a SQL table.
     <br>**Value**: String | Name
 
@@ -50,7 +50,7 @@ At this top level we can define such things as the <code>tableName</code>, <code
     - <code>success</code>: This message is returned when the user adds an item to the table.
     <br>**Value**: String | Name
 
-3. Join Data
+3. ### Join Data
     - <code>search</code>: Used to tell the API which columns to search when the <code>/search</code> route is called on this table.
     <br>**Value**: Array 
 
@@ -69,7 +69,7 @@ At this top level we can define such things as the <code>tableName</code>, <code
     - <code>secondTable</code>: This is used to send data to two different tables when you add an item. This is a requirement for the <code>secondTable</code> used later in the individual items. Also you need a <code>subLink</code> for this to work.
     <br>**Value**: String | Table Name
 
-4. Data Modifiers
+4. ### Data Modifiers
     - <code>orderIndex</code>: This is used to change the order that the data is returned in. By default the data is ordered by <code>Adate</code> this is a auto generated field in the database that keeps track of when data is entered.
     <br>**Value**: String | Column Name
 
@@ -82,7 +82,7 @@ At this top level we can define such things as the <code>tableName</code>, <code
     - <code>StatIncludes</code>: This tells the view function to grab extra data from the table that is not in the list of items but is needed to generate some of the stats fields.
     <br>**Value**: Array
 
-5. Clean Up
+5. ### Clean Up
     - <code>cleanUp</code>: This allows you to choose what you want to happen when you delete an item from this table. There are times when you have supporting data that should also be deleted with the item, as well as times where you are deleting a attribute and would like to set a new attribute for any items that will be affected. <br> There are two actions you can run from clean up and they are: <code>delete</code> and <code>move</code>. You also need to specify a target and a query. The <code>target</code> is an array of table names to run the clean up on and the <code>query</code> acts as the link to search the target arrays for the item <code>UUID</code>. <br>**Value**: 
 
     ```JSON
@@ -101,11 +101,11 @@ At this top level we can define such things as the <code>tableName</code>, <code
     - <code>allowCompleteDelete</code>: If this is set to false the API will not let you delete the item in the table if it is the last one. This is useful if you have a table as a field value for another table as having nothing show up would be undesirable.
     <br>**Value**:  <code>true</code> | <code>false</code>
 
-6. SQL Actions
+6. ### SQL Actions
     - <code>dbCreate</code>: This will almost never be used. It is only currently used to create the database for a company from a company auth link. This will generate a new DB with the name the user describes. Should be set to the name of a form item name so the user can enter a name.
     <br>**Value**: <code>POST</code> DB Name | String
 
-7. Miscellaneous
+7. ### Miscellaneous
     - <code>view</code>: This is used to add actual files in to the route structure. When set to <code>true</code> the API will look in <code>./Extras</code> and if there is a matching file it will include it.
     <br>**Value**:  <code>true</code> | <code>false</code>
 
@@ -116,7 +116,7 @@ At this top level we can define such things as the <code>tableName</code>, <code
 
 This is where you can define any form items, data only items and stat items.
 
-1. All Types
+1. ### All Types
     - <code>name</code>: This name is the column name in the table.
     <br>**Value**:  String | Column Name
     
@@ -125,7 +125,7 @@ This is where you can define any form items, data only items and stat items.
 
     - <code>inputLabel</code>: This serves as the form element label and as the label when displaying the data.
     <br>**Value**:  String
-2. Form Elements
+2. ### Form Elements
     - <code>type</code>: This has two functions. The first is that when used with <code>typeName:FormInput</code> it allows you to define what sort of input you want using any of the html input types. Secondly when used with <code>typeName:Stat</code> tells the API what sort of statistic to run.
     <br>**Value**:  String
 
@@ -138,7 +138,7 @@ This is where you can define any form items, data only items and stat items.
     
      **Form items by** <code>typeName</code>
     
-    1. <code>FormSelect</code>
+    1. #### <code>FormSelect</code>
         - <code>options</code>: This is an array of items to populate the select element. The array should contain both a <code>value</code> and <code>option</code> value. <br>**Value**: Array<br><br>
 
 
@@ -159,12 +159,12 @@ This is where you can define any form items, data only items and stat items.
         ]
         ```
 
-3. Stat Elements
+3. ### Stat Elements
     
     
      Stat Elements have a <code>typeName</code> of <code>Stat</code>
 
-    - ### Stat Types
+    - #### Stat Types
         - <code>format</code>: This type is used to apply a <code>suffix</code> to any field that you want to return.
         <br> 
         <code>statData</code>: String | Column Name
