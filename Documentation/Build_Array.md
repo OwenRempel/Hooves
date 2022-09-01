@@ -165,11 +165,11 @@ This is where you can define any form items, data only items and stat items.
      Stat Elements have a <code>typeName</code> of <code>Stat</code>
 
     - #### Stat Types
-        - <code>format</code>: This type is used to apply a <code>suffix</code> to any field that you want to return.[^1]
+        - <code>format</code>: This type is used to apply a <code>suffix</code> to any field that you want to return.
         <br> 
         <code>statData</code>: String | Column Name
 
-        - <code>diff</code>: This is used to compute the difference between two numbers like two weights.[^2]
+        - <code>diff</code>: This is used to compute the difference between two numbers like two weights.
         <br>
         <code>statData</code>: Array ( 2 items ) | Column Names
 
@@ -188,7 +188,3 @@ This is where you can define any form items, data only items and stat items.
 
     - <code>suffix</code>: This is where you can define a suffix to append to the end of any statistic you want.<br>
     **Value**: String
-
-
-[^1]: there is more to be said about that
-[^2]: This is something else
