@@ -126,23 +126,65 @@ This is where you can define any form items, data only items and stat items.
     - <code>inputLabel</code>: This serves as the form element label and as the label when displaying the data.
     <br>**Value**:  String
 2. Form Elements
-    - <code>type</code>:
-    - <code>required</code>:
-    - <code>noEdit</code>:
-    - <code>placeholder</code>:
-    - <code>secondTable</code>:
+    - <code>type</code>: This has two functions. The first is that when used with <code>typeName:FormInput</code> it allows you to define what sort of input you want using any of the html input types. Secondly when used with <code>typeName:Stat</code> tells the API what sort of statistic to run.
+    <br>**Value**:  String
+
+    - <code>required</code>: Define weather or not to require input from this field. <br>**Value**:  <code>true</code> | <code>false</code> 
+    - <code>noEdit</code>: Tells the API wether or not to allow this field to be updated.<br>**Value**:  <code>true</code> | <code>false</code>
+
+    - <code>placeholder</code>: This passes through any text that you want to be the placeholder on you input element. <br>**Value**: String
+
+    - <code>secondTable</code>: Lets the API know that this element belongs to the second table. <br>**Value**:  <code>true</code> | <code>false</code>
     
      **Form items by** <code>typeName</code>
     
     1. <code>FormSelect</code>
-        - <code>options</code>:
-        - <code>OptionsLoad</code>:
+        - <code>options</code>: This is an array of items to populate the select element. The array should contain both a <code>value</code> and <code>option</code> value. <br>**Value**: Array<br><br>
+
+
+        ```JSON
+        "options":[
+            {
+                "value":"value", // Value to be passed on
+                "option":"name" // User friendly name
+            }
+        ]
+        ```
+        - <code>OptionsLoad</code>: This loads the select data right from the database. It needs both a table and a colum name. The value that is passed to the select element is the ID from the table.
+        <br>**Value**: Array<br><br>
+        ```JSON
+        "OptionsLoad":[
+            "tableName",
+            "columName"
+        ]
+        ```
 
 3. Stat Elements
     
     
      Stat Elements have a <code>typeName</code> of <code>Stat</code>
-    - <code>type</code>:
-    - <code>statData</code>:
-    - <code>empty</code>:
-    - <code>suffix</code>:
+
+    - ### Stat Types
+        - <code>format</code>: This type is used to apply a <code>suffix</code> to any field that you want to return.
+        <br> 
+        <code>statData</code>: String | Column Name
+
+        - <code>diff</code>: This is used to compute the difference between two numbers like two weights.
+        <br>
+        <code>statData</code>: Array ( 2 items ) | Column Names
+
+        - <code>date-diff</code>: Used to get the number of days between a given date and today.
+        <br>
+        <code>statData</code>: String | Column Name
+
+        - <code>avg-time-gain</code>:This is the most complicated statistic. It uses two dates and two weights to get the amount of change in an animal over a given time.<br>
+        <code>statData</code>: Array ( 4 items | String Column Names | First Weight, Second Weight, First Date, Second Date )
+
+    - <code>statData</code>: This is where you can pass any columns that you might need for the statistic. It is different depending on what sort of statistic you are doing they are defined above in Stat Types.
+
+    - <code>type</code>: This is where you can define the type of statistic you want. Definitions are listed above.
+
+    - <code>empty</code>: This allows you to define a default value if the statistic returns nothing.<br> **Value**: String
+
+    - <code>suffix</code>: This is where you can define a suffix to append to the end of any statistic you want.<br>
+    **Value**: String
